@@ -57,11 +57,17 @@ Swagger UI opens automatically at `/swagger` in development.
 ## What's fully implemented vs. scaffolded
 
 **Fully implemented** (real handlers, validators, EF configs):
-- Auth: register, login, refresh token rotation, BCrypt hashing, JWT issuing
-- Job listings: create, update, close, public search/filter/pagination, detail page
-- Companies: create, fetch by id
+- Auth: register, login, refresh token rotation, BCrypt hashing, JWT issuing,
+  a dev-only seeded Admin account (self-registering as Admin is blocked)
+- Job listings: create, update, close, soft-delete, public search/filter/pagination,
+  detail page, "my listings" for the owning employer
+- Companies: create, update, fetch by id
+- Candidate profiles: fetch/update the profile auto-created at registration
 - Applications: apply, list mine (candidate), list for a listing (employer),
   update status with an email notification stub
+- Test coverage: `tests/JobBoard.Application.UnitTests` (handlers against EF Core
+  InMemory) and `tests/JobBoard.Api.IntegrationTests` (`WebApplicationFactory`
+  over real HTTP) - run both with `dotnet test` from the repo root
 
 **Intentionally left as a next step** (the pattern is there to copy):
 - Refresh tokens are single-slot per user (one active token). For multi-device
@@ -74,11 +80,11 @@ Swagger UI opens automatically at `/swagger` in development.
   Hangfire (`BackgroundJob.Enqueue<IEmailService>(s => s.SendAsync(...))`)
   instead of `await`-ing it inline, so a slow mail provider can't fail an
   application submission.
-- `IFileStorageService` writes to local disk. Add an S3/Azure Blob
-  implementation behind the same interface for production.
-- No integration tests yet - `Application` handlers are unit-testable against
-  an in-memory `IApplicationDbContext` fake; `Api` is a good candidate for
-  `WebApplicationFactory` tests.
+- `IFileStorageService` writes to local disk and exists but nothing calls it
+  yet - resume/logo upload commands are the next slice. Add an S3/Azure Blob
+  implementation behind the same interface before deploying to an ephemeral host.
+- The `Notification` entity exists (DbSet included) but has no feature slice
+  built on top of it yet - no commands/queries/controller.
 
 ## API surface
 
@@ -89,11 +95,16 @@ Swagger UI opens automatically at `/swagger` in development.
 | `POST /api/auth/refresh` | - | rotates the refresh token |
 | `GET /api/jobs` | - | keyword/location/type/remote/salary filters + pagination |
 | `GET /api/jobs/{id}` | - | |
+| `GET /api/jobs/mine` | Employer | includes Draft/Closed, excludes soft-deleted |
 | `POST /api/jobs` | Employer | |
 | `PUT /api/jobs/{id}` | Employer | |
 | `POST /api/jobs/{id}/close` | Employer | |
+| `DELETE /api/jobs/{id}` | Employer | soft-delete (`JobStatus.Deleted`) |
 | `POST /api/companies` | Employer | |
 | `GET /api/companies/{id}` | - | |
+| `PUT /api/companies/{id}` | Employer | |
+| `GET /api/candidates/me` | Candidate | |
+| `PUT /api/candidates/me` | Candidate | |
 | `POST /api/applications` | Candidate | |
 | `GET /api/applications/mine` | Candidate | |
 | `GET /api/applications/job/{jobListingId}` | Employer | |

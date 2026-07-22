@@ -41,7 +41,7 @@ hydration, same as a normal SPA.
 ## Setup
 
 ```bash
-npm install
+pnpm install
 ```
 
 Point the app at your running `JobBoard.Api` instance (defaults to
@@ -57,7 +57,7 @@ NUXT_PUBLIC_API_BASE=http://localhost:5000/api
 ## Development
 
 ```bash
-npm run dev
+pnpm run dev
 ```
 
 Runs on `http://localhost:3000`. The API's CORS policy (`Cors:AllowedOrigins` in
@@ -66,6 +66,21 @@ Runs on `http://localhost:3000`. The API's CORS policy (`Cors:AllowedOrigins` in
 ## Production
 
 ```bash
-npm run build
-npm run preview   # or: node .output/server/index.mjs
+pnpm run build
+pnpm run preview   # or: node .output/server/index.mjs
 ```
+
+## Tooling notes
+
+- **pnpm, not npm.** Faster installs and a shared content-addressable store instead
+  of npm's flat `node_modules` duplication — noticeably lighter on disk across
+  multiple Node projects. `onlyBuiltDependencies` in `package.json` explicitly
+  allow-lists `esbuild`'s postinstall script, since pnpm blocks arbitrary package
+  postinstall scripts by default (a supply-chain safety feature npm doesn't have).
+- **Nuxt 3, not 4.** `nuxi init` defaults to the latest Nuxt (4.5 at the time this
+  was scaffolded), whose newest patch requires Node `^22.19.0 || ^24.11.0 || >=26.0.0`.
+  The dev environment runs Node 22.16, below that floor. Pinning to the latest
+  Nuxt **3** (`^3.21.0`) avoided either forcing a Node upgrade or pinning to an
+  older, less battle-tested Nuxt 4 patch — Nuxt 3 needs only Node `>=22.12.0` and
+  has everything this project uses (SSR, `useAsyncData`, `useSeoMeta`). Moving to
+  Nuxt 4 later is a well-documented, largely mechanical migration.

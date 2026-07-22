@@ -15,5 +15,10 @@
   },
   "devDependencies": {
     "@nuxtjs/tailwindcss": "^6.13.1"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ]
   }
 }
