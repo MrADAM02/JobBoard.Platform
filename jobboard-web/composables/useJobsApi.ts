@@ -1,4 +1,11 @@
-import type { JobListingDetail, JobListingFilters, JobListingSummary, PaginatedList } from '~/types/job'
+import type {
+  CreateOrUpdateJobPayload,
+  JobListingDetail,
+  JobListingFilters,
+  JobListingSummary,
+  MyJobListing,
+  PaginatedList
+} from '~/types/job'
 
 // Thin wrapper around $fetch, pointed at JobBoard.Api via runtimeConfig.public.apiBase.
 // Kept framework-agnostic (no useFetch/useAsyncData here) so pages can choose how
@@ -6,6 +13,7 @@ import type { JobListingDetail, JobListingFilters, JobListingSummary, PaginatedL
 export function useJobsApi() {
   const config = useRuntimeConfig()
   const apiBase = config.public.apiBase as string
+  const { authFetch } = useAuthFetch()
 
   function getJobListings(filters: JobListingFilters = {}) {
     return $fetch<PaginatedList<JobListingSummary>>(`${apiBase}/jobs`, {
@@ -25,5 +33,34 @@ export function useJobsApi() {
     return $fetch<JobListingDetail>(`${apiBase}/jobs/${id}`)
   }
 
-  return { getJobListings, getJobListingById }
+  // Employer-only endpoints below - all go through authFetch.
+  function getMyJobListings(pageNumber = 1, pageSize = 20) {
+    return authFetch<PaginatedList<MyJobListing>>('/jobs/mine', { query: { pageNumber, pageSize } })
+  }
+
+  function createJobListing(payload: CreateOrUpdateJobPayload) {
+    return authFetch<string>('/jobs', { method: 'POST', body: payload })
+  }
+
+  function updateJobListing(id: string, payload: CreateOrUpdateJobPayload) {
+    return authFetch<void>(`/jobs/${id}`, { method: 'PUT', body: { id, ...payload } })
+  }
+
+  function closeJobListing(id: string) {
+    return authFetch<void>(`/jobs/${id}/close`, { method: 'POST' })
+  }
+
+  function deleteJobListing(id: string) {
+    return authFetch<void>(`/jobs/${id}`, { method: 'DELETE' })
+  }
+
+  return {
+    getJobListings,
+    getJobListingById,
+    getMyJobListings,
+    createJobListing,
+    updateJobListing,
+    closeJobListing,
+    deleteJobListing
+  }
 }

@@ -10,7 +10,9 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@pinia/nuxt": "^0.5.5",
     "nuxt": "^3.21.0",
+    "pinia": "^2.3.1",
     "vue": "^3.5.0"
   },
   "devDependencies": {
@@ -18,7 +20,8 @@
   },
   "pnpm": {
     "onlyBuiltDependencies": [
-      "esbuild"
+      "esbuild",
+      "vue-demi"
     ]
   }
 }

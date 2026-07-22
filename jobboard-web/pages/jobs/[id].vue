@@ -130,5 +130,12 @@ useHead({
         {{ job.companyWebsite }}
       </a>
     </section>
+
+    <!-- Client-only: apply state depends on the client-side auth store, which
+         has no value during SSR. Keeping this out of the server render doesn't
+         cost anything SEO-wise - it's an interactive action, not indexable content. -->
+    <ClientOnly>
+      <ApplyToJobBox :job-id="job.id" />
+    </ClientOnly>
   </article>
 </template>

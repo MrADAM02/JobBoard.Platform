@@ -57,6 +57,49 @@ export interface PaginatedList<T> {
   hasNextPage: boolean
 }
 
+export const JobStatus = {
+  Draft: 0,
+  Published: 1,
+  Closed: 2,
+  Expired: 3,
+  Deleted: 4
+} as const
+
+export type JobStatusValue = (typeof JobStatus)[keyof typeof JobStatus]
+
+export const JobStatusLabels: Record<JobStatusValue, string> = {
+  [JobStatus.Draft]: 'Draft',
+  [JobStatus.Published]: 'Published',
+  [JobStatus.Closed]: 'Closed',
+  [JobStatus.Expired]: 'Expired',
+  [JobStatus.Deleted]: 'Deleted'
+}
+
+export interface MyJobListing {
+  id: string
+  title: string
+  location: string
+  isRemote: boolean
+  status: JobStatusValue
+  viewCount: number
+  applicationCount: number
+  publishedAt: string | null
+  createdAt: string
+}
+
+export interface CreateOrUpdateJobPayload {
+  companyId?: string
+  title: string
+  description: string
+  location: string
+  isRemote: boolean
+  salaryMin: number | null
+  salaryMax: number | null
+  jobType: JobTypeValue
+  tags: string | null
+  publishImmediately?: boolean
+}
+
 export interface JobListingFilters {
   keyword?: string
   location?: string

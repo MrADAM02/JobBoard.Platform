@@ -1,6 +1,7 @@
 using JobBoard.Application.Features.Companies.Commands.CreateCompany;
 using JobBoard.Application.Features.Companies.Commands.UpdateCompany;
 using JobBoard.Application.Features.Companies.Queries.GetCompanyById;
+using JobBoard.Application.Features.Companies.Queries.GetMyCompany;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -14,6 +15,11 @@ public class CompaniesController : ControllerBase
     private readonly IMediator _mediator;
 
     public CompaniesController(IMediator mediator) => _mediator = mediator;
+
+    [HttpGet("mine")]
+    [Authorize(Roles = "Employer")]
+    public async Task<IActionResult> GetMine()
+        => Ok(await _mediator.Send(new GetMyCompanyQuery()));
 
     [HttpGet("{id:guid}")]
     [AllowAnonymous]
