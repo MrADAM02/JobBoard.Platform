@@ -1,0 +1,28 @@
+## .NET
+bin/
+obj/
+*.user
+.vs/
+
+## JobBoard.Api uploaded files (dev only - keep the folder, ignore contents)
+JobBoard/src/JobBoard.Api/wwwroot/uploads/*
+!JobBoard/src/JobBoard.Api/wwwroot/uploads/.gitkeep
+
+## Secrets
+appsettings.Production.json
+*.pfx
+
+## Node / Nuxt (jobboard-web, once scaffolded)
+node_modules/
+.nuxt/
+.output/
+dist/
+.env
+.env.*
+!.env.example
+
+## Editor / OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
