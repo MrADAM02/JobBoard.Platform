@@ -21,5 +21,11 @@ export function useCompaniesApi() {
     return authFetch<void>(`/companies/${id}`, { method: 'PUT', body: { id, ...payload } })
   }
 
-  return { getCompanyById, getMyCompany, createCompany, updateCompany }
+  function uploadLogo(id: string, file: File) {
+    const formData = new FormData()
+    formData.append('file', file)
+    return authFetch<string>(`/companies/${id}/logo`, { method: 'POST', body: formData })
+  }
+
+  return { getCompanyById, getMyCompany, createCompany, updateCompany, uploadLogo }
 }

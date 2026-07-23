@@ -11,5 +11,13 @@ export function useCandidatesApi() {
     return authFetch<void>('/candidates/me', { method: 'PUT', body: payload })
   }
 
-  return { getMyProfile, updateMyProfile }
+  function uploadResume(file: File) {
+    const formData = new FormData()
+    formData.append('file', file)
+    // No Content-Type header here - the browser sets multipart/form-data with
+    // the correct boundary itself; setting it manually would drop the boundary.
+    return authFetch<string>('/candidates/me/resume', { method: 'POST', body: formData })
+  }
+
+  return { getMyProfile, updateMyProfile, uploadResume }
 }

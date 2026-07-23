@@ -1,4 +1,5 @@
 using JobBoard.Application.Features.Candidates.Commands.UpdateCandidateProfile;
+using JobBoard.Application.Features.Candidates.Commands.UploadResume;
 using JobBoard.Application.Features.Candidates.Queries.GetMyCandidateProfile;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -24,5 +25,14 @@ public class CandidatesController : ControllerBase
     {
         await _mediator.Send(command);
         return NoContent();
+    }
+
+    [HttpPost("me/resume")]
+    [RequestSizeLimit(UploadResumeCommandValidator.MaxFileSizeBytes)]
+    public async Task<ActionResult<string>> UploadResume(IFormFile file, CancellationToken cancellationToken)
+    {
+        await using var stream = file.OpenReadStream();
+        var command = new UploadResumeCommand(stream, file.FileName, file.ContentType, file.Length);
+        return Ok(await _mediator.Send(command, cancellationToken));
     }
 }

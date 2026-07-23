@@ -1,5 +1,6 @@
 using JobBoard.Application.Features.Companies.Commands.CreateCompany;
 using JobBoard.Application.Features.Companies.Commands.UpdateCompany;
+using JobBoard.Application.Features.Companies.Commands.UploadCompanyLogo;
 using JobBoard.Application.Features.Companies.Queries.GetCompanyById;
 using JobBoard.Application.Features.Companies.Queries.GetMyCompany;
 using MediatR;
@@ -38,5 +39,15 @@ public class CompaniesController : ControllerBase
         if (id != command.Id) return BadRequest("Route id and body id must match.");
         await _mediator.Send(command);
         return NoContent();
+    }
+
+    [HttpPost("{id:guid}/logo")]
+    [Authorize(Roles = "Employer")]
+    [RequestSizeLimit(UploadCompanyLogoCommandValidator.MaxFileSizeBytes)]
+    public async Task<ActionResult<string>> UploadLogo(Guid id, IFormFile file, CancellationToken cancellationToken)
+    {
+        await using var stream = file.OpenReadStream();
+        var command = new UploadCompanyLogoCommand(id, stream, file.FileName, file.ContentType, file.Length);
+        return Ok(await _mediator.Send(command, cancellationToken));
     }
 }

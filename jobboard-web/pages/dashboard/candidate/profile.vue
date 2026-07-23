@@ -2,13 +2,17 @@
 definePageMeta({ middleware: 'auth', ssr: false })
 useRequireRole('Candidate')
 
-const { getMyProfile, updateMyProfile } = useCandidatesApi()
+const { getMyProfile, updateMyProfile, uploadResume } = useCandidatesApi()
 const { data: profile } = await useAsyncData('my-profile', () => getMyProfile())
+
+const config = useRuntimeConfig()
+const apiOrigin = (config.public.apiBase as string).replace(/\/api$/, '')
 
 const fullName = ref(profile.value?.fullName ?? '')
 const headline = ref(profile.value?.headline ?? '')
 const bio = ref(profile.value?.bio ?? '')
 const skills = ref(profile.value?.skills ?? '')
+const resumeUrl = ref(profile.value?.resumeUrl ?? null)
 const saved = ref(false)
 const error = ref<string | null>(null)
 const submitting = ref(false)
@@ -32,12 +36,48 @@ async function onSubmit() {
   }
 }
 
+const resumeUploading = ref(false)
+const resumeError = ref<string | null>(null)
+
+async function onResumeChange(event: Event) {
+  const file = (event.target as HTMLInputElement).files?.[0]
+  if (!file) return
+
+  resumeError.value = null
+  resumeUploading.value = true
+  try {
+    resumeUrl.value = await uploadResume(file)
+  } catch {
+    resumeError.value = 'Could not upload resume. Use a PDF or Word document under 5 MB.'
+  } finally {
+    resumeUploading.value = false
+  }
+}
+
 useSeoMeta({ title: 'My Profile — JobBoard' })
 </script>
 
 <template>
   <div class="mx-auto flex max-w-lg flex-col gap-6 py-6">
     <h1 class="text-2xl font-bold text-slate-900">My Profile</h1>
+
+    <div v-if="profile" class="flex flex-col gap-2 rounded-lg border border-slate-200 bg-white p-4">
+      <label class="text-sm font-medium text-slate-700">Resume</label>
+      <a
+        v-if="resumeUrl" :href="`${apiOrigin}${resumeUrl}`" target="_blank" rel="noopener"
+        class="text-sm text-slate-700 underline"
+      >
+        View current resume
+      </a>
+      <p v-else class="text-sm text-slate-500">No resume uploaded yet.</p>
+      <input
+        type="file" accept=".pdf,.doc,.docx" :disabled="resumeUploading"
+        class="text-sm"
+        @change="onResumeChange"
+      >
+      <p v-if="resumeUploading" class="text-xs text-slate-500">Uploading…</p>
+      <p v-if="resumeError" class="text-xs text-red-600">{{ resumeError }}</p>
+    </div>
 
     <form v-if="profile" class="flex flex-col gap-4" @submit.prevent="onSubmit">
       <div class="flex flex-col gap-1">
