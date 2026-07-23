@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import type { JobListingFilters, JobTypeValue } from '~/types/job'
-import { JobTypeLabels } from '~/types/job'
+import { JobTypeI18nKey } from '~/types/job'
 
 const route = useRoute()
 const router = useRouter()
 const { getJobListings } = useJobsApi()
+const { t } = useI18n()
 
 // Filters are read from - and written back to - the URL query string, not
 // component-local state, so a direct request to a filtered URL (what a search
@@ -51,17 +52,17 @@ function goToPage(page: number) {
 }
 
 useSeoMeta({
-  title: 'Browse Jobs — JobBoard',
-  description: 'Search open job listings by keyword, location, job type, and salary.'
+  title: () => t('jobs.list.seoTitle'),
+  description: () => t('jobs.list.seoDescription')
 })
 </script>
 
 <template>
   <div class="flex flex-col gap-8">
     <div>
-      <h1 class="text-2xl font-bold text-slate-900 dark:text-slate-100">Browse Jobs</h1>
+      <h1 class="text-2xl font-bold text-slate-900 dark:text-slate-100">{{ t('jobs.list.heading') }}</h1>
       <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">
-        {{ data?.totalCount ?? 0 }} open position{{ data?.totalCount === 1 ? '' : 's' }}
+        {{ t('jobs.list.resultCount', { count: data?.totalCount ?? 0 }, data?.totalCount ?? 0) }}
       </p>
     </div>
 
@@ -72,49 +73,49 @@ useSeoMeta({
       <input
         v-model="keyword"
         type="text"
-        placeholder="Keyword (title or description)"
+        :placeholder="t('jobs.list.keywordPlaceholder')"
         class="rounded-md border border-slate-300 px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:placeholder:text-slate-500 lg:col-span-2"
       >
       <input
         v-model="location"
         type="text"
-        placeholder="Location"
+        :placeholder="t('jobs.list.locationPlaceholder')"
         class="rounded-md border border-slate-300 px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:placeholder:text-slate-500"
       >
       <select v-model="jobType" class="rounded-md border border-slate-300 px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100">
-        <option value="">Any job type</option>
-        <option v-for="(label, value) in JobTypeLabels" :key="value" :value="value">
-          {{ label }}
+        <option value="">{{ t('jobs.list.anyJobType') }}</option>
+        <option v-for="(i18nKey, value) in JobTypeI18nKey" :key="value" :value="value">
+          {{ t(i18nKey) }}
         </option>
       </select>
       <input
         v-model="minSalary"
         type="number"
-        placeholder="Min salary"
+        :placeholder="t('jobs.list.minSalaryPlaceholder')"
         class="rounded-md border border-slate-300 px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:placeholder:text-slate-500"
       >
       <label class="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300 sm:col-span-2 lg:col-span-1">
         <input v-model="remoteOnly" type="checkbox" class="h-4 w-4 rounded border-slate-300 dark:border-slate-700 dark:bg-slate-900">
-        Remote only
+        {{ t('jobs.list.remoteOnly') }}
       </label>
       <button
         type="submit"
         class="rounded-md bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-700 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-slate-300 sm:col-span-2 lg:col-span-1"
       >
-        Search
+        {{ t('jobs.list.search') }}
       </button>
     </form>
 
     <div v-if="status === 'pending'" class="py-16 text-center text-slate-500 dark:text-slate-400">
-      Loading jobs&hellip;
+      {{ t('jobs.list.loading') }}
     </div>
 
     <div v-else-if="error" class="rounded-lg border border-red-200 bg-red-50 p-6 text-center text-red-700 dark:border-red-900 dark:bg-red-950/40 dark:text-red-300">
-      Something went wrong loading job listings. Please try again.
+      {{ t('jobs.list.loadError') }}
     </div>
 
     <div v-else-if="!data?.items.length" class="rounded-lg border border-slate-200 bg-white p-10 text-center text-slate-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400">
-      No jobs match your search.
+      {{ t('jobs.list.empty') }}
     </div>
 
     <ul v-else class="flex flex-col gap-3">
@@ -132,11 +133,11 @@ useSeoMeta({
               v-if="job.isRemote"
               class="whitespace-nowrap rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-medium text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300"
             >
-              Remote
+              {{ t('jobs.detail.remote') }}
             </span>
           </div>
           <div class="mt-3 flex flex-wrap gap-2 text-xs text-slate-500 dark:text-slate-400">
-            <span class="rounded-full bg-slate-100 px-2.5 py-1 dark:bg-slate-800">{{ JobTypeLabels[job.jobType] }}</span>
+            <span class="rounded-full bg-slate-100 px-2.5 py-1 dark:bg-slate-800">{{ t(JobTypeI18nKey[job.jobType]) }}</span>
             <span v-if="job.salaryMin || job.salaryMax" class="rounded-full bg-slate-100 px-2.5 py-1 dark:bg-slate-800">
               ${{ job.salaryMin?.toLocaleString() ?? '?' }} &ndash; ${{ job.salaryMax?.toLocaleString() ?? '?' }}
             </span>
@@ -151,15 +152,15 @@ useSeoMeta({
         class="rounded-md border border-slate-300 px-3 py-1.5 text-sm disabled:opacity-40 dark:border-slate-700"
         @click="goToPage(data.pageNumber - 1)"
       >
-        Previous
+        {{ t('jobs.list.previous') }}
       </button>
-      <span class="text-sm text-slate-600 dark:text-slate-400">Page {{ data.pageNumber }} of {{ data.totalPages }}</span>
+      <span class="text-sm text-slate-600 dark:text-slate-400">{{ t('jobs.list.pageOf', { page: data.pageNumber, total: data.totalPages }) }}</span>
       <button
         :disabled="!data.hasNextPage"
         class="rounded-md border border-slate-300 px-3 py-1.5 text-sm disabled:opacity-40 dark:border-slate-700"
         @click="goToPage(data.pageNumber + 1)"
       >
-        Next
+        {{ t('jobs.list.next') }}
       </button>
     </div>
   </div>

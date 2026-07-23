@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { ApplicationStatusLabels } from '~/types/application'
+import { ApplicationStatusI18nKey } from '~/types/application'
 
 definePageMeta({ middleware: 'auth', ssr: false })
 useRequireRole('Employer')
 
 const route = useRoute()
 const jobId = route.params.id as string
+const { t } = useI18n()
 
 const { getApplicationsForJob, updateApplicationStatus } = useApplicationsApi()
 const { data: applicants, refresh } = await useAsyncData(`applicants-${jobId}`, () => getApplicationsForJob(jobId))
@@ -22,18 +23,18 @@ async function onStatusChange(applicationId: string, newStatus: number) {
   }
 }
 
-useSeoMeta({ title: 'Applicants — JobBoard' })
+useSeoMeta({ title: () => t('dashboard.employer.applicants.seoTitle') })
 </script>
 
 <template>
   <div class="flex flex-col gap-6">
     <NuxtLink to="/dashboard/employer/jobs" class="text-sm text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200">
-      <span class="inline-block rtl:-scale-x-100">&larr;</span> Back to my listings
+      <span class="inline-block rtl:-scale-x-100">&larr;</span> {{ t('dashboard.employer.applicants.backToListings') }}
     </NuxtLink>
-    <h1 class="text-2xl font-bold text-slate-900 dark:text-slate-100">Applicants</h1>
+    <h1 class="text-2xl font-bold text-slate-900 dark:text-slate-100">{{ t('dashboard.employer.applicants.title') }}</h1>
 
     <div v-if="!applicants?.length" class="rounded-lg border border-slate-200 bg-white p-10 text-center text-slate-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400">
-      No applications yet.
+      {{ t('dashboard.employer.applicants.empty') }}
     </div>
 
     <ul v-else class="flex flex-col gap-3">
@@ -42,9 +43,9 @@ useSeoMeta({ title: 'Applicants — JobBoard' })
           <div>
             <h2 class="font-semibold text-slate-900 dark:text-slate-100">{{ app.candidateName }}</h2>
             <p class="text-sm text-slate-600 dark:text-slate-400">
-              Applied {{ new Date(app.appliedAt).toLocaleDateString() }}
+              {{ t('dashboard.employer.applicants.appliedOn', { date: new Date(app.appliedAt).toLocaleDateString() }) }}
               <template v-if="app.resumeUrl">
-                &middot; <a :href="app.resumeUrl" target="_blank" rel="noopener" class="underline">Resume</a>
+                &middot; <a :href="app.resumeUrl" target="_blank" rel="noopener" class="underline">{{ t('dashboard.employer.applicants.resume') }}</a>
               </template>
             </p>
           </div>
@@ -54,8 +55,8 @@ useSeoMeta({ title: 'Applicants — JobBoard' })
             class="rounded-md border border-slate-300 px-2 py-1.5 text-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
             @change="onStatusChange(app.id, Number(($event.target as HTMLSelectElement).value))"
           >
-            <option v-for="(label, value) in ApplicationStatusLabels" :key="value" :value="Number(value)">
-              {{ label }}
+            <option v-for="(i18nKey, value) in ApplicationStatusI18nKey" :key="value" :value="Number(value)">
+              {{ t(i18nKey) }}
             </option>
           </select>
         </div>

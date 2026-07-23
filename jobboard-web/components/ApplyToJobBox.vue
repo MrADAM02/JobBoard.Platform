@@ -3,6 +3,7 @@ const props = defineProps<{ jobId: string }>()
 
 const auth = useAuthStore()
 const { applyToJob, getMyApplications } = useApplicationsApi()
+const { t } = useI18n()
 
 const coverLetter = ref('')
 const submitting = ref(false)
@@ -27,7 +28,7 @@ async function onApply() {
     await applyToJob(props.jobId, coverLetter.value || null)
     submitted.value = true
   } catch {
-    error.value = 'Could not submit your application. Please try again.'
+    error.value = t('jobs.apply.error')
   } finally {
     submitting.value = false
   }
@@ -37,36 +38,42 @@ async function onApply() {
 <template>
   <div class="rounded-lg border border-slate-200 bg-white p-6 dark:border-slate-700 dark:bg-slate-900">
     <div v-if="!auth.isAuthenticated" class="text-center">
-      <p class="mb-3 text-sm text-slate-600 dark:text-slate-400">Log in as a candidate to apply for this role.</p>
+      <p class="mb-3 text-sm text-slate-600 dark:text-slate-400">{{ t('jobs.apply.loginPrompt') }}</p>
       <NuxtLink
         :to="`/login?redirect=/jobs/${jobId}`"
         class="rounded-md bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-700 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-slate-300"
       >
-        Log in to apply
+        {{ t('jobs.apply.loginToApply') }}
       </NuxtLink>
     </div>
 
     <p v-else-if="!auth.isCandidate" class="text-center text-sm text-slate-500 dark:text-slate-400">
-      Only candidate accounts can apply to jobs.
+      {{ t('jobs.apply.onlyCandidates') }}
     </p>
 
-    <p v-else-if="submitted || alreadyApplied" class="text-center text-sm font-medium text-emerald-700 dark:text-emerald-400">
-      You've applied to this job. Track it from <NuxtLink to="/dashboard/candidate/applications" class="underline">My Applications</NuxtLink>.
-    </p>
+    <i18n-t
+      v-else-if="submitted || alreadyApplied"
+      keypath="jobs.apply.appliedMessage" tag="p"
+      class="text-center text-sm font-medium text-emerald-700 dark:text-emerald-400"
+    >
+      <template #link>
+        <NuxtLink to="/dashboard/candidate/applications" class="underline">{{ t('jobs.apply.myApplicationsLink') }}</NuxtLink>
+      </template>
+    </i18n-t>
 
     <form v-else class="flex flex-col gap-3" @submit.prevent="onApply">
-      <label for="coverLetter" class="text-sm font-medium text-slate-700 dark:text-slate-300">Cover letter (optional)</label>
+      <label for="coverLetter" class="text-sm font-medium text-slate-700 dark:text-slate-300">{{ t('jobs.apply.coverLetterLabel') }}</label>
       <textarea
         id="coverLetter" v-model="coverLetter" rows="4"
         class="rounded-md border border-slate-300 px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
-        placeholder="Why are you a good fit for this role?"
+        :placeholder="t('jobs.apply.coverLetterPlaceholder')"
       />
       <p v-if="error" class="text-sm text-red-600 dark:text-red-400">{{ error }}</p>
       <button
         type="submit" :disabled="submitting"
         class="rounded-md bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-700 disabled:opacity-50 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-slate-300"
       >
-        {{ submitting ? 'Submitting…' : 'Apply now' }}
+        {{ submitting ? t('jobs.apply.submitting') : t('jobs.apply.submit') }}
       </button>
     </form>
   </div>

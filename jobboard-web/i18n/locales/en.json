@@ -1,0 +1,247 @@
+{
+  "common": {
+    "brand": "JobBoard"
+  },
+  "nav": {
+    "browseJobs": "Browse Jobs",
+    "dashboard": "Dashboard",
+    "logout": "Log out",
+    "login": "Log in",
+    "register": "Register"
+  },
+  "footer": {
+    "tagline": "JobBoard — built with ASP.NET Core & Nuxt"
+  },
+  "theme": {
+    "switchToLight": "Switch to light mode",
+    "switchToDark": "Switch to dark mode"
+  },
+  "locale": {
+    "switchLanguage": "Switch language"
+  },
+  "applicationStatus": {
+    "applied": "Applied",
+    "underReview": "Under Review",
+    "interviewScheduled": "Interview Scheduled",
+    "rejected": "Rejected",
+    "offered": "Offered",
+    "withdrawn": "Withdrawn"
+  },
+  "home": {
+    "seoTitle": "JobBoard — Find your next role",
+    "seoDescription": "Browse open job listings from companies hiring right now.",
+    "heading": "Find your next role",
+    "subheading": "Browse open positions from companies hiring right now.",
+    "browseJobs": "Browse Jobs"
+  },
+  "jobs": {
+    "type": {
+      "fullTime": "Full-time",
+      "partTime": "Part-time",
+      "contract": "Contract",
+      "internship": "Internship",
+      "remote": "Remote"
+    },
+    "status": {
+      "draft": "Draft",
+      "published": "Published",
+      "closed": "Closed",
+      "expired": "Expired",
+      "deleted": "Deleted"
+    },
+    "list": {
+      "seoTitle": "Browse Jobs — JobBoard",
+      "seoDescription": "Search open job listings by keyword, location, job type, and salary.",
+      "heading": "Browse Jobs",
+      "resultCount": "no open positions | one open position | {count} open positions",
+      "keywordPlaceholder": "Keyword (title or description)",
+      "locationPlaceholder": "Location",
+      "anyJobType": "Any job type",
+      "minSalaryPlaceholder": "Min salary",
+      "remoteOnly": "Remote only",
+      "search": "Search",
+      "loading": "Loading jobs…",
+      "loadError": "Something went wrong loading job listings. Please try again.",
+      "empty": "No jobs match your search.",
+      "previous": "Previous",
+      "next": "Next",
+      "pageOf": "Page {page} of {total}"
+    },
+    "detail": {
+      "backToAll": "Back to all jobs",
+      "remote": "Remote",
+      "description": "Description",
+      "about": "About {company}",
+      "seoTitle": "{title} at {company} — JobBoard",
+      "seoDescription": "{title} at {company} — {location}. {excerpt}",
+      "ogTitle": "{title} at {company}"
+    },
+    "apply": {
+      "loginPrompt": "Log in as a candidate to apply for this role.",
+      "loginToApply": "Log in to apply",
+      "onlyCandidates": "Only candidate accounts can apply to jobs.",
+      "appliedMessage": "You've applied to this job. Track it from {link}.",
+      "myApplicationsLink": "My Applications",
+      "coverLetterLabel": "Cover letter (optional)",
+      "coverLetterPlaceholder": "Why are you a good fit for this role?",
+      "error": "Could not submit your application. Please try again.",
+      "submit": "Apply now",
+      "submitting": "Submitting…"
+    }
+  },
+  "auth": {
+    "login": {
+      "seoTitle": "Log in — JobBoard",
+      "heading": "Log in",
+      "emailLabel": "Email",
+      "passwordLabel": "Password",
+      "submit": "Log in",
+      "submitting": "Logging in…",
+      "error": "Invalid email or password.",
+      "noAccount": "Don't have an account?",
+      "registerLink": "Register"
+    },
+    "register": {
+      "seoTitle": "Register — JobBoard",
+      "heading": "Create an account",
+      "iAmA": "I am a...",
+      "candidate": "Candidate",
+      "employer": "Employer",
+      "fullNameLabel": "Full name",
+      "emailLabel": "Email",
+      "passwordLabel": "Password",
+      "passwordHint": "At least 8 characters.",
+      "submit": "Create account",
+      "submitting": "Creating account…",
+      "genericError": "Registration failed. Please check your details.",
+      "haveAccount": "Already have an account?",
+      "loginLink": "Log in"
+    }
+  },
+  "dashboard": {
+    "employer": {
+      "overview": {
+        "title": "Employer Dashboard",
+        "loading": "Loading…",
+        "noCompany": "You haven't set up your company profile yet.",
+        "setupCompany": "Set up company profile",
+        "noLocation": "No location set",
+        "edit": "Edit",
+        "myListingsTitle": "My Job Listings",
+        "myListingsDesc": "View, edit, and manage your postings."
+      },
+      "company": {
+        "editTitle": "Edit company profile",
+        "setupTitle": "Set up your company profile",
+        "logoLabel": "Logo",
+        "noLogo": "No logo uploaded yet.",
+        "uploading": "Uploading…",
+        "logoError": "Could not upload logo. Use a PNG, JPEG, or SVG under 2 MB.",
+        "saveFirst": "Save your company profile first, then you can upload a logo.",
+        "nameLabel": "Company name",
+        "websiteLabel": "Website",
+        "locationLabel": "Location",
+        "descriptionLabel": "Description",
+        "error": "Could not save company profile. Please check your details.",
+        "save": "Save",
+        "saving": "Saving…"
+      },
+      "jobForm": {
+        "titleLabel": "Title",
+        "descriptionLabel": "Description",
+        "locationLabel": "Location",
+        "isRemote": "This role is remote",
+        "salaryMinLabel": "Salary min",
+        "salaryMaxLabel": "Salary max",
+        "jobTypeLabel": "Job type",
+        "tagsLabel": "Tags (comma-separated)",
+        "tagsPlaceholder": "dotnet, vue, remote"
+      },
+      "jobsList": {
+        "seoTitle": "My Job Listings — JobBoard",
+        "title": "My Job Listings",
+        "postJob": "Post a job",
+        "empty": "You haven't posted any jobs yet.",
+        "jobStats": "{location} · {applicants} · {views} views",
+        "applicantCount": "0 applicants | 1 applicant | {count} applicants",
+        "viewApplicants": "View applicants",
+        "edit": "Edit",
+        "close": "Close",
+        "delete": "Delete",
+        "deleteConfirm": "Delete this listing? This cannot be undone."
+      },
+      "jobsNew": {
+        "seoTitle": "Post a Job — JobBoard",
+        "title": "Post a job",
+        "setupCompanyFirst": "Set up your company profile first.",
+        "companyProfileLink": "company profile",
+        "publishImmediately": "Publish immediately (otherwise saved as a draft)",
+        "error": "Could not create the job listing. Please check your details.",
+        "submit": "Post job",
+        "submitting": "Posting…"
+      },
+      "jobsEdit": {
+        "seoTitle": "Edit Job — JobBoard",
+        "title": "Edit job",
+        "error": "Could not save changes. Please check your details.",
+        "submit": "Save changes",
+        "submitting": "Saving…"
+      },
+      "applicants": {
+        "seoTitle": "Applicants — JobBoard",
+        "backToListings": "Back to my listings",
+        "title": "Applicants",
+        "empty": "No applications yet.",
+        "appliedOn": "Applied {date}",
+        "resume": "Resume"
+      }
+    },
+    "candidate": {
+      "overview": {
+        "seoTitle": "Candidate Dashboard — JobBoard",
+        "title": "Candidate Dashboard",
+        "applicationsTitle": "My Applications",
+        "applicationsDesc": "Track the status of jobs you've applied to.",
+        "profileTitle": "My Profile",
+        "profileDesc": "Update your headline, bio, and skills.",
+        "browseJobsTitle": "Browse Jobs",
+        "browseJobsDesc": "Find your next role."
+      },
+      "applications": {
+        "seoTitle": "My Applications — JobBoard",
+        "title": "My Applications",
+        "empty": "You haven't applied to any jobs yet.",
+        "browseOpenRoles": "Browse open roles",
+        "appliedOn": "Applied {date}"
+      },
+      "profile": {
+        "seoTitle": "My Profile — JobBoard",
+        "title": "My Profile",
+        "resumeLabel": "Resume",
+        "viewResume": "View current resume",
+        "noResume": "No resume uploaded yet.",
+        "uploading": "Uploading…",
+        "resumeError": "Could not upload resume. Use a PDF or Word document under 5 MB.",
+        "fullNameLabel": "Full name",
+        "headlineLabel": "Headline",
+        "headlinePlaceholder": "Senior Backend Engineer",
+        "bioLabel": "Bio",
+        "skillsLabel": "Skills (comma-separated)",
+        "skillsPlaceholder": "C#, Vue, PostgreSQL",
+        "error": "Could not save your profile. Please check your details.",
+        "saved": "Profile saved.",
+        "save": "Save",
+        "saving": "Saving…"
+      }
+    }
+  },
+  "errors": {
+    "notFoundSeoTitle": "Page not found — JobBoard",
+    "notFoundTitle": "Job not found",
+    "notFoundMessage": "This listing doesn't exist, or has been removed.",
+    "genericSeoTitle": "Something went wrong — JobBoard",
+    "genericTitle": "Something went wrong",
+    "genericMessage": "Please try again in a moment.",
+    "backHome": "Back to JobBoard"
+  }
+}

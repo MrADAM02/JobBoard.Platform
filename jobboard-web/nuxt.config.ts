@@ -3,7 +3,7 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
 
-  modules: ['@nuxtjs/tailwindcss', '@pinia/nuxt', '@nuxtjs/color-mode'],
+  modules: ['@nuxtjs/tailwindcss', '@pinia/nuxt', '@nuxtjs/color-mode', '@nuxtjs/i18n'],
 
   css: ['~/assets/css/main.css'],
 
@@ -28,5 +28,31 @@ export default defineNuxtConfig({
     classSuffix: '', // emits a bare "dark"/"light" class, pairing with tailwind.config.ts's darkMode: 'class'
     storage: 'cookie',
     storageKey: 'color-mode'
+  },
+
+  // prefix_except_default gives /jobs (en) and /ar/jobs (ar) as separate,
+  // independently indexable URLs with real hreflang alternates - required
+  // for the SSR/SEO discipline already established for the public job pages.
+  // redirectOn: 'root' stops browser-language guessing on deep pages like
+  // /jobs/[id], so the SSR response for a given URL stays deterministic for crawlers.
+  i18n: {
+    // "language" (not "iso") is the field @nuxtjs/i18n's useLocaleHead actually
+    // reads to populate <html lang> and hreflang alternate links - using "iso"
+    // silently produces neither (confirmed by inspecting the module's head.js).
+    locales: [
+      { code: 'en', language: 'en-US', name: 'English', dir: 'ltr', file: 'en.json' },
+      { code: 'ar', language: 'ar-SA', name: 'العربية', dir: 'rtl', file: 'ar.json' }
+    ],
+    defaultLocale: 'en',
+    baseUrl: process.env.NUXT_PUBLIC_SITE_URL || 'http://localhost:3000',
+    langDir: 'locales/',
+    lazy: true,
+    strategy: 'prefix_except_default',
+    detectBrowserLanguage: {
+      useCookie: true,
+      cookieKey: 'i18n_redirected',
+      redirectOn: 'root',
+      alwaysRedirect: false
+    }
   }
 })

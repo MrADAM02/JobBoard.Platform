@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { JobTypeLabels } from '~/types/job'
+import { JobTypeI18nKey } from '~/types/job'
 import type { JobTypeValue } from '~/types/job'
 
 definePageMeta({ middleware: 'auth', ssr: false })
@@ -8,6 +8,7 @@ useRequireRole('Employer')
 const route = useRoute()
 const router = useRouter()
 const jobId = route.params.id as string
+const { t } = useI18n()
 
 const { getJobListingById, updateJobListing } = useJobsApi()
 const { data: job } = await useAsyncData(`edit-job-${jobId}`, () => getJobListingById(jobId))
@@ -39,54 +40,54 @@ async function onSubmit() {
     })
     router.push('/dashboard/employer/jobs')
   } catch {
-    error.value = 'Could not save changes. Please check your details.'
+    error.value = t('dashboard.employer.jobsEdit.error')
   } finally {
     submitting.value = false
   }
 }
 
-useSeoMeta({ title: 'Edit Job — JobBoard' })
+useSeoMeta({ title: () => t('dashboard.employer.jobsEdit.seoTitle') })
 </script>
 
 <template>
   <div class="mx-auto flex max-w-lg flex-col gap-6 py-6">
-    <h1 class="text-2xl font-bold text-slate-900 dark:text-slate-100">Edit job</h1>
+    <h1 class="text-2xl font-bold text-slate-900 dark:text-slate-100">{{ t('dashboard.employer.jobsEdit.title') }}</h1>
 
     <form v-if="job" class="flex flex-col gap-4" @submit.prevent="onSubmit">
       <div class="flex flex-col gap-1">
-        <label for="title" class="text-sm font-medium text-slate-700 dark:text-slate-300">Title</label>
+        <label for="title" class="text-sm font-medium text-slate-700 dark:text-slate-300">{{ t('dashboard.employer.jobForm.titleLabel') }}</label>
         <input id="title" v-model="title" type="text" required class="rounded-md border border-slate-300 px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100">
       </div>
       <div class="flex flex-col gap-1">
-        <label for="description" class="text-sm font-medium text-slate-700 dark:text-slate-300">Description</label>
+        <label for="description" class="text-sm font-medium text-slate-700 dark:text-slate-300">{{ t('dashboard.employer.jobForm.descriptionLabel') }}</label>
         <textarea id="description" v-model="description" rows="6" required class="rounded-md border border-slate-300 px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100" />
       </div>
       <div class="flex flex-col gap-1">
-        <label for="location" class="text-sm font-medium text-slate-700 dark:text-slate-300">Location</label>
+        <label for="location" class="text-sm font-medium text-slate-700 dark:text-slate-300">{{ t('dashboard.employer.jobForm.locationLabel') }}</label>
         <input id="location" v-model="location" type="text" required class="rounded-md border border-slate-300 px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100">
       </div>
       <label class="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300">
         <input v-model="isRemote" type="checkbox" class="h-4 w-4 rounded border-slate-300 dark:border-slate-700 dark:bg-slate-900">
-        This role is remote
+        {{ t('dashboard.employer.jobForm.isRemote') }}
       </label>
       <div class="grid grid-cols-2 gap-3">
         <div class="flex flex-col gap-1">
-          <label for="salaryMin" class="text-sm font-medium text-slate-700 dark:text-slate-300">Salary min</label>
+          <label for="salaryMin" class="text-sm font-medium text-slate-700 dark:text-slate-300">{{ t('dashboard.employer.jobForm.salaryMinLabel') }}</label>
           <input id="salaryMin" v-model="salaryMin" type="number" class="rounded-md border border-slate-300 px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100">
         </div>
         <div class="flex flex-col gap-1">
-          <label for="salaryMax" class="text-sm font-medium text-slate-700 dark:text-slate-300">Salary max</label>
+          <label for="salaryMax" class="text-sm font-medium text-slate-700 dark:text-slate-300">{{ t('dashboard.employer.jobForm.salaryMaxLabel') }}</label>
           <input id="salaryMax" v-model="salaryMax" type="number" class="rounded-md border border-slate-300 px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100">
         </div>
       </div>
       <div class="flex flex-col gap-1">
-        <label for="jobType" class="text-sm font-medium text-slate-700 dark:text-slate-300">Job type</label>
+        <label for="jobType" class="text-sm font-medium text-slate-700 dark:text-slate-300">{{ t('dashboard.employer.jobForm.jobTypeLabel') }}</label>
         <select id="jobType" v-model.number="jobType" class="rounded-md border border-slate-300 px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100">
-          <option v-for="(label, value) in JobTypeLabels" :key="value" :value="Number(value)">{{ label }}</option>
+          <option v-for="(i18nKey, value) in JobTypeI18nKey" :key="value" :value="Number(value)">{{ t(i18nKey) }}</option>
         </select>
       </div>
       <div class="flex flex-col gap-1">
-        <label for="tags" class="text-sm font-medium text-slate-700 dark:text-slate-300">Tags (comma-separated)</label>
+        <label for="tags" class="text-sm font-medium text-slate-700 dark:text-slate-300">{{ t('dashboard.employer.jobForm.tagsLabel') }}</label>
         <input id="tags" v-model="tags" type="text" class="rounded-md border border-slate-300 px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100">
       </div>
 
@@ -96,7 +97,7 @@ useSeoMeta({ title: 'Edit Job — JobBoard' })
         type="submit" :disabled="submitting"
         class="rounded-md bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-700 disabled:opacity-50 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-slate-300"
       >
-        {{ submitting ? 'Saving…' : 'Save changes' }}
+        {{ submitting ? t('dashboard.employer.jobsEdit.submitting') : t('dashboard.employer.jobsEdit.submit') }}
       </button>
     </form>
   </div>

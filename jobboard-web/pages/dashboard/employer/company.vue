@@ -4,6 +4,7 @@ useRequireRole('Employer')
 
 const { getMyCompany, createCompany, updateCompany, uploadLogo } = useCompaniesApi()
 const router = useRouter()
+const { t } = useI18n()
 
 const { data: existing } = await useAsyncData('my-company-edit', () => getMyCompany())
 
@@ -30,7 +31,7 @@ async function onLogoChange(event: Event) {
   try {
     logoUrl.value = await uploadLogo(existing.value.id, file)
   } catch {
-    logoError.value = 'Could not upload logo. Use a PNG, JPEG, or SVG under 2 MB.'
+    logoError.value = t('dashboard.employer.company.logoError')
   } finally {
     logoUploading.value = false
   }
@@ -53,59 +54,59 @@ async function onSubmit() {
     }
     router.push('/dashboard/employer')
   } catch {
-    error.value = 'Could not save company profile. Please check your details.'
+    error.value = t('dashboard.employer.company.error')
   } finally {
     submitting.value = false
   }
 }
 
-useSeoMeta({ title: 'Company Profile — JobBoard' })
+useSeoMeta({ title: () => (existing.value ? t('dashboard.employer.company.editTitle') : t('dashboard.employer.company.setupTitle')) + ' — JobBoard' })
 </script>
 
 <template>
   <div class="mx-auto flex max-w-lg flex-col gap-6 py-6">
     <h1 class="text-2xl font-bold text-slate-900 dark:text-slate-100">
-      {{ existing ? 'Edit company profile' : 'Set up your company profile' }}
+      {{ existing ? t('dashboard.employer.company.editTitle') : t('dashboard.employer.company.setupTitle') }}
     </h1>
 
     <div v-if="existing" class="flex flex-col gap-2 rounded-lg border border-slate-200 bg-white p-4 dark:border-slate-700 dark:bg-slate-900">
-      <label class="text-sm font-medium text-slate-700 dark:text-slate-300">Logo</label>
+      <label class="text-sm font-medium text-slate-700 dark:text-slate-300">{{ t('dashboard.employer.company.logoLabel') }}</label>
       <img v-if="logoUrl" :src="`${apiOrigin}${logoUrl}`" alt="Company logo" class="h-16 w-16 rounded-md object-contain">
-      <p v-else class="text-sm text-slate-500 dark:text-slate-400">No logo uploaded yet.</p>
+      <p v-else class="text-sm text-slate-500 dark:text-slate-400">{{ t('dashboard.employer.company.noLogo') }}</p>
       <input
         type="file" accept=".png,.jpg,.jpeg,.svg" :disabled="logoUploading"
         class="text-sm dark:text-slate-300"
         @change="onLogoChange"
       >
-      <p v-if="logoUploading" class="text-xs text-slate-500 dark:text-slate-400">Uploading…</p>
+      <p v-if="logoUploading" class="text-xs text-slate-500 dark:text-slate-400">{{ t('dashboard.employer.company.uploading') }}</p>
       <p v-if="logoError" class="text-xs text-red-600 dark:text-red-400">{{ logoError }}</p>
     </div>
-    <p v-else class="text-sm text-slate-500 dark:text-slate-400">Save your company profile first, then you can upload a logo.</p>
+    <p v-else class="text-sm text-slate-500 dark:text-slate-400">{{ t('dashboard.employer.company.saveFirst') }}</p>
 
     <form class="flex flex-col gap-4" @submit.prevent="onSubmit">
       <div class="flex flex-col gap-1">
-        <label for="name" class="text-sm font-medium text-slate-700 dark:text-slate-300">Company name</label>
+        <label for="name" class="text-sm font-medium text-slate-700 dark:text-slate-300">{{ t('dashboard.employer.company.nameLabel') }}</label>
         <input
           id="name" v-model="name" type="text" required
           class="rounded-md border border-slate-300 px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
         >
       </div>
       <div class="flex flex-col gap-1">
-        <label for="website" class="text-sm font-medium text-slate-700 dark:text-slate-300">Website</label>
+        <label for="website" class="text-sm font-medium text-slate-700 dark:text-slate-300">{{ t('dashboard.employer.company.websiteLabel') }}</label>
         <input
           id="website" v-model="website" type="url" placeholder="https://"
           class="rounded-md border border-slate-300 px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
         >
       </div>
       <div class="flex flex-col gap-1">
-        <label for="location" class="text-sm font-medium text-slate-700 dark:text-slate-300">Location</label>
+        <label for="location" class="text-sm font-medium text-slate-700 dark:text-slate-300">{{ t('dashboard.employer.company.locationLabel') }}</label>
         <input
           id="location" v-model="location" type="text"
           class="rounded-md border border-slate-300 px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
         >
       </div>
       <div class="flex flex-col gap-1">
-        <label for="description" class="text-sm font-medium text-slate-700 dark:text-slate-300">Description</label>
+        <label for="description" class="text-sm font-medium text-slate-700 dark:text-slate-300">{{ t('dashboard.employer.company.descriptionLabel') }}</label>
         <textarea
           id="description" v-model="description" rows="4"
           class="rounded-md border border-slate-300 px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
@@ -118,7 +119,7 @@ useSeoMeta({ title: 'Company Profile — JobBoard' })
         type="submit" :disabled="submitting"
         class="rounded-md bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-700 disabled:opacity-50 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-slate-300"
       >
-        {{ submitting ? 'Saving…' : 'Save' }}
+        {{ submitting ? t('dashboard.employer.company.saving') : t('dashboard.employer.company.save') }}
       </button>
     </form>
   </div>

@@ -2,6 +2,7 @@
 // useColorMode() reads the cookie server-side, so this renders correctly in
 // the initial SSR HTML - unlike auth state, it does not need <ClientOnly>.
 const colorMode = useColorMode()
+const { t } = useI18n()
 
 function toggle() {
   colorMode.preference = colorMode.value === 'dark' ? 'light' : 'dark'
@@ -12,7 +13,7 @@ function toggle() {
   <button
     type="button"
     class="rounded-md p-1.5 text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-100"
-    :aria-label="colorMode.value === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'"
+    :aria-label="colorMode.value === 'dark' ? t('theme.switchToLight') : t('theme.switchToDark')"
     @click="toggle"
   >
     <svg v-if="colorMode.value === 'dark'" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-5 w-5">

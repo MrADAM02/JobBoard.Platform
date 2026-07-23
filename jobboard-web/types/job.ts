@@ -11,12 +11,12 @@ export const JobType = {
 
 export type JobTypeValue = (typeof JobType)[keyof typeof JobType]
 
-export const JobTypeLabels: Record<JobTypeValue, string> = {
-  [JobType.FullTime]: 'Full-time',
-  [JobType.PartTime]: 'Part-time',
-  [JobType.Contract]: 'Contract',
-  [JobType.Internship]: 'Internship',
-  [JobType.Remote]: 'Remote'
+export const JobTypeI18nKey: Record<JobTypeValue, string> = {
+  [JobType.FullTime]: 'jobs.type.fullTime',
+  [JobType.PartTime]: 'jobs.type.partTime',
+  [JobType.Contract]: 'jobs.type.contract',
+  [JobType.Internship]: 'jobs.type.internship',
+  [JobType.Remote]: 'jobs.type.remote'
 }
 
 export interface JobListingSummary {
@@ -67,12 +67,12 @@ export const JobStatus = {
 
 export type JobStatusValue = (typeof JobStatus)[keyof typeof JobStatus]
 
-export const JobStatusLabels: Record<JobStatusValue, string> = {
-  [JobStatus.Draft]: 'Draft',
-  [JobStatus.Published]: 'Published',
-  [JobStatus.Closed]: 'Closed',
-  [JobStatus.Expired]: 'Expired',
-  [JobStatus.Deleted]: 'Deleted'
+export const JobStatusI18nKey: Record<JobStatusValue, string> = {
+  [JobStatus.Draft]: 'jobs.status.draft',
+  [JobStatus.Published]: 'jobs.status.published',
+  [JobStatus.Closed]: 'jobs.status.closed',
+  [JobStatus.Expired]: 'jobs.status.expired',
+  [JobStatus.Deleted]: 'jobs.status.deleted'
 }
 
 export interface MyJobListing {

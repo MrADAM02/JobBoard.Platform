@@ -9,13 +9,13 @@ export const ApplicationStatus = {
 
 export type ApplicationStatusValue = (typeof ApplicationStatus)[keyof typeof ApplicationStatus]
 
-export const ApplicationStatusLabels: Record<ApplicationStatusValue, string> = {
-  [ApplicationStatus.Applied]: 'Applied',
-  [ApplicationStatus.UnderReview]: 'Under Review',
-  [ApplicationStatus.InterviewScheduled]: 'Interview Scheduled',
-  [ApplicationStatus.Rejected]: 'Rejected',
-  [ApplicationStatus.Offered]: 'Offered',
-  [ApplicationStatus.Withdrawn]: 'Withdrawn'
+export const ApplicationStatusI18nKey: Record<ApplicationStatusValue, string> = {
+  [ApplicationStatus.Applied]: 'applicationStatus.applied',
+  [ApplicationStatus.UnderReview]: 'applicationStatus.underReview',
+  [ApplicationStatus.InterviewScheduled]: 'applicationStatus.interviewScheduled',
+  [ApplicationStatus.Rejected]: 'applicationStatus.rejected',
+  [ApplicationStatus.Offered]: 'applicationStatus.offered',
+  [ApplicationStatus.Withdrawn]: 'applicationStatus.withdrawn'
 }
 
 export interface MyApplication {
