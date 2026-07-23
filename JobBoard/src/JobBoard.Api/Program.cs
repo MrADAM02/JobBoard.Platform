@@ -88,7 +88,17 @@ if (app.Environment.IsDevelopment())
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
-app.UseHttpsRedirection();
+// Skipped in dev: the frontend deliberately calls the API over plain HTTP
+// (see jobboard-web/README.md) to avoid the browser rejecting the self-signed
+// HTTPS dev certificate. Redirecting here - which happens whenever the HTTPS
+// endpoint is bound, e.g. the "https" launch profile or Visual Studio's default -
+// would silently break every request: the http->https redirect either gets
+// blocked by CORS (cross-origin redirect) or hits the untrusted cert.
+if (!app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
+
 app.UseStaticFiles(); // serves /uploads for locally-stored resumes/logos
 
 app.UseCors("NuxtFrontend");
