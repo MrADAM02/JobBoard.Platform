@@ -4,6 +4,7 @@ const props = defineProps<{ jobId: string }>()
 const auth = useAuthStore()
 const { applyToJob, getMyApplications } = useApplicationsApi()
 const { t } = useI18n()
+const localePath = useLocalePath()
 
 const coverLetter = ref('')
 const submitting = ref(false)
@@ -40,7 +41,7 @@ async function onApply() {
     <div v-if="!auth.isAuthenticated" class="text-center">
       <p class="mb-3 text-sm text-slate-600 dark:text-slate-400">{{ t('jobs.apply.loginPrompt') }}</p>
       <NuxtLink
-        :to="`/login?redirect=/jobs/${jobId}`"
+        :to="{ path: localePath('/login'), query: { redirect: localePath(`/jobs/${jobId}`) } }"
         class="rounded-md bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-700 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-slate-300"
       >
         {{ t('jobs.apply.loginToApply') }}
@@ -57,7 +58,7 @@ async function onApply() {
       class="text-center text-sm font-medium text-emerald-700 dark:text-emerald-400"
     >
       <template #link>
-        <NuxtLink to="/dashboard/candidate/applications" class="underline">{{ t('jobs.apply.myApplicationsLink') }}</NuxtLink>
+        <NuxtLink :to="localePath('/dashboard/candidate/applications')" class="underline">{{ t('jobs.apply.myApplicationsLink') }}</NuxtLink>
       </template>
     </i18n-t>
 

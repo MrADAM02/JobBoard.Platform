@@ -7,6 +7,7 @@ useRequireRole('Employer')
 const { getMyCompany } = useCompaniesApi()
 const { data: company, status } = await useAsyncData('my-company', () => getMyCompany())
 const { t } = useI18n()
+const localePath = useLocalePath()
 
 useSeoMeta({ title: () => t('dashboard.employer.overview.title') + ' — JobBoard' })
 </script>
@@ -20,7 +21,7 @@ useSeoMeta({ title: () => t('dashboard.employer.overview.title') + ' — JobBoar
     <div v-else-if="!company" class="rounded-lg border border-slate-200 bg-white p-8 text-center dark:border-slate-700 dark:bg-slate-900">
       <p class="mb-4 text-slate-600 dark:text-slate-400">{{ t('dashboard.employer.overview.noCompany') }}</p>
       <NuxtLink
-        to="/dashboard/employer/company"
+        :to="localePath('/dashboard/employer/company')"
         class="rounded-md bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-700 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-slate-300"
       >
         {{ t('dashboard.employer.overview.setupCompany') }}
@@ -34,12 +35,12 @@ useSeoMeta({ title: () => t('dashboard.employer.overview.title') + ' — JobBoar
             <h2 class="font-semibold text-slate-900 dark:text-slate-100">{{ company.name }}</h2>
             <p class="text-sm text-slate-600 dark:text-slate-400">{{ company.location || t('dashboard.employer.overview.noLocation') }}</p>
           </div>
-          <NuxtLink to="/dashboard/employer/company" class="text-sm text-slate-600 underline dark:text-slate-400">{{ t('dashboard.employer.overview.edit') }}</NuxtLink>
+          <NuxtLink :to="localePath('/dashboard/employer/company')" class="text-sm text-slate-600 underline dark:text-slate-400">{{ t('dashboard.employer.overview.edit') }}</NuxtLink>
         </div>
       </div>
 
       <NuxtLink
-        to="/dashboard/employer/jobs"
+        :to="localePath('/dashboard/employer/jobs')"
         class="rounded-lg border border-slate-200 bg-white p-6 hover:border-slate-400 dark:border-slate-700 dark:bg-slate-900 dark:hover:border-slate-500"
       >
         <h2 class="font-semibold text-slate-900 dark:text-slate-100">{{ t('dashboard.employer.overview.myListingsTitle') }}</h2>

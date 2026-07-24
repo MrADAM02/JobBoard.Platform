@@ -6,6 +6,7 @@ const { register } = useAuthApi()
 const auth = useAuthStore()
 const router = useRouter()
 const { t } = useI18n()
+const localePath = useLocalePath()
 
 const email = ref('')
 const password = ref('')
@@ -25,7 +26,7 @@ async function onSubmit() {
       role: role.value
     })
     auth.setAuth(result)
-    router.push(result.role === 'Employer' ? '/dashboard/employer' : '/dashboard/candidate')
+    router.push(localePath(result.role === 'Employer' ? '/dashboard/employer' : '/dashboard/candidate'))
   } catch (err) {
     // ExceptionHandlingMiddleware shapes FluentValidation failures as an array of
     // { PropertyName, ErrorMessage } (PascalCase - it serializes with plain
@@ -104,7 +105,7 @@ useSeoMeta({ title: () => t('auth.register.seoTitle') })
     </form>
 
     <p class="text-center text-sm text-slate-600 dark:text-slate-400">
-      {{ t('auth.register.haveAccount') }} <NuxtLink to="/login" class="font-medium text-slate-900 underline dark:text-slate-100">{{ t('auth.register.loginLink') }}</NuxtLink>
+      {{ t('auth.register.haveAccount') }} <NuxtLink :to="localePath('/login')" class="font-medium text-slate-900 underline dark:text-slate-100">{{ t('auth.register.loginLink') }}</NuxtLink>
     </p>
   </div>
 </template>

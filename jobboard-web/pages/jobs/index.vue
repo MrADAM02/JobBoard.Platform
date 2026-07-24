@@ -6,6 +6,7 @@ const route = useRoute()
 const router = useRouter()
 const { getJobListings } = useJobsApi()
 const { t } = useI18n()
+const localePath = useLocalePath()
 
 // Filters are read from - and written back to - the URL query string, not
 // component-local state, so a direct request to a filtered URL (what a search
@@ -36,7 +37,7 @@ const { data, status, error } = await useAsyncData(
 
 function applyFilters() {
   router.push({
-    path: '/jobs',
+    path: localePath('/jobs'),
     query: {
       keyword: keyword.value || undefined,
       location: location.value || undefined,
@@ -48,7 +49,7 @@ function applyFilters() {
 }
 
 function goToPage(page: number) {
-  router.push({ path: '/jobs', query: { ...route.query, page: String(page) } })
+  router.push({ path: localePath('/jobs'), query: { ...route.query, page: String(page) } })
 }
 
 useSeoMeta({
@@ -121,7 +122,7 @@ useSeoMeta({
     <ul v-else class="flex flex-col gap-3">
       <li v-for="job in data.items" :key="job.id">
         <NuxtLink
-          :to="`/jobs/${job.id}`"
+          :to="localePath(`/jobs/${job.id}`)"
           class="block rounded-lg border border-slate-200 bg-white p-5 transition hover:border-slate-400 hover:shadow-sm dark:border-slate-700 dark:bg-slate-900 dark:hover:border-slate-500"
         >
           <div class="flex items-start justify-between gap-4">

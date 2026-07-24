@@ -4,6 +4,7 @@ const auth = useAuthStore()
 const router = useRouter()
 const route = useRoute()
 const { t } = useI18n()
+const localePath = useLocalePath()
 
 const email = ref('')
 const password = ref('')
@@ -17,7 +18,7 @@ async function onSubmit() {
     const result = await login({ email: email.value, password: password.value })
     auth.setAuth(result)
     const redirect = route.query.redirect as string | undefined
-    router.push(redirect || (result.role === 'Employer' ? '/dashboard/employer' : '/dashboard/candidate'))
+    router.push(redirect || localePath(result.role === 'Employer' ? '/dashboard/employer' : '/dashboard/candidate'))
   } catch {
     error.value = t('auth.login.error')
   } finally {
@@ -59,7 +60,7 @@ useSeoMeta({ title: () => t('auth.login.seoTitle') })
     </form>
 
     <p class="text-center text-sm text-slate-600 dark:text-slate-400">
-      {{ t('auth.login.noAccount') }} <NuxtLink to="/register" class="font-medium text-slate-900 underline dark:text-slate-100">{{ t('auth.login.registerLink') }}</NuxtLink>
+      {{ t('auth.login.noAccount') }} <NuxtLink :to="localePath('/register')" class="font-medium text-slate-900 underline dark:text-slate-100">{{ t('auth.login.registerLink') }}</NuxtLink>
     </p>
   </div>
 </template>

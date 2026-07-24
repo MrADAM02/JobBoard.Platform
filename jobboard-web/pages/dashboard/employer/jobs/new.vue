@@ -9,6 +9,7 @@ const { getMyCompany } = useCompaniesApi()
 const { createJobListing } = useJobsApi()
 const router = useRouter()
 const { t } = useI18n()
+const localePath = useLocalePath()
 
 const { data: company } = await useAsyncData('my-company-for-new-job', () => getMyCompany())
 
@@ -41,7 +42,7 @@ async function onSubmit() {
       tags: tags.value || null,
       publishImmediately: publishImmediately.value
     })
-    router.push('/dashboard/employer/jobs')
+    router.push(localePath('/dashboard/employer/jobs'))
   } catch {
     error.value = t('dashboard.employer.jobsNew.error')
   } finally {
@@ -58,7 +59,7 @@ useSeoMeta({ title: () => t('dashboard.employer.jobsNew.seoTitle') })
 
     <div v-if="!company" class="rounded-lg border border-amber-200 bg-amber-50 p-6 text-amber-800 dark:border-amber-900 dark:bg-amber-950/40 dark:text-amber-300">
       {{ t('dashboard.employer.jobsNew.setupCompanyFirst') }}
-      <NuxtLink to="/dashboard/employer/company" class="underline">{{ t('dashboard.employer.jobsNew.companyProfileLink') }}</NuxtLink>
+      <NuxtLink :to="localePath('/dashboard/employer/company')" class="underline">{{ t('dashboard.employer.jobsNew.companyProfileLink') }}</NuxtLink>
     </div>
 
     <form v-else class="flex flex-col gap-4" @submit.prevent="onSubmit">

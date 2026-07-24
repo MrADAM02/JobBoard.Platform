@@ -5,6 +5,7 @@ useRequireRole('Employer')
 const { getMyCompany, createCompany, updateCompany, uploadLogo } = useCompaniesApi()
 const router = useRouter()
 const { t } = useI18n()
+const localePath = useLocalePath()
 
 const { data: existing } = await useAsyncData('my-company-edit', () => getMyCompany())
 
@@ -52,7 +53,7 @@ async function onSubmit() {
     } else {
       await createCompany(payload)
     }
-    router.push('/dashboard/employer')
+    router.push(localePath('/dashboard/employer'))
   } catch {
     error.value = t('dashboard.employer.company.error')
   } finally {

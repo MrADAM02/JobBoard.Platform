@@ -7,6 +7,7 @@ useRequireRole('Candidate')
 const { getMyApplications } = useApplicationsApi()
 const { data: applications } = await useAsyncData('my-applications', () => getMyApplications())
 const { t } = useI18n()
+const localePath = useLocalePath()
 
 useSeoMeta({ title: () => t('dashboard.candidate.applications.seoTitle') })
 </script>
@@ -17,14 +18,14 @@ useSeoMeta({ title: () => t('dashboard.candidate.applications.seoTitle') })
 
     <div v-if="!applications?.length" class="rounded-lg border border-slate-200 bg-white p-10 text-center text-slate-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400">
       {{ t('dashboard.candidate.applications.empty') }}
-      <NuxtLink to="/jobs" class="block underline">{{ t('dashboard.candidate.applications.browseOpenRoles') }}</NuxtLink>
+      <NuxtLink :to="localePath('/jobs')" class="block underline">{{ t('dashboard.candidate.applications.browseOpenRoles') }}</NuxtLink>
     </div>
 
     <ul v-else class="flex flex-col gap-3">
       <li v-for="app in applications" :key="app.id" class="rounded-lg border border-slate-200 bg-white p-5 dark:border-slate-700 dark:bg-slate-900">
         <div class="flex items-center justify-between gap-4">
           <div>
-            <NuxtLink :to="`/jobs/${app.jobListingId}`" class="font-semibold text-slate-900 hover:underline dark:text-slate-100">
+            <NuxtLink :to="localePath(`/jobs/${app.jobListingId}`)" class="font-semibold text-slate-900 hover:underline dark:text-slate-100">
               {{ app.jobTitle }}
             </NuxtLink>
             <p class="text-sm text-slate-600 dark:text-slate-400">{{ app.companyName }} &middot; {{ t('dashboard.candidate.applications.appliedOn', { date: new Date(app.appliedAt).toLocaleDateString() }) }}</p>

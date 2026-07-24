@@ -2,10 +2,11 @@
 const auth = useAuthStore()
 const router = useRouter()
 const { t } = useI18n()
+const localePath = useLocalePath()
 
 function onLogout() {
   auth.clearAuth()
-  router.push('/')
+  router.push(localePath('/'))
 }
 </script>
 
@@ -13,11 +14,11 @@ function onLogout() {
   <div class="min-h-screen flex flex-col bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100">
     <header class="border-b border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
       <nav class="mx-auto flex max-w-5xl items-center justify-between px-4 py-4">
-        <NuxtLink to="/" class="text-lg font-semibold tracking-tight">
+        <NuxtLink :to="localePath('/')" class="text-lg font-semibold tracking-tight">
           {{ t('common.brand') }}
         </NuxtLink>
         <div class="flex items-center gap-6 text-sm font-medium text-slate-600 dark:text-slate-400">
-          <NuxtLink to="/jobs" class="hover:text-slate-900 dark:hover:text-slate-100">{{ t('nav.browseJobs') }}</NuxtLink>
+          <NuxtLink :to="localePath('/jobs')" class="hover:text-slate-900 dark:hover:text-slate-100">{{ t('nav.browseJobs') }}</NuxtLink>
 
           <LocaleSwitcher />
           <ThemeToggle />
@@ -25,7 +26,7 @@ function onLogout() {
           <ClientOnly>
             <template v-if="auth.isAuthenticated">
               <NuxtLink
-                :to="auth.isEmployer ? '/dashboard/employer' : '/dashboard/candidate'"
+                :to="localePath(auth.isEmployer ? '/dashboard/employer' : '/dashboard/candidate')"
                 class="hover:text-slate-900 dark:hover:text-slate-100"
               >
                 {{ t('nav.dashboard') }}
@@ -33,9 +34,9 @@ function onLogout() {
               <button class="hover:text-slate-900 dark:hover:text-slate-100" @click="onLogout">{{ t('nav.logout') }}</button>
             </template>
             <template v-else>
-              <NuxtLink to="/login" class="hover:text-slate-900 dark:hover:text-slate-100">{{ t('nav.login') }}</NuxtLink>
+              <NuxtLink :to="localePath('/login')" class="hover:text-slate-900 dark:hover:text-slate-100">{{ t('nav.login') }}</NuxtLink>
               <NuxtLink
-                to="/register"
+                :to="localePath('/register')"
                 class="rounded-md bg-slate-900 px-3 py-1.5 text-white hover:bg-slate-700 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-slate-300"
               >
                 {{ t('nav.register') }}

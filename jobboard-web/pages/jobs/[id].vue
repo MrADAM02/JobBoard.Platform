@@ -5,6 +5,7 @@ const route = useRoute()
 const { getJobListingById } = useJobsApi()
 const jobId = route.params.id as string
 const { t } = useI18n()
+const localePath = useLocalePath()
 
 const { data: job } = await useAsyncData(`job-${jobId}`, () => getJobListingById(jobId))
 
@@ -110,7 +111,7 @@ useHead({
 
 <template>
   <article v-if="job" class="flex flex-col gap-6">
-    <NuxtLink to="/jobs" class="text-sm text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200">
+    <NuxtLink :to="localePath('/jobs')" class="text-sm text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200">
       <span class="inline-block rtl:-scale-x-100">&larr;</span> {{ t('jobs.detail.backToAll') }}
     </NuxtLink>
 

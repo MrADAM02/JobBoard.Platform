@@ -9,6 +9,7 @@ const route = useRoute()
 const router = useRouter()
 const jobId = route.params.id as string
 const { t } = useI18n()
+const localePath = useLocalePath()
 
 const { getJobListingById, updateJobListing } = useJobsApi()
 const { data: job } = await useAsyncData(`edit-job-${jobId}`, () => getJobListingById(jobId))
@@ -38,7 +39,7 @@ async function onSubmit() {
       jobType: jobType.value,
       tags: tags.value || null
     })
-    router.push('/dashboard/employer/jobs')
+    router.push(localePath('/dashboard/employer/jobs'))
   } catch {
     error.value = t('dashboard.employer.jobsEdit.error')
   } finally {

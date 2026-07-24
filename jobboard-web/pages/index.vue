@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const { t } = useI18n()
+const localePath = useLocalePath()
 
 useSeoMeta({
   title: () => t('home.seoTitle'),
@@ -16,7 +17,7 @@ useSeoMeta({
       {{ t('home.subheading') }}
     </p>
     <NuxtLink
-      to="/jobs"
+      :to="localePath('/jobs')"
       class="rounded-md bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white hover:bg-slate-700 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-slate-300"
     >
       {{ t('home.browseJobs') }}

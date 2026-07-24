@@ -6,6 +6,7 @@ useRequireRole('Employer')
 
 const { getMyJobListings, closeJobListing, deleteJobListing } = useJobsApi()
 const { t } = useI18n()
+const localePath = useLocalePath()
 
 const { data, refresh } = await useAsyncData('my-jobs', () => getMyJobListings())
 
@@ -34,7 +35,7 @@ useSeoMeta({ title: () => t('dashboard.employer.jobsList.seoTitle') })
     <div class="flex items-center justify-between">
       <h1 class="text-2xl font-bold text-slate-900 dark:text-slate-100">{{ t('dashboard.employer.jobsList.title') }}</h1>
       <NuxtLink
-        to="/dashboard/employer/jobs/new"
+        :to="localePath('/dashboard/employer/jobs/new')"
         class="rounded-md bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-700 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-slate-300"
       >
         {{ t('dashboard.employer.jobsList.postJob') }}
@@ -63,10 +64,10 @@ useSeoMeta({ title: () => t('dashboard.employer.jobsList.seoTitle') })
           </span>
         </div>
         <div class="mt-4 flex flex-wrap gap-3 text-sm">
-          <NuxtLink :to="`/dashboard/employer/jobs/${job.id}/applicants`" class="text-slate-700 underline dark:text-slate-300">
+          <NuxtLink :to="localePath(`/dashboard/employer/jobs/${job.id}/applicants`)" class="text-slate-700 underline dark:text-slate-300">
             {{ t('dashboard.employer.jobsList.viewApplicants') }}
           </NuxtLink>
-          <NuxtLink :to="`/dashboard/employer/jobs/${job.id}/edit`" class="text-slate-700 underline dark:text-slate-300">
+          <NuxtLink :to="localePath(`/dashboard/employer/jobs/${job.id}/edit`)" class="text-slate-700 underline dark:text-slate-300">
             {{ t('dashboard.employer.jobsList.edit') }}
           </NuxtLink>
           <button

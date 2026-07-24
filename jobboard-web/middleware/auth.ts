@@ -8,6 +8,9 @@ export default defineNuxtRouteMiddleware((to) => {
 
   const auth = useAuthStore()
   if (!auth.isAuthenticated) {
-    return navigateTo(`/login?redirect=${encodeURIComponent(to.fullPath)}`)
+    const localePath = useLocalePath()
+    // to.fullPath is already locale-prefixed (e.g. /ar/dashboard/employer) since
+    // it's the actual target route - only the /login base needs localizing.
+    return navigateTo({ path: localePath('/login'), query: { redirect: to.fullPath } })
   }
 })

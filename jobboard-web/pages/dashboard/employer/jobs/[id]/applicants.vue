@@ -7,6 +7,7 @@ useRequireRole('Employer')
 const route = useRoute()
 const jobId = route.params.id as string
 const { t } = useI18n()
+const localePath = useLocalePath()
 
 const { getApplicationsForJob, updateApplicationStatus } = useApplicationsApi()
 const { data: applicants, refresh } = await useAsyncData(`applicants-${jobId}`, () => getApplicationsForJob(jobId))
@@ -28,7 +29,7 @@ useSeoMeta({ title: () => t('dashboard.employer.applicants.seoTitle') })
 
 <template>
   <div class="flex flex-col gap-6">
-    <NuxtLink to="/dashboard/employer/jobs" class="text-sm text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200">
+    <NuxtLink :to="localePath('/dashboard/employer/jobs')" class="text-sm text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200">
       <span class="inline-block rtl:-scale-x-100">&larr;</span> {{ t('dashboard.employer.applicants.backToListings') }}
     </NuxtLink>
     <h1 class="text-2xl font-bold text-slate-900 dark:text-slate-100">{{ t('dashboard.employer.applicants.title') }}</h1>

@@ -47,7 +47,8 @@ export function useAuthFetch() {
 
       if (!refreshed) {
         auth.clearAuth()
-        await navigateTo('/login')
+        const localePath = useLocalePath()
+        await navigateTo(localePath('/login'))
         throw err
       }
 
