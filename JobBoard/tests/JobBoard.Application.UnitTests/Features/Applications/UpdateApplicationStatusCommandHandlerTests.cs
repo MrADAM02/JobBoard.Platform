@@ -6,6 +6,7 @@ using JobBoard.Application.UnitTests.TestHelpers;
 using JobBoard.Domain.Entities;
 using JobBoard.Domain.Enums;
 using JobBoard.Infrastructure.Persistence;
+using MediatR;
 using NSubstitute;
 
 namespace JobBoard.Application.UnitTests.Features.Applications;
@@ -48,14 +49,14 @@ public class UpdateApplicationStatusCommandHandlerTests
     {
         var (db, application, owningEmployer, _) = Seed();
         var currentUser = new FakeCurrentUserService { UserId = owningEmployer.Id, Role = "Employer" };
-        var emailService = Substitute.For<IEmailService>();
-        var handler = new UpdateApplicationStatusCommandHandler(db, currentUser, emailService);
+        var backgroundJobs = Substitute.For<IBackgroundJobService>();
+        var mediator = Substitute.For<IMediator>();
+        var handler = new UpdateApplicationStatusCommandHandler(db, currentUser, backgroundJobs, mediator);
 
         await handler.Handle(new UpdateApplicationStatusCommand(application.Id, ApplicationStatus.InterviewScheduled), CancellationToken.None);
 
         db.JobApplications.First(a => a.Id == application.Id).Status.Should().Be(ApplicationStatus.InterviewScheduled);
-        await emailService.Received(1).SendAsync(
-            "candidate@test.com", Arg.Any<string>(), Arg.Any<string>(), Arg.Any<CancellationToken>());
+        backgroundJobs.Received(1).Enqueue<IEmailService>(Arg.Any<System.Linq.Expressions.Expression<Func<IEmailService, Task>>>());
     }
 
     [Fact]
@@ -63,8 +64,9 @@ public class UpdateApplicationStatusCommandHandlerTests
     {
         var (db, application, _, otherEmployer) = Seed();
         var currentUser = new FakeCurrentUserService { UserId = otherEmployer.Id, Role = "Employer" };
-        var emailService = Substitute.For<IEmailService>();
-        var handler = new UpdateApplicationStatusCommandHandler(db, currentUser, emailService);
+        var backgroundJobs = Substitute.For<IBackgroundJobService>();
+        var mediator = Substitute.For<IMediator>();
+        var handler = new UpdateApplicationStatusCommandHandler(db, currentUser, backgroundJobs, mediator);
 
         var act = () => handler.Handle(new UpdateApplicationStatusCommand(application.Id, ApplicationStatus.Rejected), CancellationToken.None);
 

@@ -19,6 +19,10 @@
   "locale": {
     "switchLanguage": "Switch language"
   },
+  "notifications": {
+    "title": "Notifications",
+    "empty": "You have no notifications yet."
+  },
   "applicationStatus": {
     "applied": "Applied",
     "underReview": "Under Review",

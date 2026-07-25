@@ -1,3 +1,5 @@
+using Hangfire;
+using Hangfire.MemoryStorage;
 using JobBoard.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -29,6 +31,10 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseInMemoryDatabase(DatabaseName));
+
+            // Real Hangfire storage needs Postgres - swap to in-memory so tests
+            // (which enqueue an email job on apply/status-update) never touch a real DB.
+            services.AddHangfire(config => config.UseMemoryStorage());
 
             using var scope = services.BuildServiceProvider().CreateScope();
             var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();

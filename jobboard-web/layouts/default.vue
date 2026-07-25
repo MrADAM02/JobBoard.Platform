@@ -31,6 +31,7 @@ function onLogout() {
               >
                 {{ t('nav.dashboard') }}
               </NuxtLink>
+              <NotificationBell />
               <button class="hover:text-slate-900 dark:hover:text-slate-100" @click="onLogout">{{ t('nav.logout') }}</button>
             </template>
             <template v-else>

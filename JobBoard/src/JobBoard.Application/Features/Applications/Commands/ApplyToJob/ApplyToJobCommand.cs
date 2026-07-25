@@ -1,6 +1,7 @@
 using FluentValidation;
 using JobBoard.Application.Common.Exceptions;
 using JobBoard.Application.Common.Interfaces;
+using JobBoard.Application.Features.Notifications.Commands.CreateNotification;
 using JobBoard.Domain.Entities;
 using JobBoard.Domain.Enums;
 using MediatR;
@@ -23,18 +24,21 @@ public class ApplyToJobCommandHandler : IRequestHandler<ApplyToJobCommand, Guid>
 {
     private readonly IApplicationDbContext _db;
     private readonly ICurrentUserService _currentUser;
-    private readonly IEmailService _emailService;
+    private readonly IBackgroundJobService _backgroundJobs;
+    private readonly IMediator _mediator;
 
-    public ApplyToJobCommandHandler(IApplicationDbContext db, ICurrentUserService currentUser, IEmailService emailService)
+    public ApplyToJobCommandHandler(
+        IApplicationDbContext db, ICurrentUserService currentUser, IBackgroundJobService backgroundJobs, IMediator mediator)
     {
         _db = db;
         _currentUser = currentUser;
-        _emailService = emailService;
+        _backgroundJobs = backgroundJobs;
+        _mediator = mediator;
     }
 
     public async Task<Guid> Handle(ApplyToJobCommand request, CancellationToken cancellationToken)
     {
-        var job = await _db.JobListings.Include(j => j.Company)
+        var job = await _db.JobListings.Include(j => j.Company).ThenInclude(c => c.OwnerUser)
             .FirstOrDefaultAsync(j => j.Id == request.JobListingId, cancellationToken)
             ?? throw new NotFoundException(nameof(JobListing), request.JobListingId);
 
@@ -66,13 +70,17 @@ public class ApplyToJobCommandHandler : IRequestHandler<ApplyToJobCommand, Guid>
         _db.JobApplications.Add(application);
         await _db.SaveChangesAsync(cancellationToken);
 
-        // Queue this via Hangfire in Infrastructure rather than awaiting inline -
-        // an application shouldn't fail because the mail server is slow. See README.
-        await _emailService.SendAsync(
-            job.Company.OwnerUser?.Email ?? string.Empty,
+        await _mediator.Send(new CreateNotificationCommand(
+            job.Company.OwnerUserId,
+            "ApplicationReceived",
+            $"{candidate.FullName} applied to {job.Title}."), cancellationToken);
+
+        var ownerEmail = job.Company.OwnerUser?.Email ?? string.Empty;
+        _backgroundJobs.Enqueue<IEmailService>(s => s.SendAsync(
+            ownerEmail,
             $"New application for {job.Title}",
             $"{candidate.FullName} just applied to {job.Title}.",
-            cancellationToken);
+            CancellationToken.None));
 
         return application.Id;
     }

@@ -1,4 +1,6 @@
 using System.Text;
+using Hangfire;
+using Hangfire.PostgreSql;
 using JobBoard.Application.Common.Interfaces;
 using JobBoard.Infrastructure.Persistence;
 using JobBoard.Infrastructure.Services;
@@ -25,6 +27,18 @@ public static class DependencyInjection
         services.AddScoped<IPasswordHasher, PasswordHasher>();
         services.AddScoped<IFileStorageService, LocalFileStorageService>();
         services.AddScoped<IEmailService, EmailService>();
+        services.AddScoped<IBackgroundJobService, HangfireBackgroundJobService>();
+
+        // Reuses the existing Postgres instance for job storage - no separate infra needed.
+        // Queuing emails here (rather than awaiting IEmailService inline) means a slow mail
+        // provider can never make an apply/status-update request hang or fail.
+        services.AddHangfire(config => config
+            .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+            .UseSimpleAssemblyNameTypeSerializer()
+            .UseRecommendedSerializerSettings()
+            .UsePostgreSqlStorage(options => options
+                .UseNpgsqlConnection(configuration.GetConnectionString("DefaultConnection"))));
+        services.AddHangfireServer();
 
         services.AddAuthentication(options =>
         {

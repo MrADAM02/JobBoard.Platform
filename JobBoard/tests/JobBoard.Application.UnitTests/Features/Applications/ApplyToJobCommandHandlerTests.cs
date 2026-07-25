@@ -6,6 +6,7 @@ using JobBoard.Application.UnitTests.TestHelpers;
 using JobBoard.Domain.Entities;
 using JobBoard.Domain.Enums;
 using JobBoard.Infrastructure.Persistence;
+using MediatR;
 using NSubstitute;
 
 namespace JobBoard.Application.UnitTests.Features.Applications;
@@ -35,9 +36,10 @@ public class ApplyToJobCommandHandlerTests
         db.SaveChanges();
 
         var currentUser = new FakeCurrentUserService { UserId = candidateUser.Id, Role = "Candidate" };
-        var emailService = Substitute.For<IEmailService>();
+        var backgroundJobs = Substitute.For<IBackgroundJobService>();
+        var mediator = Substitute.For<IMediator>();
 
-        var handler = new ApplyToJobCommandHandler(db, currentUser, emailService);
+        var handler = new ApplyToJobCommandHandler(db, currentUser, backgroundJobs, mediator);
         return (handler, db, candidateUser.Id, job.Id);
     }
 

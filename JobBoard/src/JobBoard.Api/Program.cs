@@ -1,4 +1,6 @@
 using System.Threading.RateLimiting;
+using Hangfire;
+using Hangfire.Dashboard;
 using JobBoard.Api.Middleware;
 using JobBoard.Application;
 using JobBoard.Application.Common.Interfaces;
@@ -136,6 +138,14 @@ app.UseAuthorization();
 
 app.MapControllers();
 app.MapHealthChecks("/health");
+
+// Dashboard has its own auth model (not JWT-based, since it's opened as a plain
+// browser tab) - gated to localhost-only requests, Hangfire's documented pattern
+// for securing the dashboard without building a separate cookie-auth flow.
+app.MapHangfireDashboard("/hangfire", new DashboardOptions
+{
+    Authorization = [new LocalRequestsOnlyAuthorizationFilter()]
+});
 
 app.Run();
 

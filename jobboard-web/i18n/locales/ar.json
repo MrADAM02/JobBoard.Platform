@@ -19,6 +19,10 @@
   "locale": {
     "switchLanguage": "تغيير اللغة"
   },
+  "notifications": {
+    "title": "الإشعارات",
+    "empty": "ليس لديك أي إشعارات بعد."
+  },
   "applicationStatus": {
     "applied": "تم التقديم",
     "underReview": "قيد المراجعة",

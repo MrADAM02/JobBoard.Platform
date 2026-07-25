@@ -1,5 +1,6 @@
 using JobBoard.Application.Common.Exceptions;
 using JobBoard.Application.Common.Interfaces;
+using JobBoard.Application.Features.Notifications.Commands.CreateNotification;
 using JobBoard.Domain.Entities;
 using JobBoard.Domain.Enums;
 using MediatR;
@@ -13,14 +14,16 @@ public class UpdateApplicationStatusCommandHandler : IRequestHandler<UpdateAppli
 {
     private readonly IApplicationDbContext _db;
     private readonly ICurrentUserService _currentUser;
-    private readonly IEmailService _emailService;
+    private readonly IBackgroundJobService _backgroundJobs;
+    private readonly IMediator _mediator;
 
     public UpdateApplicationStatusCommandHandler(
-        IApplicationDbContext db, ICurrentUserService currentUser, IEmailService emailService)
+        IApplicationDbContext db, ICurrentUserService currentUser, IBackgroundJobService backgroundJobs, IMediator mediator)
     {
         _db = db;
         _currentUser = currentUser;
-        _emailService = emailService;
+        _backgroundJobs = backgroundJobs;
+        _mediator = mediator;
     }
 
     public async Task Handle(UpdateApplicationStatusCommand request, CancellationToken cancellationToken)
@@ -39,10 +42,15 @@ public class UpdateApplicationStatusCommandHandler : IRequestHandler<UpdateAppli
         application.Status = request.NewStatus;
         await _db.SaveChangesAsync(cancellationToken);
 
-        await _emailService.SendAsync(
+        await _mediator.Send(new CreateNotificationCommand(
+            application.CandidateProfile.UserId,
+            "StatusChanged",
+            $"Your application for {application.JobListing.Title} is now: {request.NewStatus}."), cancellationToken);
+
+        _backgroundJobs.Enqueue<IEmailService>(s => s.SendAsync(
             application.CandidateProfile.User.Email,
             $"Update on your application for {application.JobListing.Title}",
             $"Your application status changed to: {request.NewStatus}.",
-            cancellationToken);
+            CancellationToken.None));
     }
 }
