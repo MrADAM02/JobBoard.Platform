@@ -2,7 +2,7 @@
 import { JobType, JobTypeI18nKey } from '~/types/job'
 
 const route = useRoute()
-const { getJobListingById } = useJobsApi()
+const { getJobListingById, recordJobView } = useJobsApi()
 const jobId = route.params.id as string
 const { t } = useI18n()
 const localePath = useLocalePath()
@@ -14,6 +14,14 @@ const { data: job } = await useAsyncData(`job-${jobId}`, () => getJobListingById
 if (!job.value) {
   throw createError({ statusCode: 404, statusMessage: t('errors.notFoundTitle'), fatal: true })
 }
+
+// Client-only, not part of the SSR data fetch above - a crawler rendering
+// this page server-side should never count as a "view".
+onMounted(() => {
+  recordJobView(jobId).catch(() => {
+    // non-fatal - a failed view ping shouldn't affect the page in any way
+  })
+})
 
 const salaryRange = computed(() => {
   const { salaryMin, salaryMax } = job.value!

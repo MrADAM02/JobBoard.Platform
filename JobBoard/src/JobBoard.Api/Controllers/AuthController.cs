@@ -3,11 +3,13 @@ using JobBoard.Application.Features.Auth.Commands.RefreshToken;
 using JobBoard.Application.Features.Auth.Commands.Register;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace JobBoard.Api.Controllers;
 
 [ApiController]
 [Route("api/auth")]
+[EnableRateLimiting("auth")]
 public class AuthController : ControllerBase
 {
     private readonly IMediator _mediator;

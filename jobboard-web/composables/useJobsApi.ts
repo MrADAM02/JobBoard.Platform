@@ -33,6 +33,12 @@ export function useJobsApi() {
     return $fetch<JobListingDetail>(`${apiBase}/jobs/${id}`)
   }
 
+  // Public, fire-and-forget - called client-side on mount, not part of the SSR
+  // fetch, so crawler/bot hits don't inflate the view count.
+  function recordJobView(id: string) {
+    return $fetch<void>(`${apiBase}/jobs/${id}/view`, { method: 'POST' })
+  }
+
   // Employer-only endpoints below - all go through authFetch.
   function getMyJobListings(pageNumber = 1, pageSize = 20) {
     return authFetch<PaginatedList<MyJobListing>>('/jobs/mine', { query: { pageNumber, pageSize } })
@@ -57,6 +63,7 @@ export function useJobsApi() {
   return {
     getJobListings,
     getJobListingById,
+    recordJobView,
     getMyJobListings,
     createJobListing,
     updateJobListing,

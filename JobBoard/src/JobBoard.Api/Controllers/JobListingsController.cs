@@ -2,6 +2,7 @@ using JobBoard.Application.Common.Models;
 using JobBoard.Application.Features.Jobs.Commands.CloseJobListing;
 using JobBoard.Application.Features.Jobs.Commands.CreateJobListing;
 using JobBoard.Application.Features.Jobs.Commands.DeleteJobListing;
+using JobBoard.Application.Features.Jobs.Commands.RecordJobView;
 using JobBoard.Application.Features.Jobs.Commands.UpdateJobListing;
 using JobBoard.Application.Features.Jobs.Queries.GetJobListingById;
 using JobBoard.Application.Features.Jobs.Queries.GetJobListings;
@@ -72,6 +73,16 @@ public class JobListingsController : ControllerBase
     public async Task<IActionResult> Delete(Guid id)
     {
         await _mediator.Send(new DeleteJobListingCommand(id));
+        return NoContent();
+    }
+
+    // Public - fired client-side from the job detail page on mount, not part of
+    // the SSR fetch, so crawler/bot hits don't inflate the view count.
+    [HttpPost("{id:guid}/view")]
+    [AllowAnonymous]
+    public async Task<IActionResult> RecordView(Guid id)
+    {
+        await _mediator.Send(new RecordJobViewCommand(id));
         return NoContent();
     }
 }

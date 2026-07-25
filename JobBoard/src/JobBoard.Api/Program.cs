@@ -1,3 +1,4 @@
+using System.Threading.RateLimiting;
 using JobBoard.Api.Middleware;
 using JobBoard.Application;
 using JobBoard.Application.Common.Interfaces;
@@ -6,6 +7,7 @@ using JobBoard.Domain.Enums;
 using JobBoard.Infrastructure;
 using JobBoard.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
@@ -58,6 +60,30 @@ builder.Services.AddCors(options =>
     });
 });
 
+// Fixed-window limiter on auth endpoints (login/register/refresh) - these are
+// anonymous and credential-guessing/registration-spam targets, unlike the rest
+// of the API which is already gated by JWT auth or read-only. Partitioned by
+// caller IP via AddPolicy (not AddFixedWindowLimiter, which would create a
+// single global window shared by every caller - one abusive client would lock
+// out everyone else, confirmed by testing: hammering /login from one client
+// immediately 429'd a completely unrelated /register call).
+builder.Services.AddRateLimiter(options =>
+{
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+    options.AddPolicy("auth", httpContext => RateLimitPartition.GetFixedWindowLimiter(
+        partitionKey: httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+        factory: _ => new FixedWindowRateLimiterOptions
+        {
+            PermitLimit = 10,
+            Window = TimeSpan.FromMinutes(1),
+            QueueLimit = 0,
+            QueueProcessingOrder = QueueProcessingOrder.OldestFirst
+        }));
+});
+
+builder.Services.AddHealthChecks()
+    .AddNpgSql(builder.Configuration.GetConnectionString("DefaultConnection")!);
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -103,10 +129,13 @@ app.UseStaticFiles(); // serves /uploads for locally-stored resumes/logos
 
 app.UseCors("NuxtFrontend");
 
+app.UseRateLimiter();
+
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapHealthChecks("/health");
 
 app.Run();
 
