@@ -86,6 +86,17 @@ builder.Services.AddRateLimiter(options =>
 builder.Services.AddHealthChecks()
     .AddNpgSql(builder.Configuration.GetConnectionString("DefaultConnection")!);
 
+// Short-lived cache on the public, unauthenticated job/company reads - pairs
+// with the SSR story as a layered-caching talking point (SSR for crawlers,
+// output cache for repeat API hits). Never applied to authenticated actions
+// like GetMyJobListings - opt-in per action via [OutputCache], not global.
+builder.Services.AddOutputCache(options =>
+{
+    options.AddPolicy("PublicReads", policy => policy
+        .Expire(TimeSpan.FromSeconds(30))
+        .SetVaryByQuery("keyword", "location", "jobType", "remoteOnly", "minSalary", "pageNumber", "pageSize"));
+});
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -135,6 +146,8 @@ app.UseRateLimiter();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseOutputCache();
 
 app.MapControllers();
 app.MapHealthChecks("/health");

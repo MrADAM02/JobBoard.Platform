@@ -19,6 +19,7 @@ function onLogout() {
         </NuxtLink>
         <div class="flex items-center gap-6 text-sm font-medium text-slate-600 dark:text-slate-400">
           <NuxtLink :to="localePath('/jobs')" class="hover:text-slate-900 dark:hover:text-slate-100">{{ t('nav.browseJobs') }}</NuxtLink>
+          <NuxtLink :to="localePath('/companies')" class="hover:text-slate-900 dark:hover:text-slate-100">{{ t('nav.companies') }}</NuxtLink>
 
           <LocaleSwitcher />
           <ThemeToggle />

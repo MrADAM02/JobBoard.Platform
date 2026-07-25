@@ -4,6 +4,7 @@
   },
   "nav": {
     "browseJobs": "تصفح الوظائف",
+    "companies": "الشركات",
     "dashboard": "لوحة التحكم",
     "logout": "تسجيل الخروج",
     "login": "تسجيل الدخول",
@@ -22,6 +23,24 @@
   "notifications": {
     "title": "الإشعارات",
     "empty": "ليس لديك أي إشعارات بعد."
+  },
+  "companies": {
+    "seoTitle": "الشركات — JobBoard",
+    "seoDescription": "تصفح الشركات التي توظف عبر JobBoard.",
+    "heading": "الشركات",
+    "resultCount": "لا توجد شركات | شركة واحدة | شركتان | {count} شركات | {count} شركة | {count} شركة",
+    "keywordPlaceholder": "ابحث باسم الشركة",
+    "search": "بحث",
+    "loading": "جارٍ تحميل الشركات…",
+    "loadError": "حدث خطأ أثناء تحميل الشركات. الرجاء المحاولة مرة أخرى.",
+    "empty": "لا توجد شركات مطابقة لبحثك.",
+    "openJobCount": "لا توجد وظائف شاغرة | وظيفة شاغرة واحدة | وظيفتان شاغرتان | {count} وظائف شاغرة | {count} وظيفة شاغرة | {count} وظيفة شاغرة",
+    "detail": {
+      "seoTitle": "{name} — JobBoard",
+      "seoDescription": "{name} على JobBoard.",
+      "backToAll": "العودة إلى جميع الشركات",
+      "website": "الموقع الإلكتروني"
+    }
   },
   "applicationStatus": {
     "applied": "تم التقديم",

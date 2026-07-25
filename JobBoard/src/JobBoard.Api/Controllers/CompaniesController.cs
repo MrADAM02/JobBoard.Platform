@@ -1,11 +1,13 @@
 using JobBoard.Application.Features.Companies.Commands.CreateCompany;
 using JobBoard.Application.Features.Companies.Commands.UpdateCompany;
 using JobBoard.Application.Features.Companies.Commands.UploadCompanyLogo;
+using JobBoard.Application.Features.Companies.Queries.GetCompanies;
 using JobBoard.Application.Features.Companies.Queries.GetCompanyById;
 using JobBoard.Application.Features.Companies.Queries.GetMyCompany;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OutputCaching;
 
 namespace JobBoard.Api.Controllers;
 
@@ -22,8 +24,15 @@ public class CompaniesController : ControllerBase
     public async Task<IActionResult> GetMine()
         => Ok(await _mediator.Send(new GetMyCompanyQuery()));
 
+    [HttpGet]
+    [AllowAnonymous]
+    [OutputCache(PolicyName = "PublicReads")]
+    public async Task<IActionResult> GetAll([FromQuery] string? keyword, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 20)
+        => Ok(await _mediator.Send(new GetCompaniesQuery(keyword, pageNumber, pageSize)));
+
     [HttpGet("{id:guid}")]
     [AllowAnonymous]
+    [OutputCache(PolicyName = "PublicReads")]
     public async Task<IActionResult> GetById(Guid id)
         => Ok(await _mediator.Send(new GetCompanyByIdQuery(id)));
 

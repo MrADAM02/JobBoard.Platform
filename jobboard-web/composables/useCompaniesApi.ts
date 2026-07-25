@@ -1,9 +1,16 @@
-import type { Company, CompanyPayload } from '~/types/company'
+import type { Company, CompanyPayload, CompanySummary } from '~/types/company'
+import type { PaginatedList } from '~/types/job'
 
 export function useCompaniesApi() {
   const { authFetch } = useAuthFetch()
   const config = useRuntimeConfig()
   const apiBase = config.public.apiBase as string
+
+  function getCompanies(keyword?: string, pageNumber = 1, pageSize = 20) {
+    return $fetch<PaginatedList<CompanySummary>>(`${apiBase}/companies`, {
+      query: { keyword: keyword || undefined, pageNumber, pageSize }
+    })
+  }
 
   function getCompanyById(id: string) {
     return $fetch<Company>(`${apiBase}/companies/${id}`)
@@ -27,5 +34,5 @@ export function useCompaniesApi() {
     return authFetch<string>(`/companies/${id}/logo`, { method: 'POST', body: formData })
   }
 
-  return { getCompanyById, getMyCompany, createCompany, updateCompany, uploadLogo }
+  return { getCompanies, getCompanyById, getMyCompany, createCompany, updateCompany, uploadLogo }
 }

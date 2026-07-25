@@ -11,6 +11,7 @@ using JobBoard.Domain.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OutputCaching;
 
 namespace JobBoard.Api.Controllers;
 
@@ -31,6 +32,7 @@ public class JobListingsController : ControllerBase
 
     [HttpGet]
     [AllowAnonymous]
+    [OutputCache(PolicyName = "PublicReads")]
     public async Task<ActionResult<PaginatedList<JobListingSummaryDto>>> GetAll(
         [FromQuery] string? keyword, [FromQuery] string? location, [FromQuery] JobType? jobType,
         [FromQuery] bool? remoteOnly, [FromQuery] decimal? minSalary,
@@ -43,6 +45,7 @@ public class JobListingsController : ControllerBase
     // Public - backs the SSR-rendered /jobs/[id] detail page.
     [HttpGet("{id:guid}")]
     [AllowAnonymous]
+    [OutputCache(PolicyName = "PublicReads")]
     public async Task<ActionResult<JobListingDetailDto>> GetById(Guid id)
         => Ok(await _mediator.Send(new GetJobListingByIdQuery(id)));
 

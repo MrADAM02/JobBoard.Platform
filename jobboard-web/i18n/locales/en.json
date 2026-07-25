@@ -4,6 +4,7 @@
   },
   "nav": {
     "browseJobs": "Browse Jobs",
+    "companies": "Companies",
     "dashboard": "Dashboard",
     "logout": "Log out",
     "login": "Log in",
@@ -22,6 +23,24 @@
   "notifications": {
     "title": "Notifications",
     "empty": "You have no notifications yet."
+  },
+  "companies": {
+    "seoTitle": "Companies — JobBoard",
+    "seoDescription": "Browse companies hiring on JobBoard.",
+    "heading": "Companies",
+    "resultCount": "no companies | one company | {count} companies",
+    "keywordPlaceholder": "Search by company name",
+    "search": "Search",
+    "loading": "Loading companies…",
+    "loadError": "Something went wrong loading companies. Please try again.",
+    "empty": "No companies match your search.",
+    "openJobCount": "no open roles | one open role | {count} open roles",
+    "detail": {
+      "seoTitle": "{name} — JobBoard",
+      "seoDescription": "{name} on JobBoard.",
+      "backToAll": "Back to all companies",
+      "website": "Website"
+    }
   },
   "applicationStatus": {
     "applied": "Applied",

@@ -13,3 +13,12 @@ export interface CompanyPayload {
   description: string | null
   location: string | null
 }
+
+export interface CompanySummary {
+  id: string
+  name: string
+  logoUrl: string | null
+  location: string | null
+  website: string | null
+  openJobCount: number
+}
