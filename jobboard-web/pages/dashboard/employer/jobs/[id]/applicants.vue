@@ -40,7 +40,7 @@ useSeoMeta({ title: () => t('dashboard.employer.applicants.seoTitle') })
 
     <ul v-else class="flex flex-col gap-3">
       <li v-for="app in applicants" :key="app.id" class="rounded-lg border border-slate-200 bg-white p-5 dark:border-slate-700 dark:bg-slate-900">
-        <div class="flex items-center justify-between gap-4">
+        <div class="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h2 class="font-semibold text-slate-900 dark:text-slate-100">{{ app.candidateName }}</h2>
             <p class="text-sm text-slate-600 dark:text-slate-400">
@@ -53,7 +53,7 @@ useSeoMeta({ title: () => t('dashboard.employer.applicants.seoTitle') })
           <select
             :value="app.status"
             :disabled="updating === app.id"
-            class="rounded-md border border-slate-300 px-2 py-1.5 text-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+            class="w-full rounded-md border border-slate-300 px-2 py-1.5 text-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 sm:w-auto"
             @change="onStatusChange(app.id, Number(($event.target as HTMLSelectElement).value))"
           >
             <option v-for="(i18nKey, value) in ApplicationStatusI18nKey" :key="value" :value="Number(value)">

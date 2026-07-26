@@ -71,7 +71,7 @@ useSeoMeta({ title: () => t('dashboard.employer.jobsEdit.seoTitle') })
         <input v-model="isRemote" type="checkbox" class="h-4 w-4 rounded border-slate-300 dark:border-slate-700 dark:bg-slate-900">
         {{ t('dashboard.employer.jobForm.isRemote') }}
       </label>
-      <div class="grid grid-cols-2 gap-3">
+      <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <div class="flex flex-col gap-1">
           <label for="salaryMin" class="text-sm font-medium text-slate-700 dark:text-slate-300">{{ t('dashboard.employer.jobForm.salaryMinLabel') }}</label>
           <input id="salaryMin" v-model="salaryMin" type="number" class="rounded-md border border-slate-300 px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100">

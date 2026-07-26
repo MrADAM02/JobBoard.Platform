@@ -3,6 +3,15 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
 
+  // Nuxt doesn't inject this by default - without it, mobile browsers render
+  // at desktop width (~980px) and scale down, making every responsive
+  // Tailwind class in the app moot.
+  app: {
+    head: {
+      meta: [{ name: 'viewport', content: 'width=device-width, initial-scale=1' }]
+    }
+  },
+
   modules: ['@nuxtjs/tailwindcss', '@pinia/nuxt', '@nuxtjs/color-mode', '@nuxtjs/i18n'],
 
   css: ['~/assets/css/main.css'],

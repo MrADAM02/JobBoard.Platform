@@ -23,7 +23,7 @@ useSeoMeta({ title: () => t('dashboard.candidate.applications.seoTitle') })
 
     <ul v-else class="flex flex-col gap-3">
       <li v-for="app in applications" :key="app.id" class="rounded-lg border border-slate-200 bg-white p-5 dark:border-slate-700 dark:bg-slate-900">
-        <div class="flex items-center justify-between gap-4">
+        <div class="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <NuxtLink :to="localePath(`/jobs/${app.jobListingId}`)" class="font-semibold text-slate-900 hover:underline dark:text-slate-100">
               {{ app.jobTitle }}
