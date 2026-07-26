@@ -78,7 +78,7 @@
       "heading": "تصفح الوظائف",
       "resultCount": "لا توجد وظائف شاغرة | وظيفة شاغرة واحدة | وظيفتان شاغرتان | {count} وظائف شاغرة | {count} وظيفة شاغرة | {count} وظيفة شاغرة",
       "keywordPlaceholder": "كلمة مفتاحية (المسمى الوظيفي أو الوصف)",
-      "locationPlaceholder": "الموقع",
+      "anyLocation": "كل المواقع",
       "anyJobType": "أي نوع وظيفة",
       "minSalaryPlaceholder": "الحد الأدنى للراتب",
       "remoteOnly": "عن بُعد فقط",
@@ -189,6 +189,7 @@
         "applicantCount": "0 متقدم | متقدم واحد | متقدمان | {count} متقدمين | {count} متقدمًا | {count} متقدم",
         "viewApplicants": "عرض المتقدمين",
         "edit": "تعديل",
+        "publish": "نشر",
         "close": "إغلاق",
         "delete": "حذف",
         "deleteConfirm": "هل تريد حذف هذا الإعلان؟ لا يمكن التراجع عن هذا الإجراء."

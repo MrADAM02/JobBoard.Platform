@@ -4,9 +4,14 @@ import { JobTypeI18nKey } from '~/types/job'
 
 const route = useRoute()
 const router = useRouter()
-const { getJobListings } = useJobsApi()
+const { getJobListings, getJobLocations } = useJobsApi()
 const { t } = useI18n()
 const localePath = useLocalePath()
+
+// Populates the location filter as a select - a free-text box let candidates
+// type a location that matches nothing (typos, a city with no open jobs).
+// Public, so it renders correctly in the SSR HTML too.
+const { data: locations } = await useAsyncData('job-locations', () => getJobLocations())
 
 // Filters are read from - and written back to - the URL query string, not
 // component-local state, so a direct request to a filtered URL (what a search
@@ -77,12 +82,13 @@ useSeoMeta({
         :placeholder="t('jobs.list.keywordPlaceholder')"
         class="rounded-md border border-slate-300 px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:placeholder:text-slate-500 lg:col-span-2"
       >
-      <input
+      <select
         v-model="location"
-        type="text"
-        :placeholder="t('jobs.list.locationPlaceholder')"
-        class="rounded-md border border-slate-300 px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:placeholder:text-slate-500"
+        class="rounded-md border border-slate-300 px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
       >
+        <option value="">{{ t('jobs.list.anyLocation') }}</option>
+        <option v-for="loc in locations" :key="loc" :value="loc">{{ loc }}</option>
+      </select>
       <select v-model="jobType" class="rounded-md border border-slate-300 px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100">
         <option value="">{{ t('jobs.list.anyJobType') }}</option>
         <option v-for="(i18nKey, value) in JobTypeI18nKey" :key="value" :value="value">

@@ -78,7 +78,7 @@
       "heading": "Browse Jobs",
       "resultCount": "no open positions | one open position | {count} open positions",
       "keywordPlaceholder": "Keyword (title or description)",
-      "locationPlaceholder": "Location",
+      "anyLocation": "Any location",
       "anyJobType": "Any job type",
       "minSalaryPlaceholder": "Min salary",
       "remoteOnly": "Remote only",
@@ -189,6 +189,7 @@
         "applicantCount": "0 applicants | 1 applicant | {count} applicants",
         "viewApplicants": "View applicants",
         "edit": "Edit",
+        "publish": "Publish",
         "close": "Close",
         "delete": "Delete",
         "deleteConfirm": "Delete this listing? This cannot be undone."

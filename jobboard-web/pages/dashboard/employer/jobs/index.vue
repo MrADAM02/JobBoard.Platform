@@ -4,7 +4,7 @@ import { JobStatus, JobStatusI18nKey } from '~/types/job'
 definePageMeta({ middleware: 'auth', ssr: false })
 useRequireRole('Employer')
 
-const { getMyJobListings, closeJobListing, deleteJobListing } = useJobsApi()
+const { getMyJobListings, closeJobListing, publishJobListing, deleteJobListing } = useJobsApi()
 const { t } = useI18n()
 const localePath = useLocalePath()
 
@@ -12,6 +12,11 @@ const { data, refresh } = await useAsyncData('my-jobs', () => getMyJobListings()
 
 async function onClose(id: string) {
   await closeJobListing(id)
+  await refresh()
+}
+
+async function onPublish(id: string) {
+  await publishJobListing(id)
   await refresh()
 }
 
@@ -70,6 +75,13 @@ useSeoMeta({ title: () => t('dashboard.employer.jobsList.seoTitle') })
           <NuxtLink :to="localePath(`/dashboard/employer/jobs/${job.id}/edit`)" class="text-slate-700 underline dark:text-slate-300">
             {{ t('dashboard.employer.jobsList.edit') }}
           </NuxtLink>
+          <button
+            v-if="job.status === JobStatus.Draft"
+            class="text-emerald-700 underline dark:text-emerald-400"
+            @click="onPublish(job.id)"
+          >
+            {{ t('dashboard.employer.jobsList.publish') }}
+          </button>
           <button
             v-if="job.status === JobStatus.Published"
             class="text-slate-700 underline dark:text-slate-300"

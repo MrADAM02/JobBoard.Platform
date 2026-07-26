@@ -56,6 +56,14 @@ export function useJobsApi() {
     return authFetch<void>(`/jobs/${id}/close`, { method: 'POST' })
   }
 
+  function publishJobListing(id: string) {
+    return authFetch<void>(`/jobs/${id}/publish`, { method: 'POST' })
+  }
+
+  function getJobLocations() {
+    return $fetch<string[]>(`${apiBase}/jobs/locations`)
+  }
+
   function deleteJobListing(id: string) {
     return authFetch<void>(`/jobs/${id}`, { method: 'DELETE' })
   }
@@ -68,6 +76,8 @@ export function useJobsApi() {
     createJobListing,
     updateJobListing,
     closeJobListing,
-    deleteJobListing
+    publishJobListing,
+    deleteJobListing,
+    getJobLocations
   }
 }
