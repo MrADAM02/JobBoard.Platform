@@ -19,10 +19,10 @@ function onLogout() {
 
 <template>
   <div class="min-h-screen flex flex-col bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100">
-    <header class="border-b border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
+    <header class="border-b border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
       <nav class="mx-auto max-w-5xl px-4 py-4">
         <div class="flex items-center justify-between gap-4">
-          <NuxtLink :to="localePath('/')" class="text-lg font-semibold tracking-tight">
+          <NuxtLink :to="localePath('/')" class="text-lg font-bold tracking-tight text-primary-600 dark:text-primary-400">
             {{ t('common.brand') }}
           </NuxtLink>
 
@@ -54,13 +54,9 @@ function onLogout() {
             <ClientOnly>
               <NotificationBell v-if="auth.isAuthenticated" />
             </ClientOnly>
-            <NuxtLink
-              v-if="!auth.isAuthenticated"
-              :to="localePath('/register')"
-              class="hidden whitespace-nowrap rounded-md bg-slate-900 px-3 py-1.5 text-sm text-white hover:bg-slate-700 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-slate-300 md:inline-block"
-            >
+            <BaseButton v-if="!auth.isAuthenticated" :to="localePath('/register')" size="sm" class="hidden md:inline-flex">
               {{ t('nav.register') }}
-            </NuxtLink>
+            </BaseButton>
             <button
               v-if="auth.isAuthenticated"
               class="hidden text-sm font-medium text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100 md:inline-block"
@@ -102,12 +98,7 @@ function onLogout() {
             </template>
             <template v-else>
               <NuxtLink :to="localePath('/login')" class="hover:text-slate-900 dark:hover:text-slate-100">{{ t('nav.login') }}</NuxtLink>
-              <NuxtLink
-                :to="localePath('/register')"
-                class="rounded-md bg-slate-900 px-3 py-1.5 text-center text-white hover:bg-slate-700 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-slate-300"
-              >
-                {{ t('nav.register') }}
-              </NuxtLink>
+              <BaseButton :to="localePath('/register')" class="justify-center">{{ t('nav.register') }}</BaseButton>
             </template>
           </ClientOnly>
         </div>

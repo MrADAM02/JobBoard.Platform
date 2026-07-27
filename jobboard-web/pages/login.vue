@@ -31,36 +31,23 @@ useSeoMeta({ title: () => t('auth.login.seoTitle') })
 
 <template>
   <div class="mx-auto flex max-w-sm flex-col gap-6 py-12">
-    <h1 class="text-2xl font-bold text-slate-900 dark:text-slate-100">{{ t('auth.login.heading') }}</h1>
+    <h1 class="text-center text-2xl font-bold text-slate-900 dark:text-slate-100">{{ t('auth.login.heading') }}</h1>
 
-    <form class="flex flex-col gap-4" @submit.prevent="onSubmit">
-      <div class="flex flex-col gap-1">
-        <label for="email" class="text-sm font-medium text-slate-700 dark:text-slate-300">{{ t('auth.login.emailLabel') }}</label>
-        <input
-          id="email" v-model="email" type="email" required autocomplete="email"
-          class="rounded-md border border-slate-300 px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
-        >
-      </div>
-      <div class="flex flex-col gap-1">
-        <label for="password" class="text-sm font-medium text-slate-700 dark:text-slate-300">{{ t('auth.login.passwordLabel') }}</label>
-        <input
-          id="password" v-model="password" type="password" required autocomplete="current-password"
-          class="rounded-md border border-slate-300 px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
-        >
-      </div>
+    <Card>
+      <form class="flex flex-col gap-4" @submit.prevent="onSubmit">
+        <BaseInput id="email" v-model="email" type="email" required autocomplete="email" :label="t('auth.login.emailLabel')" />
+        <BaseInput id="password" v-model="password" type="password" required autocomplete="current-password" :label="t('auth.login.passwordLabel')" />
 
-      <p v-if="error" class="text-sm text-red-600 dark:text-red-400">{{ error }}</p>
+        <Alert v-if="error">{{ error }}</Alert>
 
-      <button
-        type="submit" :disabled="submitting"
-        class="rounded-md bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-700 disabled:opacity-50 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-slate-300"
-      >
-        {{ submitting ? t('auth.login.submitting') : t('auth.login.submit') }}
-      </button>
-    </form>
+        <BaseButton type="submit" :loading="submitting" class="justify-center">
+          {{ submitting ? t('auth.login.submitting') : t('auth.login.submit') }}
+        </BaseButton>
+      </form>
+    </Card>
 
     <p class="text-center text-sm text-slate-600 dark:text-slate-400">
-      {{ t('auth.login.noAccount') }} <NuxtLink :to="localePath('/register')" class="font-medium text-slate-900 underline dark:text-slate-100">{{ t('auth.login.registerLink') }}</NuxtLink>
+      {{ t('auth.login.noAccount') }} <NuxtLink :to="localePath('/register')" class="font-medium text-primary-600 underline dark:text-primary-400">{{ t('auth.login.registerLink') }}</NuxtLink>
     </p>
   </div>
 </template>

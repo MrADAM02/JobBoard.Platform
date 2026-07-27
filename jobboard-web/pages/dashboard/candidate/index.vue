@@ -11,28 +11,19 @@ useSeoMeta({ title: () => t('dashboard.candidate.overview.seoTitle') })
   <div class="flex flex-col gap-4">
     <h1 class="text-2xl font-bold text-slate-900 dark:text-slate-100">{{ t('dashboard.candidate.overview.title') }}</h1>
 
-    <NuxtLink
-      :to="localePath('/dashboard/candidate/applications')"
-      class="rounded-lg border border-slate-200 bg-white p-6 hover:border-slate-400 dark:border-slate-700 dark:bg-slate-900 dark:hover:border-slate-500"
-    >
+    <Card :to="localePath('/dashboard/candidate/applications')" hover>
       <h2 class="font-semibold text-slate-900 dark:text-slate-100">{{ t('dashboard.candidate.overview.applicationsTitle') }}</h2>
       <p class="text-sm text-slate-600 dark:text-slate-400">{{ t('dashboard.candidate.overview.applicationsDesc') }}</p>
-    </NuxtLink>
+    </Card>
 
-    <NuxtLink
-      :to="localePath('/dashboard/candidate/profile')"
-      class="rounded-lg border border-slate-200 bg-white p-6 hover:border-slate-400 dark:border-slate-700 dark:bg-slate-900 dark:hover:border-slate-500"
-    >
+    <Card :to="localePath('/dashboard/candidate/profile')" hover>
       <h2 class="font-semibold text-slate-900 dark:text-slate-100">{{ t('dashboard.candidate.overview.profileTitle') }}</h2>
       <p class="text-sm text-slate-600 dark:text-slate-400">{{ t('dashboard.candidate.overview.profileDesc') }}</p>
-    </NuxtLink>
+    </Card>
 
-    <NuxtLink
-      :to="localePath('/jobs')"
-      class="rounded-lg border border-slate-200 bg-white p-6 hover:border-slate-400 dark:border-slate-700 dark:bg-slate-900 dark:hover:border-slate-500"
-    >
+    <Card :to="localePath('/jobs')" hover>
       <h2 class="font-semibold text-slate-900 dark:text-slate-100">{{ t('dashboard.candidate.overview.browseJobsTitle') }}</h2>
       <p class="text-sm text-slate-600 dark:text-slate-400">{{ t('dashboard.candidate.overview.browseJobsDesc') }}</p>
-    </NuxtLink>
+    </Card>
   </div>
 </template>

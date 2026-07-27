@@ -37,15 +37,12 @@ async function onApply() {
 </script>
 
 <template>
-  <div class="rounded-lg border border-slate-200 bg-white p-6 dark:border-slate-700 dark:bg-slate-900">
+  <Card>
     <div v-if="!auth.isAuthenticated" class="text-center">
       <p class="mb-3 text-sm text-slate-600 dark:text-slate-400">{{ t('jobs.apply.loginPrompt') }}</p>
-      <NuxtLink
-        :to="{ path: localePath('/login'), query: { redirect: localePath(`/jobs/${jobId}`) } }"
-        class="rounded-md bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-700 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-slate-300"
-      >
+      <BaseButton :to="{ path: localePath('/login'), query: { redirect: localePath(`/jobs/${jobId}`) } }">
         {{ t('jobs.apply.loginToApply') }}
-      </NuxtLink>
+      </BaseButton>
     </div>
 
     <p v-else-if="!auth.isCandidate" class="text-center text-sm text-slate-500 dark:text-slate-400">
@@ -63,19 +60,16 @@ async function onApply() {
     </i18n-t>
 
     <form v-else class="flex flex-col gap-3" @submit.prevent="onApply">
-      <label for="coverLetter" class="text-sm font-medium text-slate-700 dark:text-slate-300">{{ t('jobs.apply.coverLetterLabel') }}</label>
-      <textarea
-        id="coverLetter" v-model="coverLetter" rows="4"
-        class="rounded-md border border-slate-300 px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+      <BaseTextarea
+        id="coverLetter"
+        v-model="coverLetter"
+        :label="t('jobs.apply.coverLetterLabel')"
         :placeholder="t('jobs.apply.coverLetterPlaceholder')"
       />
-      <p v-if="error" class="text-sm text-red-600 dark:text-red-400">{{ error }}</p>
-      <button
-        type="submit" :disabled="submitting"
-        class="rounded-md bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-700 disabled:opacity-50 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-slate-300"
-      >
+      <Alert v-if="error">{{ error }}</Alert>
+      <BaseButton type="submit" :loading="submitting">
         {{ submitting ? t('jobs.apply.submitting') : t('jobs.apply.submit') }}
-      </button>
+      </BaseButton>
     </form>
-  </div>
+  </Card>
 </template>

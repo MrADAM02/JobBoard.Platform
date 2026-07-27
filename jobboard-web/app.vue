@@ -10,4 +10,7 @@ useHead(useLocaleHead({ addSeoAttributes: true }))
   <NuxtLayout>
     <NuxtPage />
   </NuxtLayout>
+  <ClientOnly>
+    <ToastContainer />
+  </ClientOnly>
 </template>

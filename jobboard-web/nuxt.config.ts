@@ -12,7 +12,10 @@ export default defineNuxtConfig({
     }
   },
 
-  modules: ['@nuxtjs/tailwindcss', '@pinia/nuxt', '@nuxtjs/color-mode', '@nuxtjs/i18n'],
+  // @nuxt/fonts self-hosts the Google Font declared in tailwind.config.ts's
+  // fontFamily.sans at build time (auto-detected from the Tailwind config) -
+  // no runtime request to Google's CDN, stays SSR-safe.
+  modules: ['@nuxtjs/tailwindcss', '@pinia/nuxt', '@nuxtjs/color-mode', '@nuxtjs/i18n', '@nuxt/fonts'],
 
   css: ['~/assets/css/main.css'],
 

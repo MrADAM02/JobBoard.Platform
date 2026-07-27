@@ -7,29 +7,47 @@ useRequireRole('Employer')
 const { getMyJobListings, closeJobListing, publishJobListing, deleteJobListing } = useJobsApi()
 const { t } = useI18n()
 const localePath = useLocalePath()
+const toast = useToast()
 
 const { data, refresh } = await useAsyncData('my-jobs', () => getMyJobListings())
 
+// Each action used to just re-fetch the list with no confirmation - a slow or
+// dropped request looked identical to success. Now every action reports back.
 async function onClose(id: string) {
-  await closeJobListing(id)
-  await refresh()
+  try {
+    await closeJobListing(id)
+    await refresh()
+    toast.success(t('dashboard.employer.jobsList.closeSuccess'))
+  } catch {
+    toast.error(t('dashboard.employer.jobsList.actionError'))
+  }
 }
 
 async function onPublish(id: string) {
-  await publishJobListing(id)
-  await refresh()
+  try {
+    await publishJobListing(id)
+    await refresh()
+    toast.success(t('dashboard.employer.jobsList.publishSuccess'))
+  } catch {
+    toast.error(t('dashboard.employer.jobsList.actionError'))
+  }
 }
 
 async function onDelete(id: string) {
   if (!confirm(t('dashboard.employer.jobsList.deleteConfirm'))) return
-  await deleteJobListing(id)
-  await refresh()
+  try {
+    await deleteJobListing(id)
+    await refresh()
+    toast.success(t('dashboard.employer.jobsList.deleteSuccess'))
+  } catch {
+    toast.error(t('dashboard.employer.jobsList.actionError'))
+  }
 }
 
-function statusBadgeClass(status: number) {
-  if (status === JobStatus.Published) return 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300'
-  if (status === JobStatus.Closed) return 'bg-slate-200 text-slate-600 dark:bg-slate-700 dark:text-slate-300'
-  return 'bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300'
+function statusVariant(status: number): 'success' | 'neutral' | 'warning' {
+  if (status === JobStatus.Published) return 'success'
+  if (status === JobStatus.Closed) return 'neutral'
+  return 'warning'
 }
 
 useSeoMeta({ title: () => t('dashboard.employer.jobsList.seoTitle') })
@@ -39,60 +57,55 @@ useSeoMeta({ title: () => t('dashboard.employer.jobsList.seoTitle') })
   <div class="flex flex-col gap-6">
     <div class="flex items-center justify-between">
       <h1 class="text-2xl font-bold text-slate-900 dark:text-slate-100">{{ t('dashboard.employer.jobsList.title') }}</h1>
-      <NuxtLink
-        :to="localePath('/dashboard/employer/jobs/new')"
-        class="rounded-md bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-700 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-slate-300"
-      >
+      <BaseButton :to="localePath('/dashboard/employer/jobs/new')">
         {{ t('dashboard.employer.jobsList.postJob') }}
-      </NuxtLink>
+      </BaseButton>
     </div>
 
-    <div v-if="!data?.items.length" class="rounded-lg border border-slate-200 bg-white p-10 text-center text-slate-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400">
-      {{ t('dashboard.employer.jobsList.empty') }}
-    </div>
+    <EmptyState v-if="!data?.items.length">{{ t('dashboard.employer.jobsList.empty') }}</EmptyState>
 
     <ul v-else class="flex flex-col gap-3">
-      <li v-for="job in data.items" :key="job.id" class="rounded-lg border border-slate-200 bg-white p-5 dark:border-slate-700 dark:bg-slate-900">
-        <div class="flex items-start justify-between gap-4">
-          <div>
-            <h2 class="font-semibold text-slate-900 dark:text-slate-100">{{ job.title }}</h2>
-            <p class="text-sm text-slate-600 dark:text-slate-400">
-              {{ t('dashboard.employer.jobsList.jobStats', {
-                location: job.location,
-                applicants: t('dashboard.employer.jobsList.applicantCount', { count: job.applicationCount }, job.applicationCount),
-                views: job.viewCount
-              }) }}
-            </p>
+      <li v-for="job in data.items" :key="job.id">
+        <Card padding="sm">
+          <div class="flex items-start justify-between gap-4">
+            <div>
+              <h2 class="font-semibold text-slate-900 dark:text-slate-100">{{ job.title }}</h2>
+              <p class="text-sm text-slate-600 dark:text-slate-400">
+                {{ t('dashboard.employer.jobsList.jobStats', {
+                  location: job.location,
+                  applicants: t('dashboard.employer.jobsList.applicantCount', { count: job.applicationCount }, job.applicationCount),
+                  views: job.viewCount
+                }) }}
+              </p>
+            </div>
+            <Badge :variant="statusVariant(job.status)">{{ t(JobStatusI18nKey[job.status]) }}</Badge>
           </div>
-          <span class="whitespace-nowrap rounded-full px-2.5 py-1 text-xs font-medium" :class="statusBadgeClass(job.status)">
-            {{ t(JobStatusI18nKey[job.status]) }}
-          </span>
-        </div>
-        <div class="mt-4 flex flex-wrap gap-3 text-sm">
-          <NuxtLink :to="localePath(`/dashboard/employer/jobs/${job.id}/applicants`)" class="text-slate-700 underline dark:text-slate-300">
-            {{ t('dashboard.employer.jobsList.viewApplicants') }}
-          </NuxtLink>
-          <NuxtLink :to="localePath(`/dashboard/employer/jobs/${job.id}/edit`)" class="text-slate-700 underline dark:text-slate-300">
-            {{ t('dashboard.employer.jobsList.edit') }}
-          </NuxtLink>
-          <button
-            v-if="job.status === JobStatus.Draft"
-            class="text-emerald-700 underline dark:text-emerald-400"
-            @click="onPublish(job.id)"
-          >
-            {{ t('dashboard.employer.jobsList.publish') }}
-          </button>
-          <button
-            v-if="job.status === JobStatus.Published"
-            class="text-slate-700 underline dark:text-slate-300"
-            @click="onClose(job.id)"
-          >
-            {{ t('dashboard.employer.jobsList.close') }}
-          </button>
-          <button class="text-red-600 underline dark:text-red-400" @click="onDelete(job.id)">
-            {{ t('dashboard.employer.jobsList.delete') }}
-          </button>
-        </div>
+          <div class="mt-4 flex flex-wrap gap-3 text-sm">
+            <NuxtLink :to="localePath(`/dashboard/employer/jobs/${job.id}/applicants`)" class="text-primary-600 underline dark:text-primary-400">
+              {{ t('dashboard.employer.jobsList.viewApplicants') }}
+            </NuxtLink>
+            <NuxtLink :to="localePath(`/dashboard/employer/jobs/${job.id}/edit`)" class="text-primary-600 underline dark:text-primary-400">
+              {{ t('dashboard.employer.jobsList.edit') }}
+            </NuxtLink>
+            <button
+              v-if="job.status === JobStatus.Draft"
+              class="text-emerald-700 underline dark:text-emerald-400"
+              @click="onPublish(job.id)"
+            >
+              {{ t('dashboard.employer.jobsList.publish') }}
+            </button>
+            <button
+              v-if="job.status === JobStatus.Published"
+              class="text-slate-700 underline dark:text-slate-300"
+              @click="onClose(job.id)"
+            >
+              {{ t('dashboard.employer.jobsList.close') }}
+            </button>
+            <button class="text-red-600 underline dark:text-red-400" @click="onDelete(job.id)">
+              {{ t('dashboard.employer.jobsList.delete') }}
+            </button>
+          </div>
+        </Card>
       </li>
     </ul>
   </div>

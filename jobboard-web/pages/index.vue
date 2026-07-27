@@ -6,21 +6,30 @@ useSeoMeta({
   title: () => t('home.seoTitle'),
   description: () => t('home.seoDescription')
 })
+
+const features = ['search', 'apply', 'employers'] as const
 </script>
 
 <template>
-  <div class="flex flex-col items-center gap-6 py-16 text-center">
-    <h1 class="text-4xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
-      {{ t('home.heading') }}
-    </h1>
-    <p class="max-w-md text-slate-600 dark:text-slate-400">
-      {{ t('home.subheading') }}
-    </p>
-    <NuxtLink
-      :to="localePath('/jobs')"
-      class="rounded-md bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white hover:bg-slate-700 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-slate-300"
-    >
-      {{ t('home.browseJobs') }}
-    </NuxtLink>
+  <div class="flex flex-col gap-16 py-12 sm:py-16">
+    <div class="flex flex-col items-center gap-6 text-center">
+      <h1 class="max-w-2xl text-4xl font-bold tracking-tight text-slate-900 dark:text-slate-100 sm:text-5xl">
+        {{ t('home.heading') }}
+      </h1>
+      <p class="max-w-md text-lg text-slate-600 dark:text-slate-400">
+        {{ t('home.subheading') }}
+      </p>
+      <div class="flex flex-col gap-3 sm:flex-row">
+        <BaseButton :to="localePath('/jobs')" size="md">{{ t('home.browseJobs') }}</BaseButton>
+        <BaseButton :to="localePath('/register')" variant="secondary" size="md">{{ t('home.forEmployers') }}</BaseButton>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 gap-6 sm:grid-cols-3">
+      <Card v-for="feature in features" :key="feature">
+        <h2 class="font-semibold text-slate-900 dark:text-slate-100">{{ t(`home.features.${feature}.title`) }}</h2>
+        <p class="mt-2 text-sm text-slate-600 dark:text-slate-400">{{ t(`home.features.${feature}.desc`) }}</p>
+      </Card>
+    </div>
   </div>
 </template>

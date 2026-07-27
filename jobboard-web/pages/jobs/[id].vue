@@ -123,38 +123,33 @@ useHead({
       <span class="inline-block rtl:-scale-x-100">&larr;</span> {{ t('jobs.detail.backToAll') }}
     </NuxtLink>
 
-    <header class="rounded-lg border border-slate-200 bg-white p-6 dark:border-slate-700 dark:bg-slate-900">
+    <Card>
       <div class="flex items-start justify-between gap-4">
         <div>
           <h1 class="text-2xl font-bold text-slate-900 dark:text-slate-100">{{ job.title }}</h1>
           <p class="mt-1 text-slate-600 dark:text-slate-400">{{ job.companyName }} &middot; {{ job.location }}</p>
         </div>
-        <span
-          v-if="job.isRemote"
-          class="whitespace-nowrap rounded-full bg-emerald-100 px-3 py-1 text-xs font-medium text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300"
-        >
-          {{ t('jobs.detail.remote') }}
-        </span>
+        <Badge v-if="job.isRemote" variant="success">{{ t('jobs.detail.remote') }}</Badge>
       </div>
 
-      <div class="mt-4 flex flex-wrap gap-2 text-xs text-slate-500 dark:text-slate-400">
-        <span class="rounded-full bg-slate-100 px-2.5 py-1 dark:bg-slate-800">{{ t(JobTypeI18nKey[job.jobType]) }}</span>
-        <span v-if="salaryRange" class="rounded-full bg-slate-100 px-2.5 py-1 dark:bg-slate-800">{{ salaryRange }}</span>
-        <span v-if="job.tags" class="rounded-full bg-slate-100 px-2.5 py-1 dark:bg-slate-800">{{ job.tags }}</span>
+      <div class="mt-4 flex flex-wrap gap-2">
+        <Badge variant="neutral">{{ t(JobTypeI18nKey[job.jobType]) }}</Badge>
+        <Badge v-if="salaryRange" variant="neutral">{{ salaryRange }}</Badge>
+        <Badge v-if="job.tags" variant="neutral">{{ job.tags }}</Badge>
       </div>
-    </header>
+    </Card>
 
-    <section class="rounded-lg border border-slate-200 bg-white p-6 dark:border-slate-700 dark:bg-slate-900">
+    <Card>
       <h2 class="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ t('jobs.detail.description') }}</h2>
       <p class="whitespace-pre-line text-slate-700 dark:text-slate-300">{{ job.description }}</p>
-    </section>
+    </Card>
 
-    <section v-if="job.companyWebsite" class="rounded-lg border border-slate-200 bg-white p-6 dark:border-slate-700 dark:bg-slate-900">
+    <Card v-if="job.companyWebsite">
       <h2 class="mb-2 text-sm font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ t('jobs.detail.about', { company: job.companyName }) }}</h2>
-      <a :href="job.companyWebsite" target="_blank" rel="noopener" class="text-sm text-slate-700 underline dark:text-slate-300">
+      <a :href="job.companyWebsite" target="_blank" rel="noopener" class="text-sm text-primary-600 underline dark:text-primary-400">
         {{ job.companyWebsite }}
       </a>
-    </section>
+    </Card>
 
     <!-- Client-only: apply state depends on the client-side auth store, which
          has no value during SSR. Keeping this out of the server render doesn't

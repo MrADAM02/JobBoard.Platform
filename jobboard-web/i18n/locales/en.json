@@ -56,7 +56,13 @@
     "seoDescription": "Browse open job listings from companies hiring right now.",
     "heading": "Find your next role",
     "subheading": "Browse open positions from companies hiring right now.",
-    "browseJobs": "Browse Jobs"
+    "browseJobs": "Browse Jobs",
+    "forEmployers": "Post a job",
+    "features": {
+      "search": { "title": "Search that works", "desc": "Filter by location, job type, and salary to find roles that actually match." },
+      "apply": { "title": "Apply in one click", "desc": "No lengthy forms — apply with your saved profile and resume in seconds." },
+      "employers": { "title": "Built for employers too", "desc": "Post a listing, manage applicants, and get notified the moment someone applies." }
+    }
   },
   "jobs": {
     "type": {
@@ -161,12 +167,14 @@
         "noLogo": "No logo uploaded yet.",
         "uploading": "Uploading…",
         "logoError": "Could not upload logo. Use a PNG, JPEG, or SVG under 2 MB.",
+        "logoUploaded": "Logo updated.",
         "saveFirst": "Save your company profile first, then you can upload a logo.",
         "nameLabel": "Company name",
         "websiteLabel": "Website",
         "locationLabel": "Location",
         "descriptionLabel": "Description",
         "error": "Could not save company profile. Please check your details.",
+        "saved": "Company profile saved.",
         "save": "Save",
         "saving": "Saving…"
       },
@@ -193,7 +201,11 @@
         "publish": "Publish",
         "close": "Close",
         "delete": "Delete",
-        "deleteConfirm": "Delete this listing? This cannot be undone."
+        "deleteConfirm": "Delete this listing? This cannot be undone.",
+        "publishSuccess": "Job published.",
+        "closeSuccess": "Job closed.",
+        "deleteSuccess": "Job deleted.",
+        "actionError": "Something went wrong. Please try again."
       },
       "jobsNew": {
         "seoTitle": "Post a Job — JobBoard",
@@ -202,6 +214,7 @@
         "companyProfileLink": "company profile",
         "publishImmediately": "Publish immediately (otherwise saved as a draft)",
         "error": "Could not create the job listing. Please check your details.",
+        "success": "Job posted.",
         "submit": "Post job",
         "submitting": "Posting…"
       },
@@ -209,6 +222,7 @@
         "seoTitle": "Edit Job — JobBoard",
         "title": "Edit job",
         "error": "Could not save changes. Please check your details.",
+        "success": "Changes saved.",
         "submit": "Save changes",
         "submitting": "Saving…"
       },
@@ -218,7 +232,9 @@
         "title": "Applicants",
         "empty": "No applications yet.",
         "appliedOn": "Applied {date}",
-        "resume": "Resume"
+        "resume": "Resume",
+        "statusUpdated": "Status updated.",
+        "statusError": "Could not update status. Please try again."
       }
     },
     "candidate": {
@@ -247,6 +263,7 @@
         "noResume": "No resume uploaded yet.",
         "uploading": "Uploading…",
         "resumeError": "Could not upload resume. Use a PDF or Word document under 5 MB.",
+        "resumeUploaded": "Resume updated.",
         "fullNameLabel": "Full name",
         "headlineLabel": "Headline",
         "headlinePlaceholder": "Senior Backend Engineer",

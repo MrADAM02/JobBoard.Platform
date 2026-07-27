@@ -1,5 +1,7 @@
 # JobBoard.Platform
 
+[![CI](https://github.com/MrADAM02/JobBoard.Platform/actions/workflows/ci.yml/badge.svg)](https://github.com/MrADAM02/JobBoard.Platform/actions/workflows/ci.yml)
+
 A full-stack job board: employers post listings, candidates search and apply.
 Built as a portfolio project pairing an ASP.NET Core backend with a Nuxt 3
 frontend — the two halves are deliberately chosen to demonstrate different
