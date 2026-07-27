@@ -7,6 +7,7 @@ export function useRequireRole(role: AuthResult['role']) {
   const auth = useAuthStore()
   if (import.meta.client && auth.role !== role) {
     const localePath = useLocalePath()
-    navigateTo(localePath(auth.isEmployer ? '/dashboard/employer' : '/dashboard/candidate'))
+    const home = auth.isAdmin ? '/dashboard/admin' : auth.isEmployer ? '/dashboard/employer' : '/dashboard/candidate'
+    navigateTo(localePath(home))
   }
 }

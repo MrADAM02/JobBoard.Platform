@@ -27,7 +27,8 @@ public class DeleteJobListingCommandHandler : IRequestHandler<DeleteJobListingCo
             ?? throw new NotFoundException(nameof(JobListing), request.Id);
 
         var company = _db.Companies.First(c => c.Id == listing.CompanyId);
-        if (company.OwnerUserId != _currentUser.UserId)
+        // Admins can moderate/remove any listing, not just employers deleting their own.
+        if (company.OwnerUserId != _currentUser.UserId && _currentUser.Role != "Admin")
         {
             throw new ForbiddenAccessException();
         }

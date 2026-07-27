@@ -90,8 +90,10 @@ public class JobListingsController : ControllerBase
         return NoContent();
     }
 
+    // Employers delete their own listings; admins can moderate/remove any
+    // listing - the ownership-vs-admin check itself lives in the command handler.
     [HttpDelete("{id:guid}")]
-    [Authorize(Roles = "Employer")]
+    [Authorize(Roles = "Employer,Admin")]
     public async Task<IActionResult> Delete(Guid id)
     {
         await _mediator.Send(new DeleteJobListingCommand(id));

@@ -7,6 +7,10 @@ const localePath = useLocalePath()
 
 const mobileMenuOpen = ref(false)
 
+const dashboardHome = computed(() =>
+  auth.isAdmin ? '/dashboard/admin' : auth.isEmployer ? '/dashboard/employer' : '/dashboard/candidate'
+)
+
 // Closing on route change covers both link clicks and any programmatic
 // navigation (e.g. onLogout below), so the panel never stays open post-navigation.
 watch(() => route.fullPath, () => { mobileMenuOpen.value = false })
@@ -34,7 +38,7 @@ function onLogout() {
             <ClientOnly>
               <NuxtLink
                 v-if="auth.isAuthenticated"
-                :to="localePath(auth.isEmployer ? '/dashboard/employer' : '/dashboard/candidate')"
+                :to="localePath(dashboardHome)"
                 class="hover:text-slate-900 dark:hover:text-slate-100"
               >
                 {{ t('nav.dashboard') }}
@@ -89,7 +93,7 @@ function onLogout() {
           <ClientOnly>
             <template v-if="auth.isAuthenticated">
               <NuxtLink
-                :to="localePath(auth.isEmployer ? '/dashboard/employer' : '/dashboard/candidate')"
+                :to="localePath(dashboardHome)"
                 class="hover:text-slate-900 dark:hover:text-slate-100"
               >
                 {{ t('nav.dashboard') }}

@@ -21,6 +21,48 @@
   "locale": {
     "switchLanguage": "Switch language"
   },
+  "admin": {
+    "role": { "admin": "Admin" },
+    "overview": {
+      "seoTitle": "Admin Dashboard — JobBoard",
+      "title": "Admin Dashboard",
+      "totalUsers": "Total users",
+      "totalCandidates": "Candidates",
+      "totalEmployers": "Employers",
+      "totalCompanies": "Companies",
+      "totalJobListings": "Job listings",
+      "totalApplications": "Applications",
+      "manageUsers": "Manage users",
+      "manageUsersDesc": "View accounts and activate or deactivate them.",
+      "manageJobs": "Manage job listings",
+      "manageJobsDesc": "Moderate listings across every company."
+    },
+    "users": {
+      "seoTitle": "Users — JobBoard Admin",
+      "title": "Users",
+      "email": "Email",
+      "role": "Role",
+      "status": "Status",
+      "active": "Active",
+      "inactive": "Inactive",
+      "activate": "Activate",
+      "deactivate": "Deactivate",
+      "toggleSuccess": "User updated.",
+      "toggleError": "Could not update this user. Please try again."
+    },
+    "jobs": {
+      "seoTitle": "Job Listings — JobBoard Admin",
+      "title": "Job Listings",
+      "anyStatus": "Any status",
+      "company": "Company",
+      "views": "Views",
+      "applicants": "Applicants",
+      "delete": "Delete",
+      "deleteConfirm": "Delete this listing? This cannot be undone.",
+      "deleteSuccess": "Listing deleted.",
+      "deleteError": "Could not delete this listing. Please try again."
+    }
+  },
   "notifications": {
     "title": "Notifications",
     "empty": "You have no notifications yet."

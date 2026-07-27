@@ -21,6 +21,48 @@
   "locale": {
     "switchLanguage": "تغيير اللغة"
   },
+  "admin": {
+    "role": { "admin": "مدير" },
+    "overview": {
+      "seoTitle": "لوحة تحكم المدير — JobBoard",
+      "title": "لوحة تحكم المدير",
+      "totalUsers": "إجمالي المستخدمين",
+      "totalCandidates": "المرشحون",
+      "totalEmployers": "أصحاب العمل",
+      "totalCompanies": "الشركات",
+      "totalJobListings": "إعلانات الوظائف",
+      "totalApplications": "الطلبات",
+      "manageUsers": "إدارة المستخدمين",
+      "manageUsersDesc": "عرض الحسابات وتفعيلها أو إيقافها.",
+      "manageJobs": "إدارة إعلانات الوظائف",
+      "manageJobsDesc": "إشراف على الإعلانات عبر جميع الشركات."
+    },
+    "users": {
+      "seoTitle": "المستخدمون — إدارة JobBoard",
+      "title": "المستخدمون",
+      "email": "البريد الإلكتروني",
+      "role": "الدور",
+      "status": "الحالة",
+      "active": "نشط",
+      "inactive": "غير نشط",
+      "activate": "تفعيل",
+      "deactivate": "إيقاف",
+      "toggleSuccess": "تم تحديث المستخدم.",
+      "toggleError": "تعذر تحديث هذا المستخدم. الرجاء المحاولة مرة أخرى."
+    },
+    "jobs": {
+      "seoTitle": "إعلانات الوظائف — إدارة JobBoard",
+      "title": "إعلانات الوظائف",
+      "anyStatus": "كل الحالات",
+      "company": "الشركة",
+      "views": "المشاهدات",
+      "applicants": "المتقدمون",
+      "delete": "حذف",
+      "deleteConfirm": "هل تريد حذف هذا الإعلان؟ لا يمكن التراجع عن هذا الإجراء.",
+      "deleteSuccess": "تم حذف الإعلان.",
+      "deleteError": "تعذر حذف الإعلان. الرجاء المحاولة مرة أخرى."
+    }
+  },
   "notifications": {
     "title": "الإشعارات",
     "empty": "ليس لديك أي إشعارات بعد."

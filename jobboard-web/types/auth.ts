@@ -8,6 +8,12 @@ export const UserRole = {
 
 export type UserRoleValue = (typeof UserRole)[keyof typeof UserRole]
 
+export const UserRoleI18nKey: Record<UserRoleValue, string> = {
+  [UserRole.Candidate]: 'auth.register.candidate',
+  [UserRole.Employer]: 'auth.register.employer',
+  [UserRole.Admin]: 'admin.role.admin'
+}
+
 export interface AuthResult {
   accessToken: string
   refreshToken: string
