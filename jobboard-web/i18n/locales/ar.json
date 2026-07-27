@@ -187,7 +187,9 @@
         "salaryMaxLabel": "الحد الأقصى للراتب",
         "jobTypeLabel": "نوع الوظيفة",
         "tagsLabel": "الوسوم (مفصولة بفواصل)",
-        "tagsPlaceholder": "dotnet, vue, remote"
+        "tagsPlaceholder": "dotnet, vue, remote",
+        "expiresAtLabel": "تنتهي في",
+        "expiresAtHint": "اختياري - يُغلق الإعلان تلقائيًا بعد هذا التاريخ."
       },
       "jobsList": {
         "seoTitle": "وظائفي — JobBoard",
@@ -202,6 +204,7 @@
         "close": "إغلاق",
         "delete": "حذف",
         "deleteConfirm": "هل تريد حذف هذا الإعلان؟ لا يمكن التراجع عن هذا الإجراء.",
+        "expiresOn": "تنتهي في {date}",
         "publishSuccess": "تم نشر الوظيفة.",
         "closeSuccess": "تم إغلاق الوظيفة.",
         "deleteSuccess": "تم حذف الوظيفة.",

@@ -77,6 +77,9 @@ useSeoMeta({ title: () => t('dashboard.employer.jobsList.seoTitle') })
                   views: job.viewCount
                 }) }}
               </p>
+              <p v-if="job.expiresAt" class="text-xs text-slate-500 dark:text-slate-400">
+                {{ t('dashboard.employer.jobsList.expiresOn', { date: new Date(job.expiresAt).toLocaleDateString() }) }}
+              </p>
             </div>
             <Badge :variant="statusVariant(job.status)">{{ t(JobStatusI18nKey[job.status]) }}</Badge>
           </div>

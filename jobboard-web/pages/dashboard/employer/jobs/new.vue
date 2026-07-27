@@ -21,6 +21,7 @@ const salaryMin = ref('')
 const salaryMax = ref('')
 const jobType = ref<JobTypeValue>(0)
 const tags = ref('')
+const expiresAt = ref('')
 const publishImmediately = ref(true)
 const error = ref<string | null>(null)
 const submitting = ref(false)
@@ -40,7 +41,8 @@ async function onSubmit() {
       salaryMax: salaryMax.value ? Number(salaryMax.value) : null,
       jobType: jobType.value,
       tags: tags.value || null,
-      publishImmediately: publishImmediately.value
+      publishImmediately: publishImmediately.value,
+      expiresAt: expiresAt.value || null
     })
     useToast().success(t('dashboard.employer.jobsNew.success'))
     router.push(localePath('/dashboard/employer/jobs'))
@@ -83,6 +85,7 @@ useSeoMeta({ title: () => t('dashboard.employer.jobsNew.seoTitle') })
           </select>
         </div>
         <BaseInput id="tags" v-model="tags" :placeholder="t('dashboard.employer.jobForm.tagsPlaceholder')" :label="t('dashboard.employer.jobForm.tagsLabel')" />
+        <BaseInput id="expiresAt" v-model="expiresAt" type="date" :label="t('dashboard.employer.jobForm.expiresAtLabel')" :hint="t('dashboard.employer.jobForm.expiresAtHint')" />
         <label class="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300">
           <input v-model="publishImmediately" type="checkbox" class="h-4 w-4 rounded border-slate-300 text-primary-600 dark:border-slate-700 dark:bg-slate-900">
           {{ t('dashboard.employer.jobsNew.publishImmediately') }}

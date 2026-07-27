@@ -187,7 +187,9 @@
         "salaryMaxLabel": "Salary max",
         "jobTypeLabel": "Job type",
         "tagsLabel": "Tags (comma-separated)",
-        "tagsPlaceholder": "dotnet, vue, remote"
+        "tagsPlaceholder": "dotnet, vue, remote",
+        "expiresAtLabel": "Expires on",
+        "expiresAtHint": "Optional - the listing closes itself automatically once this date passes."
       },
       "jobsList": {
         "seoTitle": "My Job Listings — JobBoard",
@@ -202,6 +204,7 @@
         "close": "Close",
         "delete": "Delete",
         "deleteConfirm": "Delete this listing? This cannot be undone.",
+        "expiresOn": "Expires {date}",
         "publishSuccess": "Job published.",
         "closeSuccess": "Job closed.",
         "deleteSuccess": "Job deleted.",

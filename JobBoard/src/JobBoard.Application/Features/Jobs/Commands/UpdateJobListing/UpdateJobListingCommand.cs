@@ -8,7 +8,8 @@ namespace JobBoard.Application.Features.Jobs.Commands.UpdateJobListing;
 
 public record UpdateJobListingCommand(
     Guid Id, string Title, string Description, string Location, bool IsRemote,
-    decimal? SalaryMin, decimal? SalaryMax, JobType JobType, string? Tags) : IRequest;
+    decimal? SalaryMin, decimal? SalaryMax, JobType JobType, string? Tags,
+    DateTime? ExpiresAt = null) : IRequest;
 
 public class UpdateJobListingCommandHandler : IRequestHandler<UpdateJobListingCommand>
 {
@@ -40,6 +41,7 @@ public class UpdateJobListingCommandHandler : IRequestHandler<UpdateJobListingCo
         listing.SalaryMax = request.SalaryMax;
         listing.JobType = request.JobType;
         listing.Tags = request.Tags;
+        listing.ExpiresAt = request.ExpiresAt;
         listing.UpdatedAt = DateTime.UtcNow;
 
         await _db.SaveChangesAsync(cancellationToken);

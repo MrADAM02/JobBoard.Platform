@@ -22,6 +22,7 @@ const salaryMin = ref(job.value?.salaryMin?.toString() ?? '')
 const salaryMax = ref(job.value?.salaryMax?.toString() ?? '')
 const jobType = ref<JobTypeValue>(job.value?.jobType ?? 0)
 const tags = ref(job.value?.tags ?? '')
+const expiresAt = ref(job.value?.expiresAt?.slice(0, 10) ?? '')
 const error = ref<string | null>(null)
 const submitting = ref(false)
 
@@ -37,7 +38,8 @@ async function onSubmit() {
       salaryMin: salaryMin.value ? Number(salaryMin.value) : null,
       salaryMax: salaryMax.value ? Number(salaryMax.value) : null,
       jobType: jobType.value,
-      tags: tags.value || null
+      tags: tags.value || null,
+      expiresAt: expiresAt.value || null
     })
     useToast().success(t('dashboard.employer.jobsEdit.success'))
     router.push(localePath('/dashboard/employer/jobs'))
@@ -75,6 +77,7 @@ useSeoMeta({ title: () => t('dashboard.employer.jobsEdit.seoTitle') })
           </select>
         </div>
         <BaseInput id="tags" v-model="tags" :label="t('dashboard.employer.jobForm.tagsLabel')" />
+        <BaseInput id="expiresAt" v-model="expiresAt" type="date" :label="t('dashboard.employer.jobForm.expiresAtLabel')" :hint="t('dashboard.employer.jobForm.expiresAtHint')" />
 
         <Alert v-if="error">{{ error }}</Alert>
 

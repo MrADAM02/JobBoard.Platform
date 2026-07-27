@@ -20,6 +20,7 @@ public record MyJobListingDto(
     int ViewCount,
     int ApplicationCount,
     DateTime? PublishedAt,
+    DateTime? ExpiresAt,
     DateTime CreatedAt);
 
 public class GetMyJobListingsQueryHandler
@@ -43,7 +44,7 @@ public class GetMyJobListingsQueryHandler
             .OrderByDescending(j => j.CreatedAt)
             .Select(j => new MyJobListingDto(
                 j.Id, j.Title, j.Location, j.IsRemote, j.Status,
-                j.ViewCount, j.Applications.Count, j.PublishedAt, j.CreatedAt));
+                j.ViewCount, j.Applications.Count, j.PublishedAt, j.ExpiresAt, j.CreatedAt));
 
         return await PaginatedList<MyJobListingDto>.CreateAsync(query, request.PageNumber, request.PageSize);
     }

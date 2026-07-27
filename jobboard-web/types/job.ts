@@ -46,6 +46,7 @@ export interface JobListingDetail {
   jobType: JobTypeValue
   tags: string | null
   publishedAt: string | null
+  expiresAt: string | null
 }
 
 export interface PaginatedList<T> {
@@ -84,6 +85,7 @@ export interface MyJobListing {
   viewCount: number
   applicationCount: number
   publishedAt: string | null
+  expiresAt: string | null
   createdAt: string
 }
 
@@ -98,6 +100,7 @@ export interface CreateOrUpdateJobPayload {
   jobType: JobTypeValue
   tags: string | null
   publishImmediately?: boolean
+  expiresAt: string | null
 }
 
 export interface JobListingFilters {

@@ -61,7 +61,7 @@ namespace JobBoard.Infrastructure.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("CandidateProfiles");
+                    b.ToTable("CandidateProfiles", (string)null);
                 });
 
             modelBuilder.Entity("JobBoard.Domain.Entities.Company", b =>
@@ -104,7 +104,7 @@ namespace JobBoard.Infrastructure.Migrations
                     b.HasIndex("OwnerUserId")
                         .IsUnique();
 
-                    b.ToTable("Companies");
+                    b.ToTable("Companies", (string)null);
                 });
 
             modelBuilder.Entity("JobBoard.Domain.Entities.JobApplication", b =>
@@ -145,7 +145,7 @@ namespace JobBoard.Infrastructure.Migrations
                     b.HasIndex("JobListingId", "CandidateProfileId")
                         .IsUnique();
 
-                    b.ToTable("JobApplications");
+                    b.ToTable("JobApplications", (string)null);
                 });
 
             modelBuilder.Entity("JobBoard.Domain.Entities.JobListing", b =>
@@ -209,7 +209,7 @@ namespace JobBoard.Infrastructure.Migrations
 
                     b.HasIndex("Status", "PublishedAt");
 
-                    b.ToTable("JobListings");
+                    b.ToTable("JobListings", (string)null);
                 });
 
             modelBuilder.Entity("JobBoard.Domain.Entities.Notification", b =>
@@ -244,7 +244,7 @@ namespace JobBoard.Infrastructure.Migrations
 
                     b.HasIndex("UserId", "CreatedAt");
 
-                    b.ToTable("Notifications");
+                    b.ToTable("Notifications", (string)null);
                 });
 
             modelBuilder.Entity("JobBoard.Domain.Entities.User", b =>
@@ -285,7 +285,7 @@ namespace JobBoard.Infrastructure.Migrations
                     b.HasIndex("Email")
                         .IsUnique();
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("JobBoard.Domain.Entities.CandidateProfile", b =>

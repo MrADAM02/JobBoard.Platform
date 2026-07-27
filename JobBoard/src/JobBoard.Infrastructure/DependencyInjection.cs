@@ -28,6 +28,7 @@ public static class DependencyInjection
         services.AddScoped<IFileStorageService, LocalFileStorageService>();
         services.AddScoped<IEmailService, EmailService>();
         services.AddScoped<IBackgroundJobService, HangfireBackgroundJobService>();
+        services.AddScoped<IJobExpiryService, JobExpiryService>();
 
         // Reuses the existing Postgres instance for job storage - no separate infra needed.
         // Queuing emails here (rather than awaiting IEmailService inline) means a slow mail

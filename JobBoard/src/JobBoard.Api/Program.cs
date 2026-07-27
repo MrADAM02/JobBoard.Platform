@@ -160,6 +160,12 @@ app.MapHangfireDashboard("/hangfire", new DashboardOptions
     Authorization = [new LocalRequestsOnlyAuthorizationFilter()]
 });
 
+// JobListing.ExpiresAt existed on the entity long before anything set or read
+// it - this is what finally makes it do something, closing published listings
+// once they pass their expiry date so they drop off the public /jobs listing.
+RecurringJob.AddOrUpdate<IJobExpiryService>(
+    "close-expired-jobs", s => s.CloseExpiredJobsAsync(), Cron.Hourly);
+
 app.Run();
 
 // Needed for WebApplicationFactory<Program> in JobBoard.Api.IntegrationTests

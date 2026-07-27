@@ -22,7 +22,8 @@ public record JobListingDetailDto(
     decimal? SalaryMax,
     JobType JobType,
     string? Tags,
-    DateTime? PublishedAt);
+    DateTime? PublishedAt,
+    DateTime? ExpiresAt);
 
 public class GetJobListingByIdQueryHandler : IRequestHandler<GetJobListingByIdQuery, JobListingDetailDto>
 {
@@ -48,6 +49,6 @@ public class GetJobListingByIdQueryHandler : IRequestHandler<GetJobListingByIdQu
             listing.Id, listing.Title, listing.Description,
             listing.Company.Name, listing.Company.LogoUrl, listing.Company.Website,
             listing.Location, listing.IsRemote, listing.SalaryMin, listing.SalaryMax,
-            listing.JobType, listing.Tags, listing.PublishedAt);
+            listing.JobType, listing.Tags, listing.PublishedAt, listing.ExpiresAt);
     }
 }

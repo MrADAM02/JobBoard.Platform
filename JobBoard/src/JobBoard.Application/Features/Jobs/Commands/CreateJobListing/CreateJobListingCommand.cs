@@ -17,7 +17,8 @@ public record CreateJobListingCommand(
     decimal? SalaryMax,
     JobType JobType,
     string? Tags,
-    bool PublishImmediately) : IRequest<Guid>;
+    bool PublishImmediately,
+    DateTime? ExpiresAt = null) : IRequest<Guid>;
 
 public class CreateJobListingCommandValidator : AbstractValidator<CreateJobListingCommand>
 {
@@ -30,6 +31,10 @@ public class CreateJobListingCommandValidator : AbstractValidator<CreateJobListi
             .GreaterThanOrEqualTo(x => x.SalaryMin!.Value)
             .When(x => x.SalaryMin.HasValue && x.SalaryMax.HasValue)
             .WithMessage("SalaryMax must be greater than or equal to SalaryMin.");
+        RuleFor(x => x.ExpiresAt)
+            .GreaterThan(_ => DateTime.UtcNow)
+            .When(x => x.ExpiresAt.HasValue)
+            .WithMessage("ExpiresAt must be in the future.");
     }
 }
 
@@ -67,7 +72,8 @@ public class CreateJobListingCommandHandler : IRequestHandler<CreateJobListingCo
             JobType = request.JobType,
             Tags = request.Tags,
             Status = request.PublishImmediately ? JobStatus.Published : JobStatus.Draft,
-            PublishedAt = request.PublishImmediately ? DateTime.UtcNow : null
+            PublishedAt = request.PublishImmediately ? DateTime.UtcNow : null,
+            ExpiresAt = request.ExpiresAt
         };
 
         _db.JobListings.Add(listing);
