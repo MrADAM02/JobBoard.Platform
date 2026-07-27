@@ -202,7 +202,25 @@
         "noLocation": "لم يتم تحديد الموقع",
         "edit": "تعديل",
         "myListingsTitle": "وظائفي المنشورة",
-        "myListingsDesc": "عرض وتعديل وإدارة إعلاناتك."
+        "myListingsDesc": "عرض وتعديل وإدارة إعلاناتك.",
+        "analyticsTitle": "التحليلات",
+        "analyticsDesc": "المشاهدات عبر الزمن، مسار المتقدمين، وأفضل الإعلانات."
+      },
+      "analytics": {
+        "seoTitle": "التحليلات — JobBoard",
+        "title": "التحليلات",
+        "totalViews": "إجمالي المشاهدات",
+        "totalApplications": "إجمالي الطلبات",
+        "totalJobsPosted": "الوظائف المنشورة",
+        "viewsChartTitle": "المشاهدات، آخر 30 يومًا",
+        "viewsChartLabel": "رسم بياني خطي لمشاهدات إعلانات الوظائف خلال آخر 30 يومًا",
+        "statusChartTitle": "الطلبات حسب الحالة",
+        "topJobsTitle": "أفضل الإعلانات من حيث المشاهدات",
+        "viewAsTable": "عرض كجدول",
+        "date": "التاريخ",
+        "views": "مشاهدة",
+        "status": "الحالة",
+        "count": "العدد"
       },
       "company": {
         "editTitle": "تعديل ملف الشركة",

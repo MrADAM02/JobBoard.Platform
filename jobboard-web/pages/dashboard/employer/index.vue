@@ -40,6 +40,11 @@ useSeoMeta({ title: () => t('dashboard.employer.overview.title') + ' — JobBoar
         <h2 class="font-semibold text-slate-900 dark:text-slate-100">{{ t('dashboard.employer.overview.myListingsTitle') }}</h2>
         <p class="text-sm text-slate-600 dark:text-slate-400">{{ t('dashboard.employer.overview.myListingsDesc') }}</p>
       </Card>
+
+      <Card :to="localePath('/dashboard/employer/analytics')" hover>
+        <h2 class="font-semibold text-slate-900 dark:text-slate-100">{{ t('dashboard.employer.overview.analyticsTitle') }}</h2>
+        <p class="text-sm text-slate-600 dark:text-slate-400">{{ t('dashboard.employer.overview.analyticsDesc') }}</p>
+      </Card>
     </div>
   </div>
 </template>

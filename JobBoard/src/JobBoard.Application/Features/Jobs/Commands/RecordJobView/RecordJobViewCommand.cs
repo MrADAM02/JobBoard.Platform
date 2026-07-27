@@ -1,5 +1,6 @@
 using JobBoard.Domain.Enums;
 using JobBoard.Application.Common.Interfaces;
+using JobBoard.Domain.Entities;
 using MediatR;
 
 namespace JobBoard.Application.Features.Jobs.Commands.RecordJobView;
@@ -29,6 +30,7 @@ public class RecordJobViewCommandHandler : IRequestHandler<RecordJobViewCommand>
         }
 
         listing.ViewCount++;
+        _db.JobViews.Add(new JobView { JobListingId = listing.Id });
         await _db.SaveChangesAsync(cancellationToken);
     }
 }

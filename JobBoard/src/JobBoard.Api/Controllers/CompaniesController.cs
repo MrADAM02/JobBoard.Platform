@@ -3,6 +3,7 @@ using JobBoard.Application.Features.Companies.Commands.UpdateCompany;
 using JobBoard.Application.Features.Companies.Commands.UploadCompanyLogo;
 using JobBoard.Application.Features.Companies.Queries.GetCompanies;
 using JobBoard.Application.Features.Companies.Queries.GetCompanyById;
+using JobBoard.Application.Features.Companies.Queries.GetEmployerAnalytics;
 using JobBoard.Application.Features.Companies.Queries.GetMyCompany;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -23,6 +24,11 @@ public class CompaniesController : ControllerBase
     [Authorize(Roles = "Employer")]
     public async Task<IActionResult> GetMine()
         => Ok(await _mediator.Send(new GetMyCompanyQuery()));
+
+    [HttpGet("mine/analytics")]
+    [Authorize(Roles = "Employer")]
+    public async Task<IActionResult> GetMineAnalytics()
+        => Ok(await _mediator.Send(new GetEmployerAnalyticsQuery()));
 
     [HttpGet]
     [AllowAnonymous]

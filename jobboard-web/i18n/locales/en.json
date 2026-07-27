@@ -202,7 +202,25 @@
         "noLocation": "No location set",
         "edit": "Edit",
         "myListingsTitle": "My Job Listings",
-        "myListingsDesc": "View, edit, and manage your postings."
+        "myListingsDesc": "View, edit, and manage your postings.",
+        "analyticsTitle": "Analytics",
+        "analyticsDesc": "Views over time, applicant funnel, and top listings."
+      },
+      "analytics": {
+        "seoTitle": "Analytics — JobBoard",
+        "title": "Analytics",
+        "totalViews": "Total views",
+        "totalApplications": "Total applications",
+        "totalJobsPosted": "Jobs posted",
+        "viewsChartTitle": "Views, last 30 days",
+        "viewsChartLabel": "Line chart of job listing views over the last 30 days",
+        "statusChartTitle": "Applications by status",
+        "topJobsTitle": "Top listings by views",
+        "viewAsTable": "View as table",
+        "date": "Date",
+        "views": "views",
+        "status": "Status",
+        "count": "Count"
       },
       "company": {
         "editTitle": "Edit company profile",

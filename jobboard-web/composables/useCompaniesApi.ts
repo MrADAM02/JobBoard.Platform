@@ -1,5 +1,6 @@
 import type { Company, CompanyPayload, CompanySummary } from '~/types/company'
 import type { PaginatedList } from '~/types/job'
+import type { EmployerAnalytics } from '~/types/analytics'
 
 export function useCompaniesApi() {
   const { authFetch } = useAuthFetch()
@@ -20,6 +21,10 @@ export function useCompaniesApi() {
     return authFetch<Company | null>('/companies/mine')
   }
 
+  function getMyAnalytics() {
+    return authFetch<EmployerAnalytics | null>('/companies/mine/analytics')
+  }
+
   function createCompany(payload: CompanyPayload) {
     return authFetch<string>('/companies', { method: 'POST', body: payload })
   }
@@ -34,5 +39,5 @@ export function useCompaniesApi() {
     return authFetch<string>(`/companies/${id}/logo`, { method: 'POST', body: formData })
   }
 
-  return { getCompanies, getCompanyById, getMyCompany, createCompany, updateCompany, uploadLogo }
+  return { getCompanies, getCompanyById, getMyCompany, getMyAnalytics, createCompany, updateCompany, uploadLogo }
 }
