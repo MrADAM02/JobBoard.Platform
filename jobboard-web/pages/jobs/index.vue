@@ -138,14 +138,13 @@ useSeoMeta({
       </li>
     </ul>
 
-    <div v-if="data && data.totalPages > 1" class="flex items-center justify-center gap-3 pt-2">
-      <BaseButton variant="secondary" size="sm" :disabled="!data.hasPreviousPage" @click="goToPage(data.pageNumber - 1)">
-        {{ t('jobs.list.previous') }}
-      </BaseButton>
-      <span class="text-sm text-slate-600 dark:text-slate-400">{{ t('jobs.list.pageOf', { page: data.pageNumber, total: data.totalPages }) }}</span>
-      <BaseButton variant="secondary" size="sm" :disabled="!data.hasNextPage" @click="goToPage(data.pageNumber + 1)">
-        {{ t('jobs.list.next') }}
-      </BaseButton>
-    </div>
+    <Pagination
+      v-if="data && data.totalPages > 1"
+      :page-number="data.pageNumber"
+      :total-pages="data.totalPages"
+      :has-previous-page="data.hasPreviousPage"
+      :has-next-page="data.hasNextPage"
+      @change="goToPage"
+    />
   </div>
 </template>

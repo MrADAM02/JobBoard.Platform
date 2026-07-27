@@ -32,17 +32,13 @@ function onLogout() {
             <NuxtLink :to="localePath('/companies')" class="hover:text-slate-900 dark:hover:text-slate-100">{{ t('nav.companies') }}</NuxtLink>
 
             <ClientOnly>
-              <template v-if="auth.isAuthenticated">
-                <NuxtLink
-                  :to="localePath(auth.isEmployer ? '/dashboard/employer' : '/dashboard/candidate')"
-                  class="hover:text-slate-900 dark:hover:text-slate-100"
-                >
-                  {{ t('nav.dashboard') }}
-                </NuxtLink>
-              </template>
-              <template v-else>
-                <NuxtLink :to="localePath('/login')" class="hover:text-slate-900 dark:hover:text-slate-100">{{ t('nav.login') }}</NuxtLink>
-              </template>
+              <NuxtLink
+                v-if="auth.isAuthenticated"
+                :to="localePath(auth.isEmployer ? '/dashboard/employer' : '/dashboard/candidate')"
+                class="hover:text-slate-900 dark:hover:text-slate-100"
+              >
+                {{ t('nav.dashboard') }}
+              </NuxtLink>
             </ClientOnly>
           </div>
 
@@ -54,9 +50,13 @@ function onLogout() {
             <ClientOnly>
               <NotificationBell v-if="auth.isAuthenticated" />
             </ClientOnly>
-            <BaseButton v-if="!auth.isAuthenticated" :to="localePath('/register')" size="sm" class="hidden md:inline-flex">
-              {{ t('nav.register') }}
-            </BaseButton>
+
+            <!-- Login/Register paired together as one unit (was split across two different
+                 nav regions before, which read as unrelated) - secondary + primary side by side. -->
+            <div v-if="!auth.isAuthenticated" class="hidden items-center gap-2 md:flex">
+              <BaseButton :to="localePath('/login')" variant="secondary" size="sm">{{ t('nav.login') }}</BaseButton>
+              <BaseButton :to="localePath('/register')" size="sm">{{ t('nav.register') }}</BaseButton>
+            </div>
             <button
               v-if="auth.isAuthenticated"
               class="hidden text-sm font-medium text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100 md:inline-block"
@@ -97,8 +97,10 @@ function onLogout() {
               <button class="text-start hover:text-slate-900 dark:hover:text-slate-100" @click="onLogout">{{ t('nav.logout') }}</button>
             </template>
             <template v-else>
-              <NuxtLink :to="localePath('/login')" class="hover:text-slate-900 dark:hover:text-slate-100">{{ t('nav.login') }}</NuxtLink>
-              <BaseButton :to="localePath('/register')" class="justify-center">{{ t('nav.register') }}</BaseButton>
+              <div class="flex gap-2">
+                <BaseButton :to="localePath('/login')" variant="secondary" class="flex-1 justify-center">{{ t('nav.login') }}</BaseButton>
+                <BaseButton :to="localePath('/register')" class="flex-1 justify-center">{{ t('nav.register') }}</BaseButton>
+              </div>
             </template>
           </ClientOnly>
         </div>
