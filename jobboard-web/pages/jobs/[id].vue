@@ -3,9 +3,11 @@ import { JobType, JobTypeI18nKey } from '~/types/job'
 
 const route = useRoute()
 const { getJobListingById, recordJobView } = useJobsApi()
+const { getMySavedJobIds } = useSavedJobsApi()
 const jobId = route.params.id as string
 const { t } = useI18n()
 const localePath = useLocalePath()
+const auth = useAuthStore()
 
 const { data: job } = await useAsyncData(`job-${jobId}`, () => getJobListingById(jobId))
 
@@ -14,6 +16,16 @@ const { data: job } = await useAsyncData(`job-${jobId}`, () => getJobListingById
 if (!job.value) {
   throw createError({ statusCode: 404, statusMessage: t('errors.notFoundTitle'), fatal: true })
 }
+
+const isSaved = ref(false)
+onMounted(async () => {
+  if (!auth.isCandidate) return
+  try {
+    isSaved.value = (await getMySavedJobIds()).includes(jobId)
+  } catch {
+    // non-fatal - bookmark button just defaults to "not saved"
+  }
+})
 
 // Client-only, not part of the SSR data fetch above - a crawler rendering
 // this page server-side should never count as a "view".
@@ -129,7 +141,12 @@ useHead({
           <h1 class="text-2xl font-bold text-slate-900 dark:text-slate-100">{{ job.title }}</h1>
           <p class="mt-1 text-slate-600 dark:text-slate-400">{{ job.companyName }} &middot; {{ job.location }}</p>
         </div>
-        <Badge v-if="job.isRemote" variant="success">{{ t('jobs.detail.remote') }}</Badge>
+        <div class="flex items-center gap-1">
+          <Badge v-if="job.isRemote" variant="success">{{ t('jobs.detail.remote') }}</Badge>
+          <ClientOnly>
+            <BookmarkButton v-if="auth.isCandidate" :job-id="job.id" v-model="isSaved" />
+          </ClientOnly>
+        </div>
       </div>
 
       <div class="mt-4 flex flex-wrap gap-2">

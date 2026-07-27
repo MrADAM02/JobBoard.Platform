@@ -5,8 +5,26 @@ import { JobTypeI18nKey } from '~/types/job'
 const route = useRoute()
 const router = useRouter()
 const { getJobListings, getJobLocations } = useJobsApi()
+const { getMySavedJobIds } = useSavedJobsApi()
 const { t } = useI18n()
 const localePath = useLocalePath()
+const auth = useAuthStore()
+
+// Client-only, matches how ApplyToJobBox checks "already applied" - a
+// crawler rendering this page server-side has no auth state anyway.
+const savedIds = ref<string[]>([])
+onMounted(async () => {
+  if (!auth.isCandidate) return
+  try {
+    savedIds.value = await getMySavedJobIds()
+  } catch {
+    // non-fatal - bookmark buttons just default to "not saved"
+  }
+})
+
+function onToggleSaved(jobId: string, saved: boolean) {
+  savedIds.value = saved ? [...savedIds.value, jobId] : savedIds.value.filter((id) => id !== jobId)
+}
 
 // Populates the location filter as a select - a free-text box let candidates
 // type a location that matches nothing (typos, a city with no open jobs).
@@ -126,7 +144,17 @@ useSeoMeta({
               <h2 class="font-semibold text-slate-900 dark:text-slate-100">{{ job.title }}</h2>
               <p class="text-sm text-slate-600 dark:text-slate-400">{{ job.companyName }} &middot; {{ job.location }}</p>
             </div>
-            <Badge v-if="job.isRemote" variant="success">{{ t('jobs.detail.remote') }}</Badge>
+            <div class="flex items-center gap-1">
+              <Badge v-if="job.isRemote" variant="success">{{ t('jobs.detail.remote') }}</Badge>
+              <ClientOnly>
+                <BookmarkButton
+                  v-if="auth.isCandidate"
+                  :job-id="job.id"
+                  :model-value="savedIds.includes(job.id)"
+                  @update:model-value="(v) => onToggleSaved(job.id, v)"
+                />
+              </ClientOnly>
+            </div>
           </div>
           <div class="mt-3 flex flex-wrap gap-2 text-xs">
             <Badge variant="neutral">{{ t(JobTypeI18nKey[job.jobType]) }}</Badge>

@@ -13,6 +13,7 @@ public interface IApplicationDbContext
     DbSet<JobListing> JobListings { get; }
     DbSet<JobApplication> JobApplications { get; }
     DbSet<Notification> Notifications { get; }
+    DbSet<SavedJob> SavedJobs { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

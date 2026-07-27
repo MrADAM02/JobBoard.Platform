@@ -16,6 +16,11 @@ useSeoMeta({ title: () => t('dashboard.candidate.overview.seoTitle') })
       <p class="text-sm text-slate-600 dark:text-slate-400">{{ t('dashboard.candidate.overview.applicationsDesc') }}</p>
     </Card>
 
+    <Card :to="localePath('/dashboard/candidate/saved-jobs')" hover>
+      <h2 class="font-semibold text-slate-900 dark:text-slate-100">{{ t('dashboard.candidate.overview.savedJobsTitle') }}</h2>
+      <p class="text-sm text-slate-600 dark:text-slate-400">{{ t('dashboard.candidate.overview.savedJobsDesc') }}</p>
+    </Card>
+
     <Card :to="localePath('/dashboard/candidate/profile')" hover>
       <h2 class="font-semibold text-slate-900 dark:text-slate-100">{{ t('dashboard.candidate.overview.profileTitle') }}</h2>
       <p class="text-sm text-slate-600 dark:text-slate-400">{{ t('dashboard.candidate.overview.profileDesc') }}</p>

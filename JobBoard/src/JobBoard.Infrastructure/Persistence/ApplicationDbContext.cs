@@ -15,6 +15,7 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     public DbSet<JobListing> JobListings => Set<JobListing>();
     public DbSet<JobApplication> JobApplications => Set<JobApplication>();
     public DbSet<Notification> Notifications => Set<Notification>();
+    public DbSet<SavedJob> SavedJobs => Set<SavedJob>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

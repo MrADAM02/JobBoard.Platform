@@ -90,6 +90,8 @@
       "minSalaryPlaceholder": "Min salary",
       "remoteOnly": "Remote only",
       "search": "Search",
+      "save": "Save job",
+      "unsave": "Remove from saved jobs",
       "loading": "Loading jobs…",
       "loadError": "Something went wrong loading job listings. Please try again.",
       "empty": "No jobs match your search.",
@@ -253,6 +255,8 @@
         "title": "Candidate Dashboard",
         "applicationsTitle": "My Applications",
         "applicationsDesc": "Track the status of jobs you've applied to.",
+        "savedJobsTitle": "Saved Jobs",
+        "savedJobsDesc": "Jobs you've bookmarked to review later.",
         "profileTitle": "My Profile",
         "profileDesc": "Update your headline, bio, and skills.",
         "browseJobsTitle": "Browse Jobs",
@@ -264,6 +268,11 @@
         "empty": "You haven't applied to any jobs yet.",
         "browseOpenRoles": "Browse open roles",
         "appliedOn": "Applied {date}"
+      },
+      "savedJobs": {
+        "seoTitle": "Saved Jobs — JobBoard",
+        "title": "Saved Jobs",
+        "empty": "You haven't saved any jobs yet."
       },
       "profile": {
         "seoTitle": "My Profile — JobBoard",

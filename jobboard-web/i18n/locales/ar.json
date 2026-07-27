@@ -90,6 +90,8 @@
       "minSalaryPlaceholder": "الحد الأدنى للراتب",
       "remoteOnly": "عن بُعد فقط",
       "search": "بحث",
+      "save": "حفظ الوظيفة",
+      "unsave": "إزالة من الوظائف المحفوظة",
       "loading": "جارٍ تحميل الوظائف…",
       "loadError": "حدث خطأ أثناء تحميل الوظائف. يرجى المحاولة مرة أخرى.",
       "empty": "لا توجد وظائف مطابقة لبحثك.",
@@ -253,6 +255,8 @@
         "title": "لوحة تحكم المرشح",
         "applicationsTitle": "طلباتي",
         "applicationsDesc": "تابع حالة الوظائف التي تقدمت لها.",
+        "savedJobsTitle": "الوظائف المحفوظة",
+        "savedJobsDesc": "الوظائف التي حفظتها لمراجعتها لاحقًا.",
         "profileTitle": "ملفي الشخصي",
         "profileDesc": "حدّث عنوانك الوظيفي ونبذتك ومهاراتك.",
         "browseJobsTitle": "تصفح الوظائف",
@@ -264,6 +268,11 @@
         "empty": "لم تتقدم لأي وظيفة بعد.",
         "browseOpenRoles": "تصفح الوظائف الشاغرة",
         "appliedOn": "تقدّم بتاريخ {date}"
+      },
+      "savedJobs": {
+        "seoTitle": "الوظائف المحفوظة — JobBoard",
+        "title": "الوظائف المحفوظة",
+        "empty": "لم تحفظ أي وظيفة بعد."
       },
       "profile": {
         "seoTitle": "ملفي الشخصي — JobBoard",
