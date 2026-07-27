@@ -33,4 +33,5 @@ export interface ApplicationSummary {
   resumeUrl: string | null
   status: ApplicationStatusValue
   appliedAt: string
+  employerNotes: string | null
 }

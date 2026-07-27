@@ -17,5 +17,9 @@ public class JobApplication : BaseEntity
     public string ResumeUrlSnapshot { get; set; } = default!; // resume as of application time
     public ApplicationStatus Status { get; set; } = ApplicationStatus.Applied;
 
+    // Employer-only, never surfaced to the candidate - see GetApplicationsForJobQuery,
+    // the only query that reads it, and its existing employer-ownership check.
+    public string? EmployerNotes { get; set; }
+
     public DateTime AppliedAt { get; set; } = DateTime.UtcNow;
 }

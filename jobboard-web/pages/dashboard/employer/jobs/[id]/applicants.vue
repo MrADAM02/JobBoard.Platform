@@ -9,7 +9,7 @@ const jobId = route.params.id as string
 const { t } = useI18n()
 const localePath = useLocalePath()
 
-const { getApplicationsForJob, updateApplicationStatus } = useApplicationsApi()
+const { getApplicationsForJob, updateApplicationStatus, setApplicationNote } = useApplicationsApi()
 const { data: applicants, refresh } = await useAsyncData(`applicants-${jobId}`, () => getApplicationsForJob(jobId))
 const toast = useToast()
 
@@ -25,6 +25,31 @@ async function onStatusChange(applicationId: string, newStatus: number) {
     toast.error(t('dashboard.employer.applicants.statusError'))
   } finally {
     updating.value = null
+  }
+}
+
+// Private to the employer, never shown to the candidate - see the backend's
+// GetApplicationsForJobQuery, the only query that returns EmployerNotes.
+const notesOpen = ref<Record<string, boolean>>({})
+const noteDrafts = ref<Record<string, string>>({})
+const savingNote = ref<string | null>(null)
+
+function toggleNotes(applicationId: string, currentNote: string | null) {
+  if (!(applicationId in noteDrafts.value)) {
+    noteDrafts.value[applicationId] = currentNote ?? ''
+  }
+  notesOpen.value[applicationId] = !notesOpen.value[applicationId]
+}
+
+async function onSaveNote(applicationId: string) {
+  savingNote.value = applicationId
+  try {
+    await setApplicationNote(applicationId, noteDrafts.value[applicationId] || null)
+    toast.success(t('dashboard.employer.applicants.noteSaved'))
+  } catch {
+    toast.error(t('dashboard.employer.applicants.noteError'))
+  } finally {
+    savingNote.value = null
   }
 }
 
@@ -63,6 +88,27 @@ useSeoMeta({ title: () => t('dashboard.employer.applicants.seoTitle') })
                 {{ t(i18nKey) }}
               </option>
             </select>
+          </div>
+
+          <button
+            type="button"
+            class="mt-3 text-sm text-primary-600 underline dark:text-primary-400"
+            @click="toggleNotes(app.id, app.employerNotes)"
+          >
+            {{ app.employerNotes ? t('dashboard.employer.applicants.editNote') : t('dashboard.employer.applicants.addNote') }}
+          </button>
+
+          <div v-if="notesOpen[app.id]" class="mt-2 flex flex-col gap-2">
+            <BaseTextarea
+              :id="`note-${app.id}`"
+              v-model="noteDrafts[app.id]"
+              :rows="3"
+              :label="t('dashboard.employer.applicants.noteLabel')"
+              :placeholder="t('dashboard.employer.applicants.notePlaceholder')"
+            />
+            <BaseButton size="sm" :loading="savingNote === app.id" class="self-start" @click="onSaveNote(app.id)">
+              {{ t('dashboard.employer.applicants.saveNote') }}
+            </BaseButton>
           </div>
         </Card>
       </li>

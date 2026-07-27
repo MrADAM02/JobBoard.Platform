@@ -237,7 +237,14 @@
         "appliedOn": "Applied {date}",
         "resume": "Resume",
         "statusUpdated": "Status updated.",
-        "statusError": "Could not update status. Please try again."
+        "statusError": "Could not update status. Please try again.",
+        "addNote": "Add private note",
+        "editNote": "Edit private note",
+        "noteLabel": "Private note (only you can see this)",
+        "notePlaceholder": "Interview impressions, follow-ups, anything worth remembering...",
+        "saveNote": "Save note",
+        "noteSaved": "Note saved.",
+        "noteError": "Could not save the note. Please try again."
       }
     },
     "candidate": {

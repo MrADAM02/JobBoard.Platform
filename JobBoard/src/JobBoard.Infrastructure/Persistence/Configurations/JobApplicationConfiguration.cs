@@ -8,6 +8,8 @@ public class JobApplicationConfiguration : IEntityTypeConfiguration<JobApplicati
 {
     public void Configure(EntityTypeBuilder<JobApplication> builder)
     {
+        builder.Property(a => a.EmployerNotes).HasMaxLength(2000);
+
         builder.HasOne(a => a.JobListing)
             .WithMany(j => j.Applications)
             .HasForeignKey(a => a.JobListingId)

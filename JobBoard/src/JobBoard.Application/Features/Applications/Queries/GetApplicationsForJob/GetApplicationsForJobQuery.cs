@@ -11,7 +11,8 @@ namespace JobBoard.Application.Features.Applications.Queries.GetApplicationsForJ
 public record GetApplicationsForJobQuery(Guid JobListingId) : IRequest<List<ApplicationSummaryDto>>;
 
 public record ApplicationSummaryDto(
-    Guid Id, string CandidateName, string? ResumeUrl, ApplicationStatus Status, DateTime AppliedAt);
+    Guid Id, string CandidateName, string? ResumeUrl, ApplicationStatus Status, DateTime AppliedAt,
+    string? EmployerNotes);
 
 public class GetApplicationsForJobQueryHandler
     : IRequestHandler<GetApplicationsForJobQuery, List<ApplicationSummaryDto>>
@@ -43,7 +44,8 @@ public class GetApplicationsForJobQueryHandler
             .Include(a => a.CandidateProfile)
             .OrderByDescending(a => a.AppliedAt)
             .Select(a => new ApplicationSummaryDto(
-                a.Id, a.CandidateProfile.FullName, a.CandidateProfile.ResumeUrl, a.Status, a.AppliedAt))
+                a.Id, a.CandidateProfile.FullName, a.CandidateProfile.ResumeUrl, a.Status, a.AppliedAt,
+                a.EmployerNotes))
             .ToListAsync(cancellationToken);
     }
 }

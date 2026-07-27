@@ -1,4 +1,5 @@
 using JobBoard.Application.Features.Applications.Commands.ApplyToJob;
+using JobBoard.Application.Features.Applications.Commands.SetApplicationNote;
 using JobBoard.Application.Features.Applications.Commands.UpdateApplicationStatus;
 using JobBoard.Application.Features.Applications.Queries.GetApplicationsForJob;
 using JobBoard.Application.Features.Applications.Queries.GetMyApplications;
@@ -35,6 +36,15 @@ public class ApplicationsController : ControllerBase
     [HttpPut("{id:guid}/status")]
     [Authorize(Roles = "Employer")]
     public async Task<IActionResult> UpdateStatus(Guid id, UpdateApplicationStatusCommand command)
+    {
+        if (id != command.ApplicationId) return BadRequest("Route id and body id must match.");
+        await _mediator.Send(command);
+        return NoContent();
+    }
+
+    [HttpPut("{id:guid}/note")]
+    [Authorize(Roles = "Employer")]
+    public async Task<IActionResult> SetNote(Guid id, SetApplicationNoteCommand command)
     {
         if (id != command.ApplicationId) return BadRequest("Route id and body id must match.");
         await _mediator.Send(command);

@@ -22,5 +22,12 @@ export function useApplicationsApi() {
     })
   }
 
-  return { applyToJob, getMyApplications, getApplicationsForJob, updateApplicationStatus }
+  function setApplicationNote(applicationId: string, note: string | null) {
+    return authFetch<void>(`/applications/${applicationId}/note`, {
+      method: 'PUT',
+      body: { applicationId, note }
+    })
+  }
+
+  return { applyToJob, getMyApplications, getApplicationsForJob, updateApplicationStatus, setApplicationNote }
 }
