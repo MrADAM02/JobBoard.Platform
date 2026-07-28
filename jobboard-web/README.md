@@ -32,11 +32,33 @@ hydration, same as a normal SPA.
 
 ## Project layout
 
-- `pages/jobs/index.vue` — SSR job search/listing, filters synced to the URL query string
-- `pages/jobs/[id].vue` — SSR job detail, `useSeoMeta` + `JobPosting` JSON-LD
-- `composables/useJobsApi.ts` — typed `$fetch` wrapper around `JobBoard.Api`
-- `types/job.ts` — TypeScript types mirroring the API's DTO shapes
-- `error.vue` — custom error page (used for the job-not-found 404 case)
+**Public, SSR pages** — real content in the first response, no login required:
+- `pages/index.vue` — home/hero
+- `pages/jobs/index.vue` — job search/listing, filters synced to the URL query string, real numbered pagination (`components/Pagination.vue`)
+- `pages/jobs/[id].vue` — job detail, `useSeoMeta` + `JobPosting` JSON-LD
+- `pages/companies/index.vue`, `pages/companies/[id].vue` — public company directory + profile
+- `pages/login.vue`, `pages/register.vue`
+
+**Authenticated dashboards** (`ssr: false` — no SEO value behind a login wall, so these fetch client-side after hydration):
+- `pages/dashboard/candidate/` — overview, applications, saved jobs, profile (resume upload)
+- `pages/dashboard/employer/` — overview, job listings (create/edit/publish/close/delete), applicants (status + private notes), company profile (logo upload), analytics
+- `pages/dashboard/admin/` — platform stats, user management, cross-company job moderation
+
+**Shared design system** (`components/`) — a small component library rather than every page hand-rolling Tailwind strings:
+- `BaseButton`, `BaseInput`, `BaseTextarea`, `BaseSelect`, `Card`, `Badge`, `Alert`, `EmptyState`, `Spinner`
+- `ToastContainer` + `composables/useToast.ts` — global success/error feedback for mutations
+- `Pagination`, `BookmarkButton`, `NotificationBell`, `ApplyToJobBox`, `ThemeToggle`, `LocaleSwitcher`
+- `ViewsLineChart`, `ApplicationStatusChart` — hand-rolled SVG/CSS charts (no charting library) for the employer analytics page
+
+**API layer** (`composables/use*Api.ts`) — one typed `$fetch` wrapper per backend feature area (`useJobsApi`, `useApplicationsApi`, `useCompaniesApi`, `useCandidatesApi`, `useNotificationsApi`, `useSavedJobsApi`, `useAdminApi`, `useAuthApi`), backed by `useAuthFetch` (attaches the JWT, retries once through refresh-token rotation on a 401) and mirrored `types/*.ts` DTOs.
+
+**i18n / theming**:
+- `i18n/locales/{en,ar}.json`, `i18n.config.ts` (custom 6-form Arabic plural rule) — full English/Arabic UI with real RTL layout (Tailwind logical properties, not just a text-direction flip), `hreflang` alternates via `useLocaleHead()`
+- `@nuxtjs/color-mode` — cookie-persisted dark/light theme, correct in the very first SSR response (no flash), toggled via `ThemeToggle.vue`
+
+**Auth**: `stores/auth.ts` (Pinia, persisted to `localStorage`, hydrated client-side) + `middleware/auth.ts` + `composables/useRequireRole.ts` — deliberately client-only, unlike the cookie-backed theme/locale state, since dashboard pages have no SEO value to protect.
+
+`error.vue` is the custom error page (used for the job-not-found 404 case).
 
 ## Setup
 
@@ -84,3 +106,10 @@ pnpm run preview   # or: node .output/server/index.mjs
   older, less battle-tested Nuxt 4 patch — Nuxt 3 needs only Node `>=22.12.0` and
   has everything this project uses (SSR, `useAsyncData`, `useSeoMeta`). Moving to
   Nuxt 4 later is a well-documented, largely mechanical migration.
+- **`@nuxtjs/i18n` pinned to `9.5.6`, not the latest major.** The default install
+  (v10) pulls in `vue-router@5`, which conflicts with this project's Pinia 2 /
+  Nuxt 3 stack (built against `vue-router@4`). v9.5.6 depends on `vue-router@^4`,
+  matching Nuxt 3's own router.
+- **`@nuxt/fonts`** self-hosts the Google Font declared in `tailwind.config.ts`
+  at build time — real `.woff2` files ship from this app's own origin, no
+  runtime request to Google's CDN.

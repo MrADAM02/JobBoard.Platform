@@ -59,53 +59,95 @@ Swagger UI opens automatically at `/swagger` in development.
 **Fully implemented** (real handlers, validators, EF configs):
 - Auth: register, login, refresh token rotation, BCrypt hashing, JWT issuing,
   a dev-only seeded Admin account (self-registering as Admin is blocked)
-- Job listings: create, update, close, soft-delete, public search/filter/pagination,
-  detail page, "my listings" for the owning employer
-- Companies: create, update, fetch by id
-- Candidate profiles: fetch/update the profile auto-created at registration
+- Job listings: create, update, close, publish-a-draft, soft-delete, public
+  search/filter/pagination (output-cached), detail page, distinct-locations
+  list (backs the frontend's location filter), "my listings" for the owning
+  employer, view tracking (a cheap `ViewCount` counter plus a timestamped
+  `JobView` log for the analytics chart), and an hourly Hangfire recurring job
+  that auto-closes listings once their optional `ExpiresAt` date passes
+- Companies: create, update, fetch by id, public list/search, logo upload,
+  employer analytics (30-day view trend, application-status breakdown, top
+  listings) scoped to the caller's own company
+- Candidate profiles: fetch/update the profile auto-created at registration,
+  resume upload (5 MB cap, PDF/DOCX)
 - Applications: apply, list mine (candidate), list for a listing (employer),
-  update status with an email notification stub
-- Test coverage: `tests/JobBoard.Application.UnitTests` (handlers against EF Core
-  InMemory) and `tests/JobBoard.Api.IntegrationTests` (`WebApplicationFactory`
-  over real HTTP) - run both with `dotnet test` from the repo root
+  update status, private employer-only notes on an application (never
+  returned to the candidate)
+- Notifications: in-app feed + mark-as-read, created when a candidate applies
+  (notifies the employer) and when an employer changes an application's
+  status (notifies the candidate)
+- Saved jobs: candidates can bookmark/unbookmark a listing and list their
+  saved jobs; save/unsave are idempotent by design
+- Admin panel: platform-wide stats, paginated user list with
+  activate/deactivate (an admin can't deactivate their own account), and
+  cross-company job listing moderation (soft-delete any listing, not just
+  employer-owned ones)
+- Background jobs via Hangfire (Postgres-backed, dashboard at `/hangfire`,
+  gated to localhost-only requests): outbound emails are queued
+  (`BackgroundJob.Enqueue<IEmailService>`) instead of awaited inline so a slow
+  mail provider can't fail a request, plus the job-expiry recurring job above
+- Cross-cutting: per-IP rate limiting on the auth endpoints, a `/health`
+  check (Postgres connectivity), and short-lived output caching on the public
+  job/company reads
+- Test coverage: `tests/JobBoard.Application.UnitTests` (handlers against EF
+  Core InMemory, prioritizing ownership/authorization checks and the trickier
+  logic like the analytics zero-fill and the expiry bulk-update) and
+  `tests/JobBoard.Api.IntegrationTests` (`WebApplicationFactory` over real
+  HTTP, Hangfire storage swapped to in-memory so tests never touch a real
+  Postgres instance) - run both with `dotnet test` from the repo root
 
-**Intentionally left as a next step** (the pattern is there to copy):
+**Intentionally left as a next step**:
 - Refresh tokens are single-slot per user (one active token). For multi-device
   login, add a `RefreshToken` table instead of two columns on `User`.
-- `ViewCount` on `JobListing` exists but isn't incremented - that's a side
-  effect and belongs in a command, not the `GetJobListingByIdQuery` (queries
-  should stay read-only). Add a small `RecordJobViewCommand` fired from the
-  frontend on page load.
-- `IEmailService` just logs. Wire it to SendGrid/SES, and call it through
-  Hangfire (`BackgroundJob.Enqueue<IEmailService>(s => s.SendAsync(...))`)
-  instead of `await`-ing it inline, so a slow mail provider can't fail an
-  application submission.
-- `IFileStorageService` writes to local disk and exists but nothing calls it
-  yet - resume/logo upload commands are the next slice. Add an S3/Azure Blob
+- `IEmailService` just logs (queued via Hangfire, but the provider itself is a
+  stub). Wire it to a real provider (SendGrid/SES) before deploying.
+- `IFileStorageService` writes to local disk. Add an S3/Azure Blob
   implementation behind the same interface before deploying to an ephemeral host.
-- The `Notification` entity exists (DbSet included) but has no feature slice
-  built on top of it yet - no commands/queries/controller.
+- No Docker/`docker-compose.yml`, no frontend linting (ESLint/Prettier), no
+  `.editorconfig`, no frontend test suite (Vitest/Playwright) - none of these
+  block local development, they're just not there yet.
 
 ## API surface
 
 | Endpoint | Auth | Notes |
 |---|---|---|
 | `POST /api/auth/register` | - | candidate or employer |
-| `POST /api/auth/login` | - | |
-| `POST /api/auth/refresh` | - | rotates the refresh token |
-| `GET /api/jobs` | - | keyword/location/type/remote/salary filters + pagination |
-| `GET /api/jobs/{id}` | - | |
+| `POST /api/auth/login` | - | rate-limited per IP |
+| `POST /api/auth/refresh` | - | rotates the refresh token, rate-limited per IP |
+| `GET /api/jobs` | - | keyword/location/type/remote/salary filters + pagination, output-cached |
+| `GET /api/jobs/{id}` | - | output-cached |
+| `GET /api/jobs/locations` | - | distinct locations across published listings |
 | `GET /api/jobs/mine` | Employer | includes Draft/Closed, excludes soft-deleted |
-| `POST /api/jobs` | Employer | |
+| `POST /api/jobs` | Employer | optional `ExpiresAt` |
 | `PUT /api/jobs/{id}` | Employer | |
 | `POST /api/jobs/{id}/close` | Employer | |
-| `DELETE /api/jobs/{id}` | Employer | soft-delete (`JobStatus.Deleted`) |
+| `POST /api/jobs/{id}/publish` | Employer | publishes a draft listing |
+| `DELETE /api/jobs/{id}` | Employer, Admin | soft-delete (`JobStatus.Deleted`); admins can delete listings they don't own |
+| `POST /api/jobs/{id}/view` | - | fire-and-forget view ping, fired client-side only |
+| `GET /api/companies` | - | keyword search + pagination |
 | `POST /api/companies` | Employer | |
 | `GET /api/companies/{id}` | - | |
 | `PUT /api/companies/{id}` | Employer | |
+| `GET /api/companies/mine` | Employer | |
+| `GET /api/companies/mine/analytics` | Employer | 30-day view trend, status breakdown, top listings |
+| `POST /api/companies/{id}/logo` | Employer | 2 MB cap, PNG/JPEG/SVG |
 | `GET /api/candidates/me` | Candidate | |
 | `PUT /api/candidates/me` | Candidate | |
+| `POST /api/candidates/me/resume` | Candidate | 5 MB cap, PDF/DOCX |
 | `POST /api/applications` | Candidate | |
 | `GET /api/applications/mine` | Candidate | |
 | `GET /api/applications/job/{jobListingId}` | Employer | |
 | `PUT /api/applications/{id}/status` | Employer | |
+| `PUT /api/applications/{id}/note` | Employer | private note, never exposed to the candidate |
+| `GET /api/notifications` | Any authenticated | most recent 20 |
+| `PUT /api/notifications/{id}/read` | Any authenticated | |
+| `GET /api/saved-jobs` | Candidate | |
+| `GET /api/saved-jobs/ids` | Candidate | lightweight id list for bookmark-toggle state |
+| `POST /api/saved-jobs/{jobId}` | Candidate | idempotent |
+| `DELETE /api/saved-jobs/{jobId}` | Candidate | idempotent |
+| `GET /api/admin/stats` | Admin | |
+| `GET /api/admin/users` | Admin | |
+| `PUT /api/admin/users/{id}/active` | Admin | can't deactivate your own account |
+| `GET /api/admin/jobs` | Admin | cross-company, optional status filter |
+| `GET /health` | - | Postgres connectivity |
+| `/hangfire` | localhost only | background job dashboard |

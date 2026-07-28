@@ -59,10 +59,29 @@ Runs at `http://localhost:3000`, pointed at the API above via `NUXT_PUBLIC_API_B
   for the full reasoning, including why Nuxt 3 (not the newer Nuxt 4) and pnpm
   (not npm) specifically.
 
+## Features
+
+- **Core marketplace** — employer job postings (draft/publish/close/expire),
+  candidate search + apply, resume/logo upload, company profiles
+- **Candidate tools** — saved/bookmarked jobs, in-app notifications
+- **Employer tools** — applicant tracking with private notes, an analytics
+  dashboard (views over time, application-status breakdown, top listings),
+  auto-closing listings past their expiry date
+- **Admin panel** — platform stats, user management, cross-company listing moderation
+- **i18n/RTL** — full English/Arabic UI with real right-to-left layout, not
+  just a text-direction flip
+- **Dark/light theme**, mobile-responsive, a small shared design system
+  (buttons/inputs/cards/toasts) instead of per-page ad-hoc styling
+- **Background jobs** (Hangfire) for outbound email and the job-expiry sweep;
+  output caching, rate limiting, and a health check on the API; CI running
+  build + test on every push
+
 ## Status
 
-Backend: auth, job listings, companies, candidate profiles, and applications
-are fully implemented with unit + integration test coverage. Frontend: public
-SSR job search/detail pages are live; authenticated flows (login, employer
-dashboard, apply) are the next milestone. See each project's README for the
-detailed "what's done vs. scaffolded" breakdown.
+Both halves are fully built out: auth, job listings, companies, candidate
+profiles, applications, notifications, saved jobs, an admin panel, and an
+employer analytics dashboard, backed by unit + integration test coverage on
+the API and SSR on every public-facing page. See each project's README for
+the detailed feature/API breakdown. Not deployed anywhere yet — this repo is
+built and verified entirely locally (see each README's "what's left" notes
+for what deployment would still need).
