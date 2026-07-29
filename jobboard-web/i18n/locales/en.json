@@ -148,7 +148,8 @@
       "about": "About {company}",
       "seoTitle": "{title} at {company} — JobBoard",
       "seoDescription": "{title} at {company} — {location}. {excerpt}",
-      "ogTitle": "{title} at {company}"
+      "ogTitle": "{title} at {company}",
+      "similarJobs": "Similar jobs"
     },
     "apply": {
       "loginPrompt": "Log in as a candidate to apply for this role.",

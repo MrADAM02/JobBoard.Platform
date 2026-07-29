@@ -2,7 +2,7 @@
 import { JobType, JobTypeI18nKey } from '~/types/job'
 
 const route = useRoute()
-const { getJobListingById, recordJobView } = useJobsApi()
+const { getJobListingById, getSimilarJobs, recordJobView } = useJobsApi()
 const { getMySavedJobIds } = useSavedJobsApi()
 const jobId = route.params.id as string
 const { t } = useI18n()
@@ -16,6 +16,10 @@ const { data: job } = await useAsyncData(`job-${jobId}`, () => getJobListingById
 if (!job.value) {
   throw createError({ statusCode: 404, statusMessage: t('errors.notFoundTitle'), fatal: true })
 }
+
+// Public, SEO-relevant internal linking - fetched server-side alongside the
+// job itself, not client-only like ApplyToJobBox's auth-gated interaction.
+const { data: similarJobs } = await useAsyncData(`job-${jobId}-similar`, () => getSimilarJobs(jobId))
 
 const isSaved = ref(false)
 onMounted(async () => {
@@ -174,5 +178,30 @@ useHead({
     <ClientOnly>
       <ApplyToJobBox :job-id="job.id" />
     </ClientOnly>
+
+    <div v-if="similarJobs?.length">
+      <h2 class="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
+        {{ t('jobs.detail.similarJobs') }}
+      </h2>
+      <ul class="flex flex-col gap-3">
+        <li v-for="similar in similarJobs" :key="similar.id">
+          <Card :to="localePath(`/jobs/${similar.id}`)" hover padding="sm">
+            <div class="flex items-start justify-between gap-4">
+              <div>
+                <h3 class="font-semibold text-slate-900 dark:text-slate-100">{{ similar.title }}</h3>
+                <p class="text-sm text-slate-600 dark:text-slate-400">{{ similar.companyName }} &middot; {{ similar.location }}</p>
+              </div>
+              <Badge v-if="similar.isRemote" variant="success">{{ t('jobs.detail.remote') }}</Badge>
+            </div>
+            <div class="mt-3 flex flex-wrap gap-2 text-xs">
+              <Badge variant="neutral">{{ t(JobTypeI18nKey[similar.jobType]) }}</Badge>
+              <Badge v-if="similar.salaryMin || similar.salaryMax" variant="neutral">
+                ${{ similar.salaryMin?.toLocaleString() ?? '?' }} &ndash; ${{ similar.salaryMax?.toLocaleString() ?? '?' }}
+              </Badge>
+            </div>
+          </Card>
+        </li>
+      </ul>
+    </div>
   </article>
 </template>

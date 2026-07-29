@@ -33,6 +33,10 @@ export function useJobsApi() {
     return $fetch<JobListingDetail>(`${apiBase}/jobs/${id}`)
   }
 
+  function getSimilarJobs(id: string) {
+    return $fetch<JobListingSummary[]>(`${apiBase}/jobs/${id}/similar`)
+  }
+
   // Public, fire-and-forget - called client-side on mount, not part of the SSR
   // fetch, so crawler/bot hits don't inflate the view count.
   function recordJobView(id: string) {
@@ -71,6 +75,7 @@ export function useJobsApi() {
   return {
     getJobListings,
     getJobListingById,
+    getSimilarJobs,
     recordJobView,
     getMyJobListings,
     createJobListing,

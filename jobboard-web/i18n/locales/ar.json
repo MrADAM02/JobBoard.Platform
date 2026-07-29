@@ -148,7 +148,8 @@
       "about": "عن {company}",
       "seoTitle": "{title} في {company} — JobBoard",
       "seoDescription": "{title} في {company} — {location}. {excerpt}",
-      "ogTitle": "{title} في {company}"
+      "ogTitle": "{title} في {company}",
+      "similarJobs": "وظائف مشابهة"
     },
     "apply": {
       "loginPrompt": "سجّل الدخول كمرشح للتقديم على هذه الوظيفة.",

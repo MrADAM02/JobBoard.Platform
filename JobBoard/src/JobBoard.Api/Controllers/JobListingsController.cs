@@ -9,6 +9,7 @@ using JobBoard.Application.Features.Jobs.Queries.GetJobListingById;
 using JobBoard.Application.Features.Jobs.Queries.GetJobListings;
 using JobBoard.Application.Features.Jobs.Queries.GetJobLocations;
 using JobBoard.Application.Features.Jobs.Queries.GetMyJobListings;
+using JobBoard.Application.Features.Jobs.Queries.GetSimilarJobs;
 using JobBoard.Domain.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -57,6 +58,13 @@ public class JobListingsController : ControllerBase
     [OutputCache(PolicyName = "PublicReads")]
     public async Task<ActionResult<JobListingDetailDto>> GetById(Guid id)
         => Ok(await _mediator.Send(new GetJobListingByIdQuery(id)));
+
+    // Public - backs the "similar jobs" section on the job detail page.
+    [HttpGet("{id:guid}/similar")]
+    [AllowAnonymous]
+    [OutputCache(PolicyName = "PublicReads")]
+    public async Task<ActionResult<List<JobListingSummaryDto>>> GetSimilar(Guid id)
+        => Ok(await _mediator.Send(new GetSimilarJobsQuery(id)));
 
     [HttpPost]
     [Authorize(Roles = "Employer")]
