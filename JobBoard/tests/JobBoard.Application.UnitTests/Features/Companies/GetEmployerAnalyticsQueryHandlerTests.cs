@@ -3,7 +3,6 @@ using JobBoard.Application.Features.Companies.Queries.GetEmployerAnalytics;
 using JobBoard.Application.UnitTests.TestHelpers;
 using JobBoard.Domain.Entities;
 using JobBoard.Domain.Enums;
-using JobBoard.Infrastructure.Persistence;
 
 namespace JobBoard.Application.UnitTests.Features.Companies;
 
