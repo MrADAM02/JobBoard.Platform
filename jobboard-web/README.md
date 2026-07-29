@@ -66,14 +66,15 @@ hydration, same as a normal SPA.
 pnpm install
 ```
 
-Point the app at your running `JobBoard.Api` instance (defaults to
-`http://localhost:5000/api`, matching the API's `http` launch profile — this
-sidesteps the API's self-signed HTTPS dev certificate, which server-side `fetch`
-calls during SSR won't trust by default):
+Copy `.env.example` to `.env` if you need to point the app at anything other
+than the defaults (`http://localhost:5000/api` for the API, matching its
+`http` launch profile — this sidesteps the API's self-signed HTTPS dev
+certificate, which server-side `fetch` calls during SSR won't trust by
+default). Both variables already fall back to sane local defaults, so this
+step is optional:
 
 ```bash
-# .env (optional - only needed to override the default)
-NUXT_PUBLIC_API_BASE=http://localhost:5000/api
+cp .env.example .env
 ```
 
 ## Development
