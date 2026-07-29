@@ -1,0 +1,21 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+# C# backend (JobBoard/) - 4-space indent, matches every .cs file already in the repo
+[*.cs]
+indent_style = space
+indent_size = 4
+
+# Nuxt frontend (jobboard-web/) - 2-space indent, matches every file already in the repo
+[*.{ts,vue,js,json}]
+indent_style = space
+indent_size = 2
+
+# Markdown uses trailing double-space for hard line breaks - don't strip it
+[*.md]
+trim_trailing_whitespace = false
