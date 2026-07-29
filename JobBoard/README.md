@@ -28,6 +28,9 @@ JobBoard.Domain         <- entities, enums. No dependencies on anything.
   command/query + handler under `Features/`, with a co-located FluentValidation
   validator where input needs validating. This is the CQRS pattern - it keeps
   each use case in one file instead of spreading logic across a fat service class.
+- `Directory.Build.props` (repo root of this project) sets `TargetFramework`/
+  `ImplicitUsings`/`Nullable` once for all 6 projects via MSBuild's directory-walk-up
+  convention, instead of repeating them in every `.csproj`.
 
 ## Getting started
 
@@ -91,10 +94,11 @@ Swagger UI opens automatically at `/swagger` in development.
   job/company reads
 - Test coverage: `tests/JobBoard.Application.UnitTests` (handlers against EF
   Core InMemory, prioritizing ownership/authorization checks and the trickier
-  logic like the analytics zero-fill and the expiry bulk-update) and
-  `tests/JobBoard.Api.IntegrationTests` (`WebApplicationFactory` over real
-  HTTP, Hangfire storage swapped to in-memory so tests never touch a real
-  Postgres instance) - run both with `dotnet test` from the repo root
+  logic like the analytics zero-fill, the expiry bulk-update, and the
+  similar-jobs ranking) and `tests/JobBoard.Api.IntegrationTests`
+  (`WebApplicationFactory` over real HTTP, Hangfire storage swapped to
+  in-memory so tests never touch a real Postgres instance) - run both with
+  `dotnet test` from the repo root
 
 **Intentionally left as a next step**:
 - Refresh tokens are single-slot per user (one active token). For multi-device
@@ -103,9 +107,8 @@ Swagger UI opens automatically at `/swagger` in development.
   stub). Wire it to a real provider (SendGrid/SES) before deploying.
 - `IFileStorageService` writes to local disk. Add an S3/Azure Blob
   implementation behind the same interface before deploying to an ephemeral host.
-- No Docker/`docker-compose.yml`, no frontend linting (ESLint/Prettier), no
-  `.editorconfig`, no frontend test suite (Vitest/Playwright) - none of these
-  block local development, they're just not there yet.
+- No Docker/`docker-compose.yml`, no frontend linting (ESLint/Prettier) - not
+  there yet, doesn't block local development.
 
 ## API surface
 
@@ -117,6 +120,7 @@ Swagger UI opens automatically at `/swagger` in development.
 | `GET /api/jobs` | - | keyword/location/type/remote/salary filters + pagination, output-cached |
 | `GET /api/jobs/{id}` | - | output-cached |
 | `GET /api/jobs/locations` | - | distinct locations across published listings |
+| `GET /api/jobs/{id}/similar` | - | up to 4 other published listings matching type/location, output-cached |
 | `GET /api/jobs/mine` | Employer | includes Draft/Closed, excludes soft-deleted |
 | `POST /api/jobs` | Employer | optional `ExpiresAt` |
 | `PUT /api/jobs/{id}` | Employer | |

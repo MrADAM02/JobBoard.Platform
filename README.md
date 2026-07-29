@@ -62,7 +62,9 @@ Runs at `http://localhost:3000`, pointed at the API above via `NUXT_PUBLIC_API_B
 ## Features
 
 - **Core marketplace** — employer job postings (draft/publish/close/expire),
-  candidate search + apply, resume/logo upload, company profiles
+  candidate search + apply, resume/logo upload, company profiles, a
+  "similar jobs" section on each listing (same type/location, ranked by
+  best match then recency)
 - **Candidate tools** — saved/bookmarked jobs, in-app notifications
 - **Employer tools** — applicant tracking with private notes, an analytics
   dashboard (views over time, application-status breakdown, top listings),
@@ -74,14 +76,14 @@ Runs at `http://localhost:3000`, pointed at the API above via `NUXT_PUBLIC_API_B
   (buttons/inputs/cards/toasts) instead of per-page ad-hoc styling
 - **Background jobs** (Hangfire) for outbound email and the job-expiry sweep;
   output caching, rate limiting, and a health check on the API; CI running
-  build + test on every push
+  build + test on every push (backend `dotnet test`, frontend Vitest)
 
 ## Status
 
 Both halves are fully built out: auth, job listings, companies, candidate
 profiles, applications, notifications, saved jobs, an admin panel, and an
 employer analytics dashboard, backed by unit + integration test coverage on
-the API and SSR on every public-facing page. See each project's README for
-the detailed feature/API breakdown. Not deployed anywhere yet — this repo is
-built and verified entirely locally (see each README's "what's left" notes
-for what deployment would still need).
+the API and a Vitest suite on the frontend, plus SSR on every public-facing
+page. See each project's README for the detailed feature/API breakdown. Not
+deployed anywhere yet — this repo is built and verified entirely locally
+(see each README's "what's left" notes for what deployment would still need).

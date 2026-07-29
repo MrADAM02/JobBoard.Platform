@@ -35,7 +35,7 @@ hydration, same as a normal SPA.
 **Public, SSR pages** — real content in the first response, no login required:
 - `pages/index.vue` — home/hero
 - `pages/jobs/index.vue` — job search/listing, filters synced to the URL query string, real numbered pagination (`components/Pagination.vue`)
-- `pages/jobs/[id].vue` — job detail, `useSeoMeta` + `JobPosting` JSON-LD
+- `pages/jobs/[id].vue` — job detail, `useSeoMeta` + `JobPosting` JSON-LD, an SSR-fetched "similar jobs" section (same type or location, ranked by best match then recency)
 - `pages/companies/index.vue`, `pages/companies/[id].vue` — public company directory + profile
 - `pages/login.vue`, `pages/register.vue`
 
