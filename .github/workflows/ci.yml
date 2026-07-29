@@ -46,6 +46,10 @@ jobs:
         working-directory: jobboard-web
         run: pnpm install --frozen-lockfile
 
+      - name: Test
+        working-directory: jobboard-web
+        run: pnpm run test
+
       - name: Build
         working-directory: jobboard-web
         run: pnpm run build

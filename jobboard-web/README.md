@@ -93,6 +93,18 @@ pnpm run build
 pnpm run preview   # or: node .output/server/index.mjs
 ```
 
+## Testing
+
+```bash
+pnpm run test
+```
+
+Vitest, via `@nuxt/test-utils` (auto-imports and the i18n plugin resolve
+correctly inside tests, not just the running app). `tests/` covers the
+non-trivial pure logic rather than every file - the Arabic CLDR plural rule,
+the toast queue's push/auto-dismiss behavior, and `Pagination.vue`'s
+ellipsis-collapsing window. Runs in CI on every push/PR alongside the build.
+
 ## Tooling notes
 
 - **pnpm, not npm.** Faster installs and a shared content-addressable store instead

@@ -3,7 +3,7 @@
 // simple positional indices, so ar.json's pluralized keys (resultCount,
 // applicantCount) provide 6 pipe-separated forms in this exact order, and this
 // custom rule picks the right one per the standard CLDR Arabic algorithm.
-function arabicPluralRule(choice: number): number {
+export function arabicPluralRule(choice: number): number {
   if (choice === 0) return 0 // zero
   if (choice === 1) return 1 // one
   if (choice === 2) return 2 // two
