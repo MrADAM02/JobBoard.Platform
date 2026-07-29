@@ -73,7 +73,10 @@ public class CreateJobListingCommandHandler : IRequestHandler<CreateJobListingCo
             Tags = request.Tags,
             Status = request.PublishImmediately ? JobStatus.Published : JobStatus.Draft,
             PublishedAt = request.PublishImmediately ? DateTime.UtcNow : null,
-            ExpiresAt = request.ExpiresAt
+            // Client-supplied dates (e.g. a plain "2026-08-01" from a <input type="date">)
+            // deserialize with DateTimeKind.Unspecified - Npgsql rejects that for a
+            // "timestamp with time zone" column, so it must be forced to UTC.
+            ExpiresAt = request.ExpiresAt.HasValue ? DateTime.SpecifyKind(request.ExpiresAt.Value, DateTimeKind.Utc) : null
         };
 
         _db.JobListings.Add(listing);

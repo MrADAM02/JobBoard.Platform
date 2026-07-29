@@ -41,7 +41,9 @@ public class UpdateJobListingCommandHandler : IRequestHandler<UpdateJobListingCo
         listing.SalaryMax = request.SalaryMax;
         listing.JobType = request.JobType;
         listing.Tags = request.Tags;
-        listing.ExpiresAt = request.ExpiresAt;
+        // See CreateJobListingCommandHandler - a client-supplied date deserializes
+        // with DateTimeKind.Unspecified, which Npgsql rejects for "timestamp with time zone".
+        listing.ExpiresAt = request.ExpiresAt.HasValue ? DateTime.SpecifyKind(request.ExpiresAt.Value, DateTimeKind.Utc) : null;
         listing.UpdatedAt = DateTime.UtcNow;
 
         await _db.SaveChangesAsync(cancellationToken);
