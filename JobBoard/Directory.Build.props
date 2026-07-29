@@ -1,0 +1,12 @@
+<Project>
+
+  <!-- Shared by every project under JobBoard/ (src and tests alike) via MSBuild's
+       directory-walk-up convention - previously repeated identically in all 6 .csproj
+       files. Project-specific properties (UserSecretsId, IsPackable, etc.) stay local. -->
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>
