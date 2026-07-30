@@ -56,18 +56,23 @@ function onLogout() {
             </ClientOnly>
 
             <!-- Login/Register paired together as one unit (was split across two different
-                 nav regions before, which read as unrelated) - secondary + primary side by side. -->
-            <div v-if="!auth.isAuthenticated" class="hidden items-center gap-2 md:flex">
-              <BaseButton :to="localePath('/login')" variant="secondary" size="sm">{{ t('nav.login') }}</BaseButton>
-              <BaseButton :to="localePath('/register')" size="sm">{{ t('nav.register') }}</BaseButton>
-            </div>
-            <button
-              v-if="auth.isAuthenticated"
-              class="hidden text-sm font-medium text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100 md:inline-block"
-              @click="onLogout"
-            >
-              {{ t('nav.logout') }}
-            </button>
+                 nav regions before, which read as unrelated) - secondary + primary side by side.
+                 ClientOnly, same as the other auth.isAuthenticated branches above/below -
+                 the store only knows real auth state after it hydrates from localStorage
+                 client-side, so an unwrapped v-if here mismatches the SSR render. -->
+            <ClientOnly>
+              <div v-if="!auth.isAuthenticated" class="hidden items-center gap-2 md:flex">
+                <BaseButton :to="localePath('/login')" variant="secondary" size="sm">{{ t('nav.login') }}</BaseButton>
+                <BaseButton :to="localePath('/register')" size="sm">{{ t('nav.register') }}</BaseButton>
+              </div>
+              <button
+                v-else
+                class="hidden text-sm font-medium text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100 md:inline-block"
+                @click="onLogout"
+              >
+                {{ t('nav.logout') }}
+              </button>
+            </ClientOnly>
 
             <button
               type="button"
