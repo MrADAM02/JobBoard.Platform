@@ -14,7 +14,7 @@ describe('useToast', () => {
   })
 
   it('pushes a success toast onto the queue', async () => {
-    const { useToast } = await import('../composables/useToast')
+    const { useToast } = await import('../app/composables/useToast')
     const { toasts, success } = useToast()
 
     success('Job posted.')
@@ -24,7 +24,7 @@ describe('useToast', () => {
   })
 
   it('pushes an error toast', async () => {
-    const { useToast } = await import('../composables/useToast')
+    const { useToast } = await import('../app/composables/useToast')
     const { toasts, error } = useToast()
 
     error('Something went wrong.')
@@ -33,7 +33,7 @@ describe('useToast', () => {
   })
 
   it('auto-dismisses a toast after 4 seconds', async () => {
-    const { useToast } = await import('../composables/useToast')
+    const { useToast } = await import('../app/composables/useToast')
     const { toasts, success } = useToast()
 
     success('Temporary')
@@ -45,7 +45,7 @@ describe('useToast', () => {
   })
 
   it('does not dismiss early, just before the 4-second mark', async () => {
-    const { useToast } = await import('../composables/useToast')
+    const { useToast } = await import('../app/composables/useToast')
     const { toasts, success } = useToast()
 
     success('Still here')

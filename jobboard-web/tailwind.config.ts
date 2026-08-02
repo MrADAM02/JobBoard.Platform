@@ -11,12 +11,12 @@ export default {
   // content auto-detection, so every directory containing class strings must
   // be listed explicitly here.
   content: [
-    "./components/**/*.{vue,js,ts}",
-    "./layouts/**/*.vue",
-    "./pages/**/*.vue",
-    "./composables/**/*.{js,ts}",
-    "./app.vue",
-    "./error.vue",
+    "./app/components/**/*.{vue,js,ts}",
+    "./app/layouts/**/*.vue",
+    "./app/pages/**/*.vue",
+    "./app/composables/**/*.{js,ts}",
+    "./app/app.vue",
+    "./app/error.vue",
   ],
   theme: {
     extend: {

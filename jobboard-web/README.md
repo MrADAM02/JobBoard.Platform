@@ -1,6 +1,6 @@
 # jobboard-web
 
-Nuxt 3 frontend for JobBoard, consuming the ASP.NET Core API in [`../JobBoard`](../JobBoard).
+Nuxt 4 frontend for JobBoard, consuming the ASP.NET Core API in [`../JobBoard`](../JobBoard).
 
 ## Why Nuxt (SSR), not a plain SPA
 
@@ -32,35 +32,44 @@ hydration, same as a normal SPA.
 
 ## Project layout
 
+App code lives under `app/` (Nuxt 4's default `srcDir`), so `~/` resolves there — `app/components`, `app/composables`, `app/stores`, `app/types`, etc. `i18n/` stays at the repo root (outside `app/`, per `@nuxtjs/i18n`'s own convention, since translations are used both server- and client-side), alongside `public/`, `tests/`, and the config files (`nuxt.config.ts`, `tailwind.config.ts`, `vitest.config.ts`).
+
 **Public, SSR pages** — real content in the first response, no login required:
-- `pages/index.vue` — home/hero
-- `pages/jobs/index.vue` — job search/listing, filters synced to the URL query string, real numbered pagination (`components/Pagination.vue`)
-- `pages/jobs/[id].vue` — job detail, `useSeoMeta` + `JobPosting` JSON-LD, an SSR-fetched "similar jobs" section (same type or location, ranked by best match then recency)
-- `pages/companies/index.vue`, `pages/companies/[id].vue` — public company directory + profile
-- `pages/login.vue`, `pages/register.vue`
+- `app/pages/index.vue` — home/hero
+- `app/pages/jobs/index.vue` — job search/listing, filters synced to the URL query string, real numbered pagination (`app/components/Pagination.vue`)
+- `app/pages/jobs/[id].vue` — job detail, `useSeoMeta` + `JobPosting` JSON-LD, an SSR-fetched "similar jobs" section (same type or location, ranked by best match then recency)
+- `app/pages/companies/index.vue`, `app/pages/companies/[id].vue` — public company directory + profile
+- `app/pages/login.vue`, `app/pages/register.vue`
 
 **Authenticated dashboards** (`ssr: false` — no SEO value behind a login wall, so these fetch client-side after hydration):
-- `pages/dashboard/candidate/` — overview, applications, saved jobs, profile (resume upload)
-- `pages/dashboard/employer/` — overview, job listings (create/edit/publish/close/delete), applicants (status + private notes), company profile (logo upload), analytics
-- `pages/dashboard/admin/` — platform stats, user management, cross-company job moderation
+- `app/pages/dashboard/candidate/` — overview, applications, saved jobs, profile (resume upload)
+- `app/pages/dashboard/employer/` — overview, job listings (create/edit/publish/close/delete), applicants (status + private notes), company profile (logo upload), analytics
+- `app/pages/dashboard/admin/` — platform stats, user management, cross-company job moderation
 
-**Shared design system** (`components/`) — a small component library rather than every page hand-rolling Tailwind strings:
+**Shared design system** (`app/components/`) — a small component library rather than every page hand-rolling Tailwind strings:
 - `BaseButton`, `BaseInput`, `BaseTextarea`, `BaseSelect`, `Card`, `Badge`, `Alert`, `EmptyState`, `Spinner`
 - `ToastContainer` + `composables/useToast.ts` — global success/error feedback for mutations
 - `Pagination`, `BookmarkButton`, `NotificationBell`, `ApplyToJobBox`, `ThemeToggle`, `LocaleSwitcher`
 - `ViewsLineChart`, `ApplicationStatusChart` — hand-rolled SVG/CSS charts (no charting library) for the employer analytics page
 
-**API layer** (`composables/use*Api.ts`) — one typed `$fetch` wrapper per backend feature area (`useJobsApi`, `useApplicationsApi`, `useCompaniesApi`, `useCandidatesApi`, `useNotificationsApi`, `useSavedJobsApi`, `useAdminApi`, `useAuthApi`), backed by `useAuthFetch` (attaches the JWT, retries once through refresh-token rotation on a 401) and mirrored `types/*.ts` DTOs.
+**API layer** (`app/composables/use*Api.ts`) — one typed `$fetch` wrapper per backend feature area (`useJobsApi`, `useApplicationsApi`, `useCompaniesApi`, `useCandidatesApi`, `useNotificationsApi`, `useSavedJobsApi`, `useAdminApi`, `useAuthApi`), backed by `useAuthFetch` (attaches the JWT, retries once through refresh-token rotation on a 401) and mirrored `app/types/*.ts` DTOs.
 
 **i18n / theming**:
 - `i18n/locales/{en,ar}.json`, `i18n.config.ts` (custom 6-form Arabic plural rule) — full English/Arabic UI with real RTL layout (Tailwind logical properties, not just a text-direction flip), `hreflang` alternates via `useLocaleHead()`
 - `@nuxtjs/color-mode` — cookie-persisted dark/light theme, correct in the very first SSR response (no flash), toggled via `ThemeToggle.vue`
 
-**Auth**: `stores/auth.ts` (Pinia, persisted to `localStorage`, hydrated client-side) + `middleware/auth.ts` + `composables/useRequireRole.ts` — deliberately client-only, unlike the cookie-backed theme/locale state, since dashboard pages have no SEO value to protect.
+**Auth**: `app/stores/auth.ts` (Pinia, persisted to `localStorage`, hydrated client-side) + `app/middleware/auth.ts` + `composables/useRequireRole.ts` — deliberately client-only, unlike the cookie-backed theme/locale state, since dashboard pages have no SEO value to protect.
 
-`error.vue` is the custom error page (used for the job-not-found 404 case).
+`app/error.vue` is the custom error page (used for the job-not-found 404 case).
 
 ## Setup
+
+Requires Node `^22.19.0 || ^24.11.0 || >=26.0.0` (Nuxt 4.5's floor). If you're on an older Node and have pnpm installed, its built-in runtime manager can fetch and switch to a compatible version without needing nvm:
+
+```bash
+pnpm env use --global 24.18.1   # or: pnpm runtime set node 24.18.1 -g, on newer pnpm
+node --version
+```
 
 ```bash
 pnpm install
@@ -112,17 +121,18 @@ ellipsis-collapsing window. Runs in CI on every push/PR alongside the build.
   multiple Node projects. `onlyBuiltDependencies` in `package.json` explicitly
   allow-lists `esbuild`'s postinstall script, since pnpm blocks arbitrary package
   postinstall scripts by default (a supply-chain safety feature npm doesn't have).
-- **Nuxt 3, not 4.** `nuxi init` defaults to the latest Nuxt (4.5 at the time this
-  was scaffolded), whose newest patch requires Node `^22.19.0 || ^24.11.0 || >=26.0.0`.
-  The dev environment runs Node 22.16, below that floor. Pinning to the latest
-  Nuxt **3** (`^3.21.0`) avoided either forcing a Node upgrade or pinning to an
-  older, less battle-tested Nuxt 4 patch — Nuxt 3 needs only Node `>=22.12.0` and
-  has everything this project uses (SSR, `useAsyncData`, `useSeoMeta`). Moving to
-  Nuxt 4 later is a well-documented, largely mechanical migration.
-- **`@nuxtjs/i18n` pinned to `9.5.6`, not the latest major.** The default install
-  (v10) pulls in `vue-router@5`, which conflicts with this project's Pinia 2 /
-  Nuxt 3 stack (built against `vue-router@4`). v9.5.6 depends on `vue-router@^4`,
-  matching Nuxt 3's own router.
+- **Nuxt 4** (`^4.5.1`), on the `app/` `srcDir` convention — moved off the initial
+  Nuxt 3 scaffold once Node was upgraded to satisfy Nuxt 4.5's `^22.19.0 ||
+  ^24.11.0 || >=26.0.0` floor. The module ecosystem had already started requiring
+  it anyway (`@nuxt/fonts`, `@nuxtjs/i18n`'s latest majors both depend on
+  `@nuxt/kit ^4.x`), so staying on Nuxt 3 was starting to mean losing the ability
+  to update anything.
+- **Pinia `^4.0.2`** (up from 2.x) and **`@nuxtjs/i18n` `^10.6.0`** (up from the
+  `9.5.6` pin) came along with the Nuxt 4 move — `@pinia/nuxt@1.x` requires
+  Pinia 4, and `@nuxtjs/i18n@10.x` is built against `vue-router@^5`, which Nuxt 4
+  itself now uses (the old pin to `9.5.6` existed specifically to avoid v10's
+  `vue-router@5` conflicting with the Nuxt 3 stack's `vue-router@4` — no longer
+  an issue once both moved to Nuxt 4 together).
 - **`@nuxt/fonts`** self-hosts the Google Font declared in `tailwind.config.ts`
   at build time — real `.woff2` files ship from this app's own origin, no
   runtime request to Google's CDN.

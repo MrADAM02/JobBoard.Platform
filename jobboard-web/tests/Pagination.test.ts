@@ -5,7 +5,7 @@
 // resolves both, unlike a plain @vue/test-utils mount would.
 import { describe, expect, it } from 'vitest'
 import { mountSuspended } from '@nuxt/test-utils/runtime'
-import Pagination from '../components/Pagination.vue'
+import Pagination from '../app/components/Pagination.vue'
 
 function renderedPageLabels(text: string) {
   // Strip the prev/next arrow buttons' (empty) text and the whitespace

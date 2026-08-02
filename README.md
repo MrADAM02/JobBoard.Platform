@@ -3,7 +3,7 @@
 [![CI](https://github.com/MrADAM02/JobBoard.Platform/actions/workflows/ci.yml/badge.svg)](https://github.com/MrADAM02/JobBoard.Platform/actions/workflows/ci.yml)
 
 A full-stack job board: employers post listings, candidates search and apply.
-Built as a portfolio project pairing an ASP.NET Core backend with a Nuxt 3
+Built as a portfolio project pairing an ASP.NET Core backend with a Nuxt 4
 frontend — the two halves are deliberately chosen to demonstrate different
 things (clean architecture/CQRS on the backend, SSR/SEO on the frontend), not
 just "a REST API plus some Vue pages."
@@ -13,7 +13,7 @@ just "a REST API plus some Vue pages."
 ```
 JobBoard.Platform/
 ├── JobBoard/         ASP.NET Core backend  → see JobBoard/README.md
-└── jobboard-web/      Nuxt 3 frontend       → see jobboard-web/README.md
+└── jobboard-web/      Nuxt 4 frontend       → see jobboard-web/README.md
 ```
 
 Each half has its own detailed README (setup, architecture, API surface, SSR
@@ -21,7 +21,8 @@ rationale). This file is the front door — quick start and how the two connect.
 
 ## Quick start
 
-Requires: .NET 8 SDK, PostgreSQL, Node.js ≥22.12, [pnpm](https://pnpm.io).
+Requires: .NET 8 SDK, PostgreSQL, Node.js `^22.19.0 || ^24.11.0 || >=26.0.0`
+(Nuxt 4.5's floor), [pnpm](https://pnpm.io).
 
 **Backend** (`JobBoard/`) — full detail in [`JobBoard/README.md`](JobBoard/README.md):
 
@@ -53,11 +54,10 @@ Runs at `http://localhost:3000`, pointed at the API above via `NUXT_PUBLIC_API_B
   CQRS via MediatR** — each use case (register, post a job, apply, ...) is one
   file, testable in isolation against an abstraction (`IApplicationDbContext`)
   rather than a real database.
-- **Nuxt 3, server-side rendering the public job pages** — `/jobs` and
+- **Nuxt 4, server-side rendering the public job pages** — `/jobs` and
   `/jobs/[id]` need to be crawlable and indexable; a client-only SPA can't
   guarantee that. See [`jobboard-web/README.md`](jobboard-web/README.md#why-nuxt-ssr-not-a-plain-spa)
-  for the full reasoning, including why Nuxt 3 (not the newer Nuxt 4) and pnpm
-  (not npm) specifically.
+  for the full reasoning, including why pnpm (not npm) specifically.
 
 ## Features
 
