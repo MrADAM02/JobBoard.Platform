@@ -80,7 +80,6 @@ export default defineNuxtConfig({
     baseUrl: process.env.NUXT_PUBLIC_SITE_URL || "http://localhost:3000",
     langDir: "locales/",
     vueI18n: "./i18n.config.ts",
-    lazy: true,
     strategy: "prefix_except_default",
     detectBrowserLanguage: {
       useCookie: true,

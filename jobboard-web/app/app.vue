@@ -3,7 +3,7 @@
 // (dashboards included) for accessibility and RTL layout correctness, not just
 // the SEO-critical job pages. addSeoAttributes also emits hreflang alternates
 // on whichever page is currently rendering.
-useHead(useLocaleHead({ addSeoAttributes: true }))
+useHead(useLocaleHead())
 </script>
 
 <template>
