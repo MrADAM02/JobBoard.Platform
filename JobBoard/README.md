@@ -107,8 +107,8 @@ Swagger UI opens automatically at `/swagger` in development.
   stub). Wire it to a real provider (SendGrid/SES) before deploying.
 - `IFileStorageService` writes to local disk. Add an S3/Azure Blob
   implementation behind the same interface before deploying to an ephemeral host.
-- No Docker/`docker-compose.yml`, no frontend linting (ESLint/Prettier) - not
-  there yet, doesn't block local development.
+- No frontend linting (ESLint/Prettier) - not there yet, doesn't block local
+  development. (Docker is covered — see the root README's "Docker" section.)
 
 ## API surface
 

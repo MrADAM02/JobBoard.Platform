@@ -1,0 +1,49 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: jobboard
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  api:
+    build:
+      context: ./JobBoard
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__DefaultConnection: Host=postgres;Port=5432;Database=jobboard;Username=postgres;Password=postgres
+      # Dev-only fallback so `docker compose up` works with zero setup - override
+      # via a root .env (see .env.example) for anything beyond a local demo.
+      Jwt__Secret: ${JWT_SECRET:-docker-compose-dev-only-secret-do-not-use-in-production-1234567890}
+      Cors__AllowedOrigins__0: http://localhost:3000
+    ports:
+      - "5000:8080"
+    volumes:
+      - api-uploads:/app/wwwroot/uploads
+
+  web:
+    build:
+      context: ./jobboard-web
+    depends_on:
+      - api
+    environment:
+      # Host-mapped URLs, not Docker-internal service names - with ssr:false
+      # these requests are made by the browser on the host, not container-to-container.
+      NUXT_PUBLIC_API_BASE: http://localhost:5000/api
+      NUXT_PUBLIC_SITE_URL: http://localhost:3000
+    ports:
+      - "3000:3000"
+
+volumes:
+  postgres-data:
+  api-uploads:

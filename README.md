@@ -48,6 +48,22 @@ pnpm run dev
 
 Runs at `http://localhost:3000`, pointed at the API above via `NUXT_PUBLIC_API_BASE`.
 
+## Docker
+
+No local toolchain needed — Postgres, the API, and the frontend all run in containers:
+
+```bash
+docker compose up --build
+```
+
+API at `http://localhost:5000`, frontend at `http://localhost:3000`. The API
+container auto-migrates the database and seeds a dev admin account on startup
+(`admin@jobboard.local` / `Admin123!`) — same convenience behavior as running
+the API locally in Development mode, just with zero setup. Postgres data and
+uploaded files persist across restarts via named volumes. Copy `.env.example`
+to `.env` to set a real `JWT_SECRET`; the default is fine for just trying the
+app out.
+
 ## Why this stack
 
 - **ASP.NET Core, clean architecture (Domain → Application → Infrastructure → Api),

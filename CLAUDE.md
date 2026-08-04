@@ -44,9 +44,17 @@ Requires Node `^22.19.0 || ^24.11.0 || >=26.0.0` (Nuxt 4.5's floor) — `pnpm en
 
 Copy `jobboard-web/.env.example` to `.env` to point at a non-default API URL; both vars already fall back to sane local defaults.
 
+### Docker
+
+```bash
+docker compose up --build   # Postgres + API (:5000) + web (:3000)
+```
+
+`JobBoard/Dockerfile` and `jobboard-web/Dockerfile` are each multi-stage; `docker-compose.yml` (repo root) wires them together. The API container runs with `ASPNETCORE_ENVIRONMENT=Development` on purpose, so it reuses the existing auto-migrate + dev-admin-seed block in `Program.cs` (`admin@jobboard.local` / `Admin123!`) — no separate migration step needed. `JWT_SECRET` has a dev-only fallback baked into `docker-compose.yml`; override via a root `.env` (see `.env.example`) for anything beyond trying the app locally.
+
 ### CI (`.github/workflows/ci.yml`)
 
-Two independent jobs on every push/PR to `main`: `backend` (`dotnet restore` → `build` → `test`), `frontend` (`pnpm install --frozen-lockfile` → `pnpm run test` → `pnpm run build`). Mirror these commands locally before assuming a change is CI-clean.
+Three independent jobs on every push/PR to `main`: `backend` (`dotnet restore` → `build` → `test`), `frontend` (`pnpm install --frozen-lockfile` → `pnpm run test` → `pnpm run build`, Node 24/pnpm 10), `docker` (build both images, no push). Mirror these commands locally before assuming a change is CI-clean.
 
 ## Backend architecture
 
