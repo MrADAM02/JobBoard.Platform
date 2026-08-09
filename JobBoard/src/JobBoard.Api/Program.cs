@@ -97,19 +97,32 @@ builder.Services.AddOutputCache(options =>
 
 var app = builder.Build();
 
+// Applies pending migrations on every boot, in every environment - idempotent
+// (EF only applies what's not already applied), and without this a fresh
+// Production database has no schema-provisioning path at all. IsRelational()
+// guards this against JobBoard.Api.IntegrationTests' CustomWebApplicationFactory,
+// which swaps in the EF Core InMemory provider - Migrate() throws on anything non-relational.
+using (var migrationScope = app.Services.CreateScope())
+{
+    var migrationDb = migrationScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    if (migrationDb.Database.IsRelational())
+    {
+        migrationDb.Database.Migrate();
+    }
+}
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 
-    // Convenience only: applies pending migrations automatically in dev.
-    // Never do this in production - use `dotnet ef database update` in your deploy pipeline instead.
+    // Dev-only admin seed: Admin can't be created via /register (see RegisterCommandValidator),
+    // so this is the only way to get one. Never do this in production - a
+    // well-known admin password has no business existing on a public deployment;
+    // promote a real registered account to Admin manually instead (see
+    // README.md#deploying-to-a-server).
     using var scope = app.Services.CreateScope();
     var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-    db.Database.Migrate();
-
-    // Dev-only admin seed: Admin can't be created via /register (see RegisterCommandValidator),
-    // so this is the only way to get one. Never do this in production.
     if (!db.Users.Any(u => u.Role == UserRole.Admin))
     {
         var passwordHasher = scope.ServiceProvider.GetRequiredService<IPasswordHasher>();

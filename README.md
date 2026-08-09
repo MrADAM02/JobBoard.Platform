@@ -53,16 +53,65 @@ Runs at `http://localhost:3000`, pointed at the API above via `NUXT_PUBLIC_API_B
 No local toolchain needed — Postgres, the API, and the frontend all run in containers:
 
 ```bash
+cp .env.example .env   # set JWT_SECRET and POSTGRES_PASSWORD - compose won't start without them
 docker compose up --build
 ```
 
 API at `http://localhost:5000`, frontend at `http://localhost:3000`. The API
 container auto-migrates the database and seeds a dev admin account on startup
 (`admin@jobboard.local` / `Admin123!`) — same convenience behavior as running
-the API locally in Development mode, just with zero setup. Postgres data and
-uploaded files persist across restarts via named volumes. Copy `.env.example`
-to `.env` to set a real `JWT_SECRET`; the default is fine for just trying the
-app out.
+the API locally in Development mode. Postgres data and uploaded files persist
+across restarts via named volumes. Neither secret has a fallback, on purpose —
+a known credential baked into the compose file is exactly the kind of thing
+that ends up running for real by accident.
+
+## Deploying to a server
+
+Every push to `main` builds both images, publishes them to GitHub Container
+Registry (`ghcr.io/mradam02/jobboard-api` / `-web`), then SSHes into the
+server and redeploys — see the `publish` and `deploy` jobs in
+[`.github/workflows/ci.yml`](.github/workflows/ci.yml). The server runs in
+`Production` mode: no Swagger, no auto-seeded admin account (unlike the local
+`docker-compose.yml` above) — migrations still apply automatically on every
+boot, but you create the first admin yourself, once, as below.
+
+**One-time server setup:**
+
+```bash
+git clone https://github.com/MrADAM02/JobBoard.Platform.git
+cd JobBoard.Platform
+cp .env.production.example .env
+# edit .env: set PUBLIC_HOST to this server's IP, POSTGRES_PASSWORD, and
+# JWT_SECRET (openssl rand -base64 48)
+docker compose -f docker-compose.prod.yml up -d
+```
+
+**One-time GitHub setup** — add these as repo secrets (Settings → Secrets and
+variables → Actions):
+- `DEPLOY_HOST` — the server's IP
+- `DEPLOY_USER` — the SSH user
+- `DEPLOY_SSH_KEY` — the private key for that user
+
+After the first successful `publish` run, the two GHCR packages are created
+as private by default — flip them to Public once under the repo's Packages
+tab (sidebar → Packages → each package → Package settings) so the server can
+pull them without authenticating.
+
+**Creating the first admin account** — register a normal account through the
+running app at `http://<server-ip>:3000`, then promote it directly in
+Postgres (self-registering as Admin is intentionally blocked — see
+[`JobBoard/README.md`](JobBoard/README.md)):
+
+```bash
+docker compose -f docker-compose.prod.yml exec postgres \
+  psql -U postgres -d jobboard \
+  -c "UPDATE \"Users\" SET \"Role\" = 2 WHERE \"Email\" = 'you@example.com';"
+```
+
+No domain/HTTPS yet — the app is reachable over plain HTTP by IP
+(`http://<server-ip>:3000` and `:5000`). Worth adding a reverse proxy
+(Caddy is the simplest option — automatic Let's Encrypt certs) once a domain
+is pointed at the server.
 
 ## Why this stack
 

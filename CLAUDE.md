@@ -50,11 +50,15 @@ Copy `jobboard-web/.env.example` to `.env` to point at a non-default API URL; bo
 docker compose up --build   # Postgres + API (:5000) + web (:3000)
 ```
 
-`JobBoard/Dockerfile` and `jobboard-web/Dockerfile` are each multi-stage; `docker-compose.yml` (repo root) wires them together. The API container runs with `ASPNETCORE_ENVIRONMENT=Development` on purpose, so it reuses the existing auto-migrate + dev-admin-seed block in `Program.cs` (`admin@jobboard.local` / `Admin123!`) — no separate migration step needed. `JWT_SECRET` has a dev-only fallback baked into `docker-compose.yml`; override via a root `.env` (see `.env.example`) for anything beyond trying the app locally.
+`JobBoard/Dockerfile` and `jobboard-web/Dockerfile` are each multi-stage; `docker-compose.yml` (repo root) wires them together. The API container runs with `ASPNETCORE_ENVIRONMENT=Development` on purpose, so it reuses the existing auto-migrate + dev-admin-seed block in `Program.cs` (`admin@jobboard.local` / `Admin123!`) — no separate migration step needed. `JWT_SECRET` and `POSTGRES_PASSWORD` have no fallback in `docker-compose.yml` (`${VAR:?...}`, same pattern as `docker-compose.prod.yml`) — copy `.env.example` to `.env` first or compose refuses to start. Don't reintroduce a default value for either; that's specifically what was removed to stop a known credential from ever running for real by accident.
+
+Migrations (`ApplicationDbContext.Database.Migrate()`) run unconditionally on every API boot, in every environment — guarded by `Database.IsRelational()` so it's a no-op against `JobBoard.Api.IntegrationTests`' in-memory-provider `CustomWebApplicationFactory`. Don't reintroduce an `IsDevelopment()` guard around this call; that's what originally left `Production` with no schema-provisioning path at all.
+
+`docker-compose.prod.yml` (repo root) is the remote-server variant — pulls prebuilt `ghcr.io/mradam02/jobboard-*:latest` images instead of building locally, runs `ASPNETCORE_ENVIRONMENT=Production` (no Swagger, no admin auto-seed), and every secret (`POSTGRES_PASSWORD`, `JWT_SECRET`, `PUBLIC_HOST`) is required with no fallback — see `.env.production.example`. CI's `publish`/`deploy` jobs in `ci.yml` push to GHCR and SSH-redeploy on every push to `main`; see the root README's "Deploying to a server" section for the one-time setup and the first-admin-promotion step.
 
 ### CI (`.github/workflows/ci.yml`)
 
-Three independent jobs on every push/PR to `main`: `backend` (`dotnet restore` → `build` → `test`), `frontend` (`pnpm install --frozen-lockfile` → `pnpm run test` → `pnpm run build`, Node 24/pnpm 10), `docker` (build both images, no push). Mirror these commands locally before assuming a change is CI-clean.
+Three independent jobs run on every push/PR to `main`: `backend` (`dotnet restore` → `build` → `test`), `frontend` (`pnpm install --frozen-lockfile` → `pnpm run test` → `pnpm run build`, Node 24/pnpm 10), `docker` (build both images, no push). Mirror these commands locally before assuming a change is CI-clean. Two more jobs (`publish`, `deploy`) only run on an actual push to `main` (never PRs) — they push images to GHCR and SSH-redeploy the remote server; see `.env.production.example` and the root README's "Deploying to a server" section.
 
 ## Backend architecture
 

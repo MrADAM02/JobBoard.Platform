@@ -1,0 +1,52 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_DB: jobboard
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD must be set}
+
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
+
+  api:
+    image: ghcr.io/mradam02/jobboard-api:${API_VERSION:?API_VERSION must be set}
+    restart: unless-stopped
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_URLS: http://+:8080
+
+      ConnectionStrings__DefaultConnection: >-
+        Host=postgres;
+        Port=5432;
+        Database=jobboard;
+        Username=postgres;
+        Password=${POSTGRES_PASSWORD}
+
+      Jwt__Secret: ${JWT_SECRET:?JWT_SECRET must be set}
+
+      Cors__AllowedOrigins__0: ${CORS_ORIGIN:?CORS_ORIGIN must be set}
+
+    ports:
+      - "127.0.0.1:5000:8080"
+
+    volumes:
+      - api-uploads:/app/wwwroot/uploads
+
+volumes:
+  postgres-data:
+  api-uploads:
