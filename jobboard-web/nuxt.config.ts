@@ -36,7 +36,8 @@ export default defineNuxtConfig({
     public: {
       // Points at JobBoard.Api's http profile (localhost:5000) in dev to avoid the
       // self-signed HTTPS dev cert tripping up server-side fetches during SSR.
-      apiBase: process.env.NUXT_PUBLIC_API_BASE || "http://localhost:5000/api",
+      apiBase:
+        process.env.NUXT_PUBLIC_API_BASE || "https://job-api.jab-eri.org/api",
     },
   },
 
