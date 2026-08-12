@@ -41,7 +41,7 @@ services:
     environment:
       # Host-mapped URLs, not Docker-internal service names - with ssr:false
       # these requests are made by the browser on the host, not container-to-container.
-      NUXT_PUBLIC_API_BASE: https://job-api.jab-eri.org
+      NUXT_PUBLIC_API_BASE: http://localhost:5000/api
       NUXT_PUBLIC_SITE_URL: http://localhost:3000
     ports:
       - "3000:3000"
