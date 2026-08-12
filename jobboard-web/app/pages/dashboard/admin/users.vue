@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { UserRoleI18nKey } from '~/types/auth'
 
-definePageMeta({ middleware: 'auth', ssr: false })
+definePageMeta({ layout: 'dashboard', middleware: 'auth', ssr: false })
 useRequireRole('Admin')
 
 const route = useRoute()

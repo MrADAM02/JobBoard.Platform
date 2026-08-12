@@ -136,33 +136,14 @@ useSeoMeta({
 
     <EmptyState v-else-if="!data?.items.length">{{ t('jobs.list.empty') }}</EmptyState>
 
-    <ul v-else class="flex flex-col gap-3">
+    <ul v-else class="grid grid-cols-1 gap-3 sm:grid-cols-2">
       <li v-for="job in data.items" :key="job.id">
-        <Card :to="localePath(`/jobs/${job.id}`)" hover padding="sm">
-          <div class="flex items-start justify-between gap-4">
-            <div>
-              <h2 class="font-semibold text-slate-900 dark:text-slate-100">{{ job.title }}</h2>
-              <p class="text-sm text-slate-600 dark:text-slate-400">{{ job.companyName }} &middot; {{ job.location }}</p>
-            </div>
-            <div class="flex items-center gap-1">
-              <Badge v-if="job.isRemote" variant="success">{{ t('jobs.detail.remote') }}</Badge>
-              <ClientOnly>
-                <BookmarkButton
-                  v-if="auth.isCandidate"
-                  :job-id="job.id"
-                  :model-value="savedIds.includes(job.id)"
-                  @update:model-value="(v) => onToggleSaved(job.id, v)"
-                />
-              </ClientOnly>
-            </div>
-          </div>
-          <div class="mt-3 flex flex-wrap gap-2 text-xs">
-            <Badge variant="neutral">{{ t(JobTypeI18nKey[job.jobType]) }}</Badge>
-            <Badge v-if="job.salaryMin || job.salaryMax" variant="neutral">
-              ${{ job.salaryMin?.toLocaleString() ?? '?' }} &ndash; ${{ job.salaryMax?.toLocaleString() ?? '?' }}
-            </Badge>
-          </div>
-        </Card>
+        <JobCard
+          :job="job"
+          :saved="savedIds.includes(job.id)"
+          :show-bookmark="auth.isCandidate"
+          @update:saved="(v) => onToggleSaved(job.id, v)"
+        />
       </li>
     </ul>
 

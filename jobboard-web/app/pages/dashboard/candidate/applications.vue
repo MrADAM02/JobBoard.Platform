@@ -2,7 +2,7 @@
 import { ApplicationStatus, ApplicationStatusI18nKey } from '~/types/application'
 import type { ApplicationStatusValue } from '~/types/application'
 
-definePageMeta({ middleware: 'auth', ssr: false })
+definePageMeta({ layout: 'dashboard', middleware: 'auth', ssr: false })
 useRequireRole('Candidate')
 
 const { getMyApplications } = useApplicationsApi()

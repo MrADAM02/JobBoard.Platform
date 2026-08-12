@@ -28,7 +28,7 @@ const sizeClasses: Record<string, string> = {
 }
 
 const classes = computed(() => [
-  'inline-flex items-center justify-center gap-2 rounded-lg font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-50',
+  'inline-flex items-center justify-center gap-2 rounded-xl font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-50',
   variantClasses[props.variant],
   sizeClasses[props.size]
 ])

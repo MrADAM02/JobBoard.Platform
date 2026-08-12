@@ -1,5 +1,5 @@
 <script setup lang="ts">
-definePageMeta({ middleware: 'auth', ssr: false })
+definePageMeta({ layout: 'dashboard', middleware: 'auth', ssr: false })
 useRequireRole('Employer')
 
 const { getMyCompany, createCompany, updateCompany, uploadLogo } = useCompaniesApi()

@@ -22,11 +22,14 @@ function onLogout() {
 </script>
 
 <template>
-  <div class="min-h-screen flex flex-col bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100">
-    <header class="border-b border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
+  <div class="min-h-screen flex flex-col bg-cream-100 text-slate-900 dark:bg-slate-950 dark:text-slate-100">
+    <header class="border-b border-slate-200/70 bg-cream-100 dark:border-slate-800 dark:bg-slate-950">
       <nav class="mx-auto max-w-5xl px-4 py-4">
         <div class="flex items-center justify-between gap-4">
-          <NuxtLink :to="localePath('/')" class="text-lg font-bold tracking-tight text-primary-600 dark:text-primary-400">
+          <NuxtLink :to="localePath('/')" class="flex items-center gap-2 font-display text-lg font-bold tracking-tight text-slate-900 dark:text-slate-100">
+            <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-accent-400 text-slate-900">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-4 w-4"><rect x="7" y="7" width="10" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="2" /></svg>
+            </span>
             {{ t('common.brand') }}
           </NuxtLink>
 
@@ -91,7 +94,7 @@ function onLogout() {
           </div>
         </div>
 
-        <div v-if="mobileMenuOpen" class="mt-4 flex flex-col gap-4 border-t border-slate-200 pt-4 text-sm font-medium text-slate-600 dark:border-slate-800 dark:text-slate-400 md:hidden">
+        <div v-if="mobileMenuOpen" class="mt-4 flex flex-col gap-4 border-t border-slate-200/70 pt-4 text-sm font-medium text-slate-600 dark:border-slate-800 dark:text-slate-400 md:hidden">
           <NuxtLink :to="localePath('/jobs')" class="hover:text-slate-900 dark:hover:text-slate-100">{{ t('nav.browseJobs') }}</NuxtLink>
           <NuxtLink :to="localePath('/companies')" class="hover:text-slate-900 dark:hover:text-slate-100">{{ t('nav.companies') }}</NuxtLink>
 
@@ -120,7 +123,7 @@ function onLogout() {
       <slot />
     </main>
 
-    <footer class="border-t border-slate-200 bg-white py-6 text-center text-sm text-slate-500 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-400">
+    <footer class="border-t border-slate-200/70 bg-cream-100 py-6 text-center text-sm text-slate-500 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-400">
       {{ t('footer.tagline') }}
     </footer>
   </div>

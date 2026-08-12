@@ -29,9 +29,9 @@ useSeoMeta({
           v-if="company.logoUrl"
           :src="company.logoUrl"
           :alt="company.name"
-          class="h-16 w-16 flex-shrink-0 rounded-md object-cover"
+          class="h-16 w-16 flex-shrink-0 rounded-xl object-cover"
         >
-        <div v-else class="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-md bg-primary-100 text-2xl font-semibold text-primary-700 dark:bg-primary-900/40 dark:text-primary-300">
+        <div v-else class="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-xl bg-cream-200 font-display text-2xl font-bold text-primary-700 dark:bg-slate-800 dark:text-primary-400">
           {{ company.name.charAt(0).toUpperCase() }}
         </div>
         <div>

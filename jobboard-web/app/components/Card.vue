@@ -23,14 +23,14 @@ const paddingClasses: Record<string, string> = {
   <NuxtLink
     v-if="to"
     :to="to"
-    class="block rounded-xl border border-slate-200 bg-white transition dark:border-slate-700 dark:bg-slate-900"
-    :class="[paddingClasses[padding], hover ? 'hover:border-primary-400 hover:shadow-sm dark:hover:border-primary-500' : '']"
+    class="block rounded-2xl border border-slate-200/70 bg-white transition dark:border-slate-700 dark:bg-slate-900"
+    :class="[paddingClasses[padding], hover ? 'hover:border-primary-300 hover:shadow-sm dark:hover:border-primary-600' : '']"
   >
     <slot />
   </NuxtLink>
   <div
     v-else
-    class="rounded-xl border border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900"
+    class="rounded-2xl border border-slate-200/70 bg-white dark:border-slate-700 dark:bg-slate-900"
     :class="paddingClasses[padding]"
   >
     <slot />

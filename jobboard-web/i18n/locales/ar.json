@@ -11,6 +11,21 @@
     "login": "تسجيل الدخول",
     "register": "إنشاء حساب"
   },
+  "sidebar": {
+    "workspace": "مساحة العمل",
+    "overview": "نظرة عامة",
+    "applications": "الطلبات",
+    "savedJobs": "الوظائف المحفوظة",
+    "companies": "الشركات",
+    "jobListings": "إعلانات الوظائف",
+    "analytics": "التحليلات",
+    "company": "الشركة",
+    "jobs": "الوظائف",
+    "users": "المستخدمون",
+    "notifications": "الإشعارات",
+    "profileSettings": "الملف الشخصي والإعدادات",
+    "menu": "القائمة"
+  },
   "footer": {
     "tagline": "JobBoard — مبني باستخدام ASP.NET Core و Nuxt"
   },
@@ -96,10 +111,18 @@
   "home": {
     "seoTitle": "JobBoard — ابحث عن وظيفتك القادمة",
     "seoDescription": "تصفح إعلانات الوظائف الشاغرة من الشركات التي توظف الآن.",
+    "eyebrow": "عمل يستحق الانتقال إليه",
     "heading": "ابحث عن وظيفتك القادمة",
     "subheading": "تصفح الوظائف الشاغرة من الشركات التي توظف الآن.",
     "browseJobs": "تصفح الوظائف",
     "forEmployers": "انشر وظيفة",
+    "searchCardTitle": "بحث أفضل يبدأ من هنا.",
+    "keywordPlaceholder": "الوظيفة أو المهارة أو الشركة",
+    "locationPlaceholder": "الموقع أو عن بُعد",
+    "searchCta": "بحث",
+    "freshEyebrow": "جديد على اللوحة",
+    "freshTitle": "أحدث الوظائف المنشورة",
+    "whyEyebrow": "لماذا JobBoard",
     "features": {
       "search": { "title": "بحث فعّال", "desc": "صفِّ النتائج حسب الموقع ونوع الوظيفة والراتب لتجد الأدوار الأنسب لك." },
       "apply": { "title": "تقديم بنقرة واحدة", "desc": "لا نماذج طويلة — قدّم باستخدام ملفك الشخصي وسيرتك الذاتية المحفوظة في ثوانٍ." },

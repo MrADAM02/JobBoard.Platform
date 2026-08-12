@@ -37,14 +37,14 @@ useSeoMeta({
     </div>
 
     <form
-      class="flex gap-3 rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-700 dark:bg-slate-900"
+      class="flex gap-3 rounded-2xl border border-slate-200/70 bg-white p-4 dark:border-slate-700 dark:bg-slate-900"
       @submit.prevent="applyFilters"
     >
       <input
         v-model="keyword"
         type="text"
         :placeholder="t('companies.keywordPlaceholder')"
-        class="flex-1 rounded-lg border border-slate-300 px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:placeholder:text-slate-500"
+        class="flex-1 rounded-xl border border-slate-300 px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:placeholder:text-slate-500"
       >
       <BaseButton type="submit">{{ t('companies.search') }}</BaseButton>
     </form>
@@ -65,9 +65,9 @@ useSeoMeta({
               v-if="company.logoUrl"
               :src="company.logoUrl"
               :alt="company.name"
-              class="h-12 w-12 flex-shrink-0 rounded-md object-cover"
+              class="h-12 w-12 flex-shrink-0 rounded-xl object-cover"
             >
-            <div v-else class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-md bg-primary-100 text-lg font-semibold text-primary-700 dark:bg-primary-900/40 dark:text-primary-300">
+            <div v-else class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-cream-200 font-display text-lg font-bold text-primary-700 dark:bg-slate-800 dark:text-primary-400">
               {{ company.name.charAt(0).toUpperCase() }}
             </div>
             <div>

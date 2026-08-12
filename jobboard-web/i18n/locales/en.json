@@ -11,6 +11,21 @@
     "login": "Log in",
     "register": "Register"
   },
+  "sidebar": {
+    "workspace": "Workspace",
+    "overview": "Overview",
+    "applications": "Applications",
+    "savedJobs": "Saved jobs",
+    "companies": "Companies",
+    "jobListings": "Job Listings",
+    "analytics": "Analytics",
+    "company": "Company",
+    "jobs": "Jobs",
+    "users": "Users",
+    "notifications": "Notifications",
+    "profileSettings": "Profile & settings",
+    "menu": "Menu"
+  },
   "footer": {
     "tagline": "JobBoard — built with ASP.NET Core & Nuxt"
   },
@@ -96,10 +111,18 @@
   "home": {
     "seoTitle": "JobBoard — Find your next role",
     "seoDescription": "Browse open job listings from companies hiring right now.",
+    "eyebrow": "Work worth moving for",
     "heading": "Find your next role",
     "subheading": "Browse open positions from companies hiring right now.",
     "browseJobs": "Browse Jobs",
     "forEmployers": "Post a job",
+    "searchCardTitle": "A better search starts here.",
+    "keywordPlaceholder": "Role, skill, or company",
+    "locationPlaceholder": "Location or remote",
+    "searchCta": "Search",
+    "freshEyebrow": "Fresh on the board",
+    "freshTitle": "Recently posted roles",
+    "whyEyebrow": "Why JobBoard",
     "features": {
       "search": { "title": "Search that works", "desc": "Filter by location, job type, and salary to find roles that actually match." },
       "apply": { "title": "Apply in one click", "desc": "No lengthy forms — apply with your saved profile and resume in seconds." },

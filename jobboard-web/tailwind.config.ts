@@ -20,15 +20,25 @@ export default {
   ],
   theme: {
     extend: {
-      // Aliased (not hardcoded indigo-* everywhere) so a future rebrand is a
-      // one-line change here instead of a find-replace across every page.
+      // Aliased (not hardcoded emerald-*/amber-* everywhere) so a future
+      // rebrand is a one-line change here instead of a find-replace across
+      // every page. primary/accent reuse Tailwind's stock emerald/amber
+      // scales (deep green + gold), matching the reference design's palette.
       colors: {
-        primary: colors.indigo,
+        primary: colors.emerald,
+        accent: colors.amber,
+        cream: {
+          50: "#FAF9F2",
+          100: "#F5F3E7",
+          200: "#EBE8D6",
+        },
       },
-      // @nuxt/fonts auto-detects this and self-hosts Plus Jakarta Sans at
-      // build time - falls back to the standard sans stack if that ever fails.
+      // @nuxt/fonts auto-detects both and self-hosts them at build time -
+      // falls back to the standard stacks if that ever fails. "display" is
+      // the heavy grotesk used for headings; "sans" stays the body font.
       fontFamily: {
         sans: ["Plus Jakarta Sans", "ui-sans-serif", "system-ui", "sans-serif"],
+        display: ["Space Grotesk", "ui-sans-serif", "system-ui", "sans-serif"],
       },
     },
   },

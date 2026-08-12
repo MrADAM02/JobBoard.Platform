@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { JobTypeI18nKey } from '~/types/job'
 
-definePageMeta({ middleware: 'auth', ssr: false })
+definePageMeta({ layout: 'dashboard', middleware: 'auth', ssr: false })
 useRequireRole('Candidate')
 
 const route = useRoute()

@@ -25,7 +25,7 @@ const inputId = computed(() => props.id ?? autoId)
       :id="inputId"
       :value="modelValue"
       :disabled="disabled"
-      class="rounded-lg border border-slate-300 px-3 py-2 text-sm disabled:opacity-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+      class="rounded-xl border border-slate-300 px-3 py-2 text-sm disabled:opacity-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
       @change="emit('update:modelValue', ($event.target as HTMLSelectElement).value)"
     >
       <slot />

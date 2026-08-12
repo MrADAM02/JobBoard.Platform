@@ -38,7 +38,7 @@ const inputId = computed(() => props.id ?? autoId)
       :disabled="disabled"
       :autocomplete="autocomplete"
       :minlength="minlength"
-      class="rounded-lg border px-3 py-2 text-sm disabled:opacity-50 dark:bg-slate-900 dark:text-slate-100"
+      class="rounded-xl border px-3 py-2 text-sm disabled:opacity-50 dark:bg-slate-900 dark:text-slate-100"
       :class="error ? 'border-red-400 dark:border-red-600' : 'border-slate-300 dark:border-slate-700'"
       @input="emit('update:modelValue', ($event.target as HTMLInputElement).value)"
     >
