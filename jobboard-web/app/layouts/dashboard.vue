@@ -96,11 +96,6 @@ function onLogout() {
       </nav>
 
       <div class="flex flex-col gap-1 border-t border-slate-200/70 pt-4 dark:border-slate-800">
-        <div class="flex items-center gap-1 px-2">
-          <ClientOnly><NotificationBell /></ClientOnly>
-          <ThemeToggle />
-          <LocaleSwitcher />
-        </div>
         <NuxtLink
           v-if="auth.isCandidate"
           :to="localePath('/dashboard/candidate/profile')"
@@ -126,24 +121,35 @@ function onLogout() {
     </aside>
 
     <div class="flex flex-1 flex-col md:min-w-0">
-      <div class="flex items-center justify-between border-b border-slate-200/70 bg-white px-4 py-3 dark:border-slate-800 dark:bg-slate-900 md:hidden">
-        <NuxtLink :to="localePath('/')" class="flex items-center gap-2 font-display text-base font-bold tracking-tight">
+      <!-- Always-visible top bar: brand + hamburger are mobile-only (the
+           sidebar already shows the brand on desktop, and there's nothing to
+           expand), but the controls render exactly once here regardless of
+           breakpoint - keeping NotificationBell to a single mounted instance
+           instead of duplicating it between a mobile and a desktop copy. -->
+      <div class="flex items-center justify-between gap-4 border-b border-slate-200/70 bg-white px-4 py-3 dark:border-slate-800 dark:bg-slate-900 md:px-8">
+        <NuxtLink :to="localePath('/')" class="flex items-center gap-2 font-display text-base font-bold tracking-tight md:hidden">
           <span class="flex h-7 w-7 items-center justify-center rounded-lg bg-accent-400 text-slate-900">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-3.5 w-3.5"><rect x="7" y="7" width="10" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="2" /></svg>
           </span>
           {{ t('common.brand') }}
         </NuxtLink>
-        <button
-          type="button"
-          class="rounded-md p-1.5 text-slate-600 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800"
-          :aria-label="t('sidebar.menu')"
-          :aria-expanded="mobileOpen"
-          @click="mobileOpen = !mobileOpen"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-6 w-6">
-            <path d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
-        </button>
+
+        <div class="ms-auto flex items-center gap-1">
+          <ClientOnly><NotificationBell /></ClientOnly>
+          <ThemeToggle />
+          <LocaleSwitcher />
+          <button
+            type="button"
+            class="rounded-md p-1.5 text-slate-600 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800 md:hidden"
+            :aria-label="t('sidebar.menu')"
+            :aria-expanded="mobileOpen"
+            @click="mobileOpen = !mobileOpen"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-6 w-6">
+              <path d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+        </div>
       </div>
 
       <main class="flex-1 px-4 py-6 md:px-8 md:py-8">
