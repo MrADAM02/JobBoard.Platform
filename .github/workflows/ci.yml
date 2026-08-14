@@ -106,7 +106,7 @@ jobs:
 
             export API_VERSION=sha-${{ github.sha }}
 
-            docker compose -f docker-compose.prod.yml pull
-            docker compose -f docker-compose.prod.yml up -d --remove-orphans
+            docker compose pull
+            docker compose up -d --remove-orphans
 
             docker image prune -f
