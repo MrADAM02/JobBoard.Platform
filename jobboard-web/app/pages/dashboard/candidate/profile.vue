@@ -1,5 +1,5 @@
 <script setup lang="ts">
-definePageMeta({ layout: 'dashboard', middleware: 'auth', ssr: false })
+definePageMeta({ middleware: 'auth', ssr: false })
 useRequireRole('Candidate')
 
 const { getMyProfile, updateMyProfile, uploadResume } = useCandidatesApi()

@@ -1,26 +1,33 @@
 <script setup lang="ts">
-// Persistent left sidebar for the authenticated dashboard area, replacing
-// the shared top-nav header (default.vue) for these pages only. Nav items
-// are role-specific (candidate/employer/admin each have their own routes)
-// but share the same shell/style, per the approved redesign plan.
-//
-// One <aside> and one <main>/<slot> only - on mobile it's translated
-// off-canvas and slid in via mobileOpen, rather than duplicating the sidebar
-// markup (and re-mounting NotificationBell / page content) once per
-// breakpoint the way two separate "mobile" and "desktop" trees would.
+// The authenticated-user chrome: persistent left sidebar + slim top bar.
+// Used by default.vue for every page (not just /dashboard/**) once
+// auth.isAuthenticated - see default.vue for the logged-out/PublicNavShell
+// branch. Nav items are role-specific but share this one shell/style.
 const auth = useAuthStore()
 const router = useRouter()
 const route = useRoute()
-const { t } = useI18n()
+const { t, localeProperties } = useI18n()
 const localePath = useLocalePath()
 
 const mobileOpen = ref(false)
 watch(() => route.fullPath, () => { mobileOpen.value = false })
 
+// A single computed class, never two competing transform utilities at once -
+// Tailwind resolves same-property conflicts by generated stylesheet order
+// (not by class-attribute order), and rtl:* variants carry extra specificity
+// from their [dir="rtl"] selector, so layering "-translate-x-full" +
+// "rtl:translate-x-full" + a conditionally-added "translate-x-0" left the
+// "hidden" rule permanently winning in Arabic regardless of mobileOpen.
+const isRtl = computed(() => localeProperties.value.dir === 'rtl')
+const asideTransformClass = computed(() => {
+  if (mobileOpen.value) return 'translate-x-0'
+  return isRtl.value ? 'translate-x-full' : '-translate-x-full'
+})
+
 interface NavItem {
   label: string
   to: string
-  icon: 'grid' | 'document' | 'bookmark' | 'building' | 'chart' | 'people'
+  icon: 'grid' | 'document' | 'bookmark' | 'building' | 'chart' | 'people' | 'search'
 }
 
 const navItems = computed<NavItem[]>(() => {
@@ -41,6 +48,7 @@ const navItems = computed<NavItem[]>(() => {
   }
   return [
     { label: t('sidebar.overview'), to: '/dashboard/candidate', icon: 'grid' },
+    { label: t('nav.browseJobs'), to: '/jobs', icon: 'search' },
     { label: t('sidebar.applications'), to: '/dashboard/candidate/applications', icon: 'document' },
     { label: t('sidebar.savedJobs'), to: '/dashboard/candidate/saved-jobs', icon: 'bookmark' },
     { label: t('sidebar.companies'), to: '/companies', icon: 'building' }
@@ -67,8 +75,8 @@ function onLogout() {
     <div v-if="mobileOpen" class="fixed inset-0 z-40 bg-slate-900/40 md:hidden" @click="mobileOpen = false" />
 
     <aside
-      class="fixed inset-y-0 start-0 z-50 flex w-72 max-w-[80vw] -translate-x-full flex-col gap-1 overflow-y-auto border-e border-slate-200/70 bg-white px-4 py-6 transition-transform rtl:translate-x-full dark:border-slate-800 dark:bg-slate-900 md:static md:z-auto md:w-64 md:max-w-none md:translate-x-0 md:rtl:translate-x-0"
-      :class="mobileOpen ? 'translate-x-0 rtl:translate-x-0' : ''"
+      class="fixed inset-y-0 start-0 z-50 flex w-72 max-w-[80vw] flex-col gap-1 overflow-y-auto border-e border-slate-200/70 bg-white px-4 py-6 transition-transform dark:border-slate-800 dark:bg-slate-900 md:static md:z-auto md:w-64 md:max-w-none md:translate-x-0"
+      :class="asideTransformClass"
     >
       <NuxtLink :to="localePath('/')" class="flex items-center gap-2 px-2 font-display text-lg font-bold tracking-tight">
         <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-accent-400 text-slate-900">

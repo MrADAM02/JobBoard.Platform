@@ -1,5 +1,5 @@
 <script setup lang="ts">
-definePageMeta({ layout: 'dashboard', middleware: 'auth', ssr: false })
+definePageMeta({ middleware: 'auth', ssr: false })
 useRequireRole('Admin')
 
 const { getStats } = useAdminApi()

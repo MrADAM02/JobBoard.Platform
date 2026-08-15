@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ApplicationStatus, ApplicationStatusI18nKey } from '~/types/application'
 
-definePageMeta({ layout: 'dashboard', middleware: 'auth', ssr: false })
+definePageMeta({ middleware: 'auth', ssr: false })
 useRequireRole('Employer')
 
 const { getMyAnalytics } = useCompaniesApi()

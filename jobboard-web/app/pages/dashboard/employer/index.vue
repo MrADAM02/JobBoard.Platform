@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // ssr: false - auth state is client-only (localStorage), so any data fetch here
 // would run unauthenticated on the server. These pages have no SEO value anyway.
-definePageMeta({ layout: 'dashboard', middleware: 'auth', ssr: false })
+definePageMeta({ middleware: 'auth', ssr: false })
 useRequireRole('Employer')
 
 const { getMyCompany } = useCompaniesApi()

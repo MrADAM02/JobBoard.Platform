@@ -2,7 +2,7 @@
 import { JobStatus, JobStatusI18nKey } from '~/types/job'
 import type { JobStatusValue } from '~/types/job'
 
-definePageMeta({ layout: 'dashboard', middleware: 'auth', ssr: false })
+definePageMeta({ middleware: 'auth', ssr: false })
 useRequireRole('Admin')
 
 const route = useRoute()

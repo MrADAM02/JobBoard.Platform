@@ -1,130 +1,27 @@
 <script setup lang="ts">
+// The only layout in the app - picks between the two chrome variants based
+// on auth state: SidebarShell (workspace nav) once logged in, on every page
+// including public ones; PublicNavShell (top nav) for logged-out visitors.
+// Auth state is only known client-side (hydrated from localStorage, see
+// stores/auth.ts), so the choice is wrapped in ClientOnly with
+// PublicNavShell as the SSR/pre-hydration fallback - the correct guess for
+// crawlers and the common logged-out case.
 const auth = useAuthStore()
-const router = useRouter()
-const route = useRoute()
-const { t } = useI18n()
-const localePath = useLocalePath()
-
-const mobileMenuOpen = ref(false)
-
-const dashboardHome = computed(() =>
-  auth.isAdmin ? '/dashboard/admin' : auth.isEmployer ? '/dashboard/employer' : '/dashboard/candidate'
-)
-
-// Closing on route change covers both link clicks and any programmatic
-// navigation (e.g. onLogout below), so the panel never stays open post-navigation.
-watch(() => route.fullPath, () => { mobileMenuOpen.value = false })
-
-function onLogout() {
-  auth.clearAuth()
-  router.push(localePath('/'))
-}
 </script>
 
 <template>
-  <div class="min-h-screen flex flex-col bg-cream-100 text-slate-900 dark:bg-slate-950 dark:text-slate-100">
-    <header class="border-b border-slate-200/70 bg-cream-100 dark:border-slate-800 dark:bg-slate-950">
-      <nav class="mx-auto max-w-5xl px-4 py-4">
-        <div class="flex items-center justify-between gap-4">
-          <NuxtLink :to="localePath('/')" class="flex items-center gap-2 font-display text-lg font-bold tracking-tight text-slate-900 dark:text-slate-100">
-            <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-accent-400 text-slate-900">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-4 w-4"><rect x="7" y="7" width="10" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="2" /></svg>
-            </span>
-            {{ t('common.brand') }}
-          </NuxtLink>
-
-          <!-- Desktop-only nav links: hidden below md, where the same links live in the collapsible panel instead. -->
-          <div class="hidden flex-1 items-center gap-6 text-sm font-medium text-slate-600 dark:text-slate-400 md:flex">
-            <NuxtLink :to="localePath('/jobs')" class="hover:text-slate-900 dark:hover:text-slate-100">{{ t('nav.browseJobs') }}</NuxtLink>
-            <NuxtLink :to="localePath('/companies')" class="hover:text-slate-900 dark:hover:text-slate-100">{{ t('nav.companies') }}</NuxtLink>
-
-            <ClientOnly>
-              <NuxtLink
-                v-if="auth.isAuthenticated"
-                :to="localePath(dashboardHome)"
-                class="hover:text-slate-900 dark:hover:text-slate-100"
-              >
-                {{ t('nav.dashboard') }}
-              </NuxtLink>
-            </ClientOnly>
-          </div>
-
-          <!-- Always-visible controls, single instance regardless of viewport - avoids mounting NotificationBell
-               twice (which would double its fetch and let its two local read-states drift apart). -->
-          <div class="flex items-center gap-1 sm:gap-2">
-            <LocaleSwitcher />
-            <ThemeToggle />
-            <ClientOnly>
-              <NotificationBell v-if="auth.isAuthenticated" />
-            </ClientOnly>
-
-            <!-- Login/Register paired together as one unit (was split across two different
-                 nav regions before, which read as unrelated) - secondary + primary side by side.
-                 ClientOnly, same as the other auth.isAuthenticated branches above/below -
-                 the store only knows real auth state after it hydrates from localStorage
-                 client-side, so an unwrapped v-if here mismatches the SSR render. -->
-            <ClientOnly>
-              <div v-if="!auth.isAuthenticated" class="hidden items-center gap-2 md:flex">
-                <BaseButton :to="localePath('/login')" variant="secondary" size="sm">{{ t('nav.login') }}</BaseButton>
-                <BaseButton :to="localePath('/register')" size="sm">{{ t('nav.register') }}</BaseButton>
-              </div>
-              <button
-                v-else
-                class="hidden text-sm font-medium text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100 md:inline-block"
-                @click="onLogout"
-              >
-                {{ t('nav.logout') }}
-              </button>
-            </ClientOnly>
-
-            <button
-              type="button"
-              class="rounded-md p-1.5 text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-100 md:hidden"
-              :aria-label="t('nav.menu')"
-              :aria-expanded="mobileMenuOpen"
-              @click="mobileMenuOpen = !mobileMenuOpen"
-            >
-              <svg v-if="!mobileMenuOpen" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-6 w-6">
-                <path d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-              <svg v-else xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-6 w-6">
-                <path d="M6 6l12 12M18 6L6 18" />
-              </svg>
-            </button>
-          </div>
-        </div>
-
-        <div v-if="mobileMenuOpen" class="mt-4 flex flex-col gap-4 border-t border-slate-200/70 pt-4 text-sm font-medium text-slate-600 dark:border-slate-800 dark:text-slate-400 md:hidden">
-          <NuxtLink :to="localePath('/jobs')" class="hover:text-slate-900 dark:hover:text-slate-100">{{ t('nav.browseJobs') }}</NuxtLink>
-          <NuxtLink :to="localePath('/companies')" class="hover:text-slate-900 dark:hover:text-slate-100">{{ t('nav.companies') }}</NuxtLink>
-
-          <ClientOnly>
-            <template v-if="auth.isAuthenticated">
-              <NuxtLink
-                :to="localePath(dashboardHome)"
-                class="hover:text-slate-900 dark:hover:text-slate-100"
-              >
-                {{ t('nav.dashboard') }}
-              </NuxtLink>
-              <button class="text-start hover:text-slate-900 dark:hover:text-slate-100" @click="onLogout">{{ t('nav.logout') }}</button>
-            </template>
-            <template v-else>
-              <div class="flex gap-2">
-                <BaseButton :to="localePath('/login')" variant="secondary" class="flex-1 justify-center">{{ t('nav.login') }}</BaseButton>
-                <BaseButton :to="localePath('/register')" class="flex-1 justify-center">{{ t('nav.register') }}</BaseButton>
-              </div>
-            </template>
-          </ClientOnly>
-        </div>
-      </nav>
-    </header>
-
-    <main class="mx-auto w-full max-w-5xl flex-1 px-4 py-8">
+  <ClientOnly>
+    <SidebarShell v-if="auth.isAuthenticated">
       <slot />
-    </main>
+    </SidebarShell>
+    <PublicNavShell v-else>
+      <slot />
+    </PublicNavShell>
 
-    <footer class="border-t border-slate-200/70 bg-cream-100 py-6 text-center text-sm text-slate-500 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-400">
-      {{ t('footer.tagline') }}
-    </footer>
-  </div>
+    <template #fallback>
+      <PublicNavShell>
+        <slot />
+      </PublicNavShell>
+    </template>
+  </ClientOnly>
 </template>

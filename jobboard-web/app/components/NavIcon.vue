@@ -3,7 +3,7 @@
 // one-off inline <svg>s elsewhere since "grid"/"document"/etc. are each
 // reused across all three role sidebars (candidate/employer/admin).
 defineProps<{
-  name: 'grid' | 'document' | 'bookmark' | 'building' | 'chart' | 'people' | 'settings'
+  name: 'grid' | 'document' | 'bookmark' | 'building' | 'chart' | 'people' | 'settings' | 'search'
 }>()
 </script>
 
@@ -19,6 +19,10 @@ defineProps<{
     <path v-else-if="name === 'bookmark'" stroke-linecap="round" stroke-linejoin="round" d="M6 4a2 2 0 0 0-2 2v14l8-5 8 5V6a2 2 0 0 0-2-2H6z" />
     <path v-else-if="name === 'building'" stroke-linecap="round" stroke-linejoin="round" d="M4 21V6a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v15M4 21h16M9 21v-4h4v4M8 8h1M8 12h1M12 8h1M12 12h1M14 21v-8h5a1 1 0 0 1 1 1v7" />
     <path v-else-if="name === 'chart'" stroke-linecap="round" stroke-linejoin="round" d="M4 20V10m6 10V4m6 16v-7" />
+    <template v-else-if="name === 'search'">
+      <circle cx="11" cy="11" r="7" />
+      <path stroke-linecap="round" d="m20 20-3.5-3.5" />
+    </template>
     <path v-else-if="name === 'people'" stroke-linecap="round" stroke-linejoin="round" d="M9 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM3 20c0-3.3 2.7-6 6-6s6 2.7 6 6M17 11a3 3 0 1 0 0-6M15 14c2.8.3 5 2.7 5 6" />
     <template v-else-if="name === 'settings'">
       <circle cx="12" cy="12" r="3" />
