@@ -35,7 +35,7 @@ hydration, same as a normal SPA.
 App code lives under `app/` (Nuxt 4's default `srcDir`), so `~/` resolves there — `app/components`, `app/composables`, `app/stores`, `app/types`, etc. `i18n/` stays at the repo root (outside `app/`, per `@nuxtjs/i18n`'s own convention, since translations are used both server- and client-side), alongside `public/`, `tests/`, and the config files (`nuxt.config.ts`, `tailwind.config.ts`, `vitest.config.ts`).
 
 **Public, SSR pages** — real content in the first response, no login required:
-- `app/pages/index.vue` — home/hero
+- `app/pages/index.vue` — home/hero, a role/location search bar, and an SSR-fetched "fresh on the board" grid (`JobCard`)
 - `app/pages/jobs/index.vue` — job search/listing, filters synced to the URL query string, real numbered pagination (`app/components/Pagination.vue`)
 - `app/pages/jobs/[id].vue` — job detail, `useSeoMeta` + `JobPosting` JSON-LD, an SSR-fetched "similar jobs" section (same type or location, ranked by best match then recency)
 - `app/pages/companies/index.vue`, `app/pages/companies/[id].vue` — public company directory + profile
@@ -46,11 +46,18 @@ App code lives under `app/` (Nuxt 4's default `srcDir`), so `~/` resolves there 
 - `app/pages/dashboard/employer/` — overview, job listings (create/edit/publish/close/delete), applicants (status + private notes), company profile (logo upload), analytics
 - `app/pages/dashboard/admin/` — platform stats, user management, cross-company job moderation
 
+**Navigation shell** (`app/layouts/default.vue`) — the only layout in the app; it doesn't render a header itself, it picks between two chrome components based on client-side auth state (wrapped in `<ClientOnly>`, since `stores/auth.ts` only knows the real state after hydrating from `localStorage`):
+- `SidebarShell.vue` — persistent left sidebar (role-specific nav items for candidate/employer/admin) shown on *every* page, not just `/dashboard/**`, once `auth.isAuthenticated`. Off-canvas + hamburger-triggered on mobile, RTL-aware (docks right in Arabic).
+- `PublicNavShell.vue` — top nav + footer, shown to logged-out visitors (and as the SSR/pre-hydration fallback, since that's the correct guess for crawlers and the common case).
+
 **Shared design system** (`app/components/`) — a small component library rather than every page hand-rolling Tailwind strings:
 - `BaseButton`, `BaseInput`, `BaseTextarea`, `BaseSelect`, `Card`, `Badge`, `Alert`, `EmptyState`, `Spinner`
+- `JobCard` — the job-row card reused identically on `/jobs`, the home page's "fresh on the board" section, and `/jobs/[id]`'s similar-jobs list
 - `ToastContainer` + `composables/useToast.ts` — global success/error feedback for mutations
-- `Pagination`, `BookmarkButton`, `NotificationBell`, `ApplyToJobBox`, `ThemeToggle`, `LocaleSwitcher`
+- `Pagination`, `BookmarkButton`, `NotificationBell`, `ApplyToJobBox`, `ThemeToggle`, `LocaleSwitcher`, `NavIcon` (icon set for `SidebarShell`)
 - `ViewsLineChart`, `ApplicationStatusChart` — hand-rolled SVG/CSS charts (no charting library) for the employer analytics page
+
+**Visual design** (`tailwind.config.ts`) — warm cream background (`cream-*`), deep green as the `primary` color and gold as `accent` (both aliased onto stock Tailwind scales — emerald/amber — so a rebrand is a one-line change), `Space Grotesk` for headings (`font-display`) paired with `Plus Jakarta Sans` for body text, both self-hosted via `@nuxt/fonts`.
 
 **API layer** (`app/composables/use*Api.ts`) — one typed `$fetch` wrapper per backend feature area (`useJobsApi`, `useApplicationsApi`, `useCompaniesApi`, `useCandidatesApi`, `useNotificationsApi`, `useSavedJobsApi`, `useAdminApi`, `useAuthApi`), backed by `useAuthFetch` (attaches the JWT, retries once through refresh-token rotation on a 401) and mirrored `app/types/*.ts` DTOs.
 

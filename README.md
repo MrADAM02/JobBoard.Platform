@@ -86,6 +86,13 @@ cp .env.production.example .env
 docker compose -f docker-compose.prod.yml up -d
 ```
 
+If `docker compose version` errors with `unknown command: docker compose`, the
+Compose v2 CLI plugin isn't installed — this bites Ubuntu servers where Docker
+came from the `docker.io` apt package rather than Docker's own repo, since
+`docker.io` doesn't bundle it. Fix with `sudo apt-get install docker-compose-v2`
+(Ubuntu's package name for the plugin) or `docker-compose-plugin` if you
+installed Docker from `download.docker.com` instead.
+
 **One-time GitHub setup** — add these as repo secrets (Settings → Secrets and
 variables → Actions):
 - `DEPLOY_HOST` — the server's IP
@@ -149,6 +156,9 @@ Both halves are fully built out: auth, job listings, companies, candidate
 profiles, applications, notifications, saved jobs, an admin panel, and an
 employer analytics dashboard, backed by unit + integration test coverage on
 the API and a Vitest suite on the frontend, plus SSR on every public-facing
-page. See each project's README for the detailed feature/API breakdown. Not
-deployed anywhere yet — this repo is built and verified entirely locally
-(see each README's "what's left" notes for what deployment would still need).
+page. See each project's README for the detailed feature/API breakdown.
+
+Deployed via the CI `publish`/`deploy` pipeline (see "Deploying to a server"
+above) — pushes to `main` build and publish both images to GHCR, then
+SSH-redeploy the remote server automatically. No domain/HTTPS in front of it
+yet (see the note at the end of that section).
